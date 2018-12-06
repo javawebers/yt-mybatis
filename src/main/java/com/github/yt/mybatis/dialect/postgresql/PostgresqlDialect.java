@@ -1,7 +1,7 @@
 package com.github.yt.mybatis.dialect.postgresql;
 
-import com.github.yt.mybatis.dialect.BaseDialect;
 import com.github.yt.commons.query.Query;
+import com.github.yt.mybatis.dialect.BaseDialect;
 import org.springframework.stereotype.Component;
 
 /**

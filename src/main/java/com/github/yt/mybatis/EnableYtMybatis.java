@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
+/**
+ * 开启mybatis无xml crud功能
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -14,7 +17,6 @@ import java.lang.annotation.*;
         YtMybatisConfig.class,
         BaseEntityUtils.class,
         MysqlDialect.class,
-
 })
 public @interface EnableYtMybatis {
 }

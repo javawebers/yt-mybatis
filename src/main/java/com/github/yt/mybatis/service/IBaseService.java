@@ -1,8 +1,8 @@
 package com.github.yt.mybatis.service;
 
-import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.commons.query.Page;
 import com.github.yt.commons.query.Query;
+import com.github.yt.mybatis.mapper.BaseMapper;
 
 import java.io.Serializable;
 import java.util.Collection;

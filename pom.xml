@@ -3,8 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.javawebers</groupId>
     <artifactId>yt-mybatis</artifactId>
-    <!--<version>3.0.2</version>-->
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <url>https://github.com/limiaogithub/yt-mybatis</url>
     <name>yt-mybatis</name>
     <description>CURD on mybaits</description>

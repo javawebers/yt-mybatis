@@ -15,20 +15,6 @@ public class YtMybatisConfig {
     public static String pageTotalCountName;
     public static String pageDataName;
 
-    // swagger
-    public static boolean showSwagger;
-
-    // 请求日志
-    // 是否记录请求日志
-    public static boolean requestLog;
-    // 如果记录日志是否记录post等的body内容，记录body内容在单元测试时会有问题，取不到body的值
-    public static boolean requestLogBody;
-
-    @Value("${yt.swagger.show:false}")
-    public void setShowSwagger(boolean showSwagger) {
-        YtMybatisConfig.showSwagger = showSwagger;
-    }
-
     @Value("${yt.entity.baseEntityValue:com.github.yt.mybatis.domain.DefaultBaseEntityValue}")
     public void setBaseEntityValueClass(String baseEntityValueClass) {
         YtMybatisConfig.baseEntityValueClass = baseEntityValueClass;
@@ -63,13 +49,6 @@ public class YtMybatisConfig {
     public void setPageDataName(String pageDataName) {
         YtMybatisConfig.pageDataName = pageDataName;
     }
-    @Value("${yt.request.requestLog:true}")
-    public void setRequestLog(boolean requestLog) {
-        YtMybatisConfig.requestLog = requestLog;
-    }
-    @Value("${yt.request.requestLogBody:false}")
-    public void setRequestLogBody(boolean requestLogBody) {
-        YtMybatisConfig.requestLogBody = requestLogBody;
-    }
+
 }
 
