@@ -1,0 +1,51 @@
+package com.github.yt.mybatis;
+
+/**
+ * 异常枚举
+ * @author liujiasheng
+ */
+public enum YtMybatisExceptionEnum {
+
+    //
+    CODE_11("参数错误,{0}", "参数校验不通过"),
+    CODE_12("参数错误,{0}", "json体和后端接口不一致"),
+    CODE_21("系统异常", "数据库异常，记录已存在"),
+    CODE_22("系统异常", "数据库异常，数据完整性异常(字段不为空，数据长度限制等)"),
+    CODE_23("系统异常", "数据库异常，脚本语法异常(字段不存在等)"),
+
+    // error
+    CODE_79("实例化resultConfig对象异常，{0}"),
+    CODE_80("不是根据id比较，不可调用map差异"),
+    CODE_81("实体未配置Table注解 entityClass = {0}"),
+    CODE_82("实体的Table注解未配置name属性 entityClass = {0}"),
+    CODE_83("{0}实体未配置Id"),
+    CODE_84("{0},删除时主键不能为空!"),
+    CODE_85("service中没有覆盖getMapper方法也没有mapper字段"),
+    CODE_86("批量插入的数据为null"),
+    CODE_87("设置id异常"),
+    CODE_88("{0},get单个对象时主键不能为空!"),
+    CODE_89("创建where语句异常"),
+    CODE_90("Object to Map convert Error"),
+    CODE_91("Id field is not found in[{0}]{1}"),
+    CODE_92("parameter is null"),
+    CODE_93("class does not have this field :{0}"),
+    CODE_94("获取对象属性异常"),
+    CODE_95("{0}不是集合属性"),
+    CODE_96("设置集合异常"),
+    CODE_97("设置id值异常"),
+
+    CODE_98("当前记录不存在"),
+    CODE_99("系统异常"),
+    ;
+
+    public String message;
+    public String description;
+    YtMybatisExceptionEnum(String message) {
+        this.message = message;
+    }
+
+    YtMybatisExceptionEnum(String message, String description) {
+        this.message = message;
+        this.description = description;
+    }
+}

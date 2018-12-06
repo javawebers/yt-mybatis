@@ -1,0 +1,22 @@
+package ${modulePackage}.service;
+
+import com.github.yt.mybatis.service.BaseService;
+import ${modulePackage}.dao.${replaceSuffixClassName}Mapper;
+import ${modulePackage}.domain.${className};
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * ${codeName}服务层
+ *
+ */
+@Service
+@Transactional
+public class  ${replaceSuffixClassName}Service extends BaseService<${className}> {
+
+    @Autowired
+    private ${replaceSuffixClassName}Mapper mapper;
+
+}

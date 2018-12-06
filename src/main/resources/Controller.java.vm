@@ -1,0 +1,30 @@
+package ${modulePackage}.controller;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.*;
+import com.github.yt.web.controller.BaseController;
+import io.swagger.annotations.ApiOperation;
+import ${importPackage}.domain.${className};
+import ${importPackage}.service.${replaceSuffixClassName}Service;
+
+
+/**
+ * ${codeName}控制器
+ *
+ */
+@RestController
+@RequestMapping("/${replaceSuffixLowerName}")
+public class ${replaceSuffixClassName}Controller extends BaseController {
+
+	@Resource
+	private ${replaceSuffixClassName}Service ${replaceSuffixLowerName}Service;
+
+
+//    @ApiOperation(value = "分页查询${codeName}")
+//    @RequestMapping(value = "/findPage", method = RequestMethod.GET)
+//    public Page<${className}> findPage(${className} ${lowerName}, Query query) {
+//        return ${replaceSuffixLowerName}Service.findPage(${lowerName}, query.addOrderBy("createDateTime desc"));
+//    }
+
+}
