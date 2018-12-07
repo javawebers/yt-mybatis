@@ -2,7 +2,7 @@ package com.github.yt.mybatis.utils;
 
 import java.lang.reflect.Array;
 
-public class ArrayUtils {
+public class YtArrayUtils {
 
 
     /**
@@ -43,12 +43,12 @@ public class ArrayUtils {
      * <p>If the input array is {@code null}, {@code 0} is returned.
      *
      * <pre>
-     * ArrayUtils.getLength(null)            = 0
-     * ArrayUtils.getLength([])              = 0
-     * ArrayUtils.getLength([null])          = 1
-     * ArrayUtils.getLength([true, false])   = 2
-     * ArrayUtils.getLength([1, 2, 3])       = 3
-     * ArrayUtils.getLength(["a", "b", "c"]) = 3
+     * YtArrayUtils.getLength(null)            = 0
+     * YtArrayUtils.getLength([])              = 0
+     * YtArrayUtils.getLength([null])          = 1
+     * YtArrayUtils.getLength([true, false])   = 2
+     * YtArrayUtils.getLength([1, 2, 3])       = 3
+     * YtArrayUtils.getLength(["a", "b", "c"]) = 3
      * </pre>
      *
      * @param array  the array to retrieve the length from, may be null

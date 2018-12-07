@@ -2,7 +2,6 @@ package com.github.yt.mybatis.utils;
 
 import com.github.yt.commons.exception.BaseErrorException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
-import com.github.yt.mybatis.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +60,7 @@ public class JPAUtils {
     }
 
     public static Object getValue(Object po, String fieldName) {
-        if (null == po || StringUtils.isEmpty(fieldName)) {
+        if (null == po || YtStringUtils.isEmpty(fieldName)) {
             throw new BaseErrorException(YtMybatisExceptionEnum.CODE_92);
         }
         try {
@@ -86,7 +85,7 @@ public class JPAUtils {
     }
 
     public static void setValue(Object source, String fieldName, Object value) {
-        if (null == source || StringUtils.isEmpty(fieldName)) {
+        if (null == source || YtStringUtils.isEmpty(fieldName)) {
             throw new BaseErrorException(YtMybatisExceptionEnum.CODE_92);
         }
         try {
@@ -160,7 +159,7 @@ public class JPAUtils {
 
     public static String getAnnotationColumnName(Field field) {
         Column columnAnnotation = field.getAnnotation(Column.class);
-        if (columnAnnotation == null || StringUtils.isEmpty(columnAnnotation.name())) {
+        if (columnAnnotation == null || YtStringUtils.isEmpty(columnAnnotation.name())) {
             return field.getName();
         }
         return columnAnnotation.name();
@@ -172,7 +171,7 @@ public class JPAUtils {
 
     public static String getSearchAnnotationColumnName(Field field, String aliasName) {
         Column columnAnnotation = field.getAnnotation(Column.class);
-        if (columnAnnotation == null || StringUtils.isEmpty(columnAnnotation.name())) {
+        if (columnAnnotation == null || YtStringUtils.isEmpty(columnAnnotation.name())) {
             return aliasName + field.getName();
         }
         return aliasName + columnAnnotation.name() + " as " + field.getName();
@@ -187,12 +186,12 @@ public class JPAUtils {
         for (Field field : JPAUtils.getAllFields(entityClass)) {
             field.setAccessible(true);
             String fieldName = JPAUtils.getSearchAnnotationColumnName(field, aliasName);
-            if (StringUtils.isNotEmpty(fieldName)) {
+            if (YtStringUtils.isNotEmpty(fieldName)) {
                 selectSql = selectSql + "," + fieldName + "";
             }
         }
         selectSql = selectSql.replaceFirst(",", "");
-        if (StringUtils.isEmpty(selectSql)) {
+        if (YtStringUtils.isEmpty(selectSql)) {
             return aliasName + "*";
         }
         return selectSql;

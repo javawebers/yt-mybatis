@@ -1,8 +1,8 @@
 package com.github.yt.mybatis.generator;
 
 
-import com.github.yt.mybatis.utils.ArrayUtils;
-import com.github.yt.mybatis.utils.StringUtils;
+import com.github.yt.mybatis.utils.YtArrayUtils;
+import com.github.yt.mybatis.utils.YtStringUtils;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
@@ -171,30 +171,30 @@ public class JavaCodeGenerator {
         String realPath = rootPath;
         String modulePakPath = modulePackage.replaceAll("\\.", "/");
         // 生成Model
-        if (ArrayUtils.isNotEmpty(templates) && ArrayUtils.contains(templates, BEAN)) {
+        if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, BEAN)) {
             CommonPageParser.writerPage(context, "Bean.java.vm", realPath + javaPath + modulePakPath, modelPath); //
         }
 
-        if (ArrayUtils.isNotEmpty(templates) && ArrayUtils.contains(templates, MAPPER)) {
+        if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, MAPPER)) {
             CommonPageParser.writerPage(context, "Mapper.java.vm", realPath + javaPath + modulePakPath, mapperPath); // 生成MybatisMapper接口
         }
 
-        if (ArrayUtils.isNotEmpty(templates) && ArrayUtils.contains(templates, MAPPER_XML)) {//生成xml
+        if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, MAPPER_XML)) {//生成xml
             CommonPageParser.writerPage(context, "Mapper.xml.vm", realPath + resourcePath + modulePakPath, mapperXmlPath); //
             // 生成MybatisMapper接口
         }
-        if (ArrayUtils.isNotEmpty(templates) && ArrayUtils.contains(templates, SERVICE)) {
+        if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, SERVICE)) {
             CommonPageParser.writerPage(context, "Service.java.vm", realPath + javaPath + modulePakPath, servicePath);// 生成Service
 //            CommonPageParser.writerPage(context, "ServiceImpl.java.vm", realPath + javaPath + modulePakPath, serviceImplPath);// 生成Service
         }
 
 //      配置controller
-        if (ArrayUtils.isNotEmpty(templates) && ArrayUtils.contains(templates, CONTROLLER)) {
+        if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, CONTROLLER)) {
             CommonPageParser.writerPage(context, "Controller.java.vm", rootPath + javaPath + modulePakPath, controllerPath);// 生成Controller
         }
 //      配置html
-        if (ArrayUtils.isNotEmpty(templates) && ArrayUtils.contains(templates, HTML)) {
-            CommonPageParser.writerPage(context, "Html.html.vm", rootPath + webappPath + StringUtils.substringAfterLast
+        if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, HTML)) {
+            CommonPageParser.writerPage(context, "Html.html.vm", rootPath + webappPath + YtStringUtils.substringAfterLast
                     (modulePackage, "."), htmlPath);//
             // 生成Controller
         }

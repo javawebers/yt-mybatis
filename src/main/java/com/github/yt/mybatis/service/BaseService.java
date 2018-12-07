@@ -10,7 +10,7 @@ import com.github.yt.mybatis.query.PageUtils;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.utils.BaseEntityUtils;
 import com.github.yt.mybatis.utils.EntityUtils;
-import com.github.yt.mybatis.utils.StringUtils;
+import com.github.yt.mybatis.utils.YtStringUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
@@ -69,10 +69,10 @@ public abstract class BaseService<T> implements IBaseService<T> {
                 break;
             }
             BaseEntity baseEntity = (BaseEntity)entity;
-            if (StringUtils.isEmpty(baseEntity.getFounderId())) {
+            if (YtStringUtils.isEmpty(baseEntity.getFounderId())) {
                 baseEntity.setFounderId(creatorId);
             }
-            if (StringUtils.isEmpty(baseEntity.getFounderName())) {
+            if (YtStringUtils.isEmpty(baseEntity.getFounderName())) {
                 baseEntity.setFounderName(creatorName);
             }
             if (baseEntity.getCreateDateTime() == null) {

@@ -3,7 +3,6 @@ package com.github.yt.mybatis.utils;
 
 import com.github.yt.commons.exception.BaseErrorException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
-import com.github.yt.mybatis.utils.StringUtils;
 
 import java.lang.reflect.Field;
 
@@ -30,7 +29,7 @@ public class BeanUtils {
                         if (null == value) {
                             continue;
                         }
-                        if (field.getType().isAssignableFrom(String.class) && StringUtils.isEmpty((String) value)) {
+                        if (field.getType().isAssignableFrom(String.class) && YtStringUtils.isEmpty((String) value)) {
                             continue;
                         }
                         map.put(field.getName(), value);

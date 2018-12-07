@@ -3,7 +3,7 @@ package com.github.yt.mybatis.utils;
 /**
  * copy from org.apache.commons
  */
-public class StringUtils {
+public class YtStringUtils {
 
     /**
      * The empty String {@code ""}.
@@ -24,11 +24,11 @@ public class StringUtils {
      * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.</p>
      *
      * <pre>
-     * StringUtils.isBlank(null)      = true
-     * StringUtils.isBlank("")        = true
-     * StringUtils.isBlank(" ")       = true
-     * StringUtils.isBlank("bob")     = false
-     * StringUtils.isBlank("  bob  ") = false
+     * YtStringUtils.isBlank(null)      = true
+     * YtStringUtils.isBlank("")        = true
+     * YtStringUtils.isBlank(" ")       = true
+     * YtStringUtils.isBlank("bob")     = false
+     * YtStringUtils.isBlank("  bob  ") = false
      * </pre>
      *
      * @param cs  the CharSequence to check, may be null
@@ -55,11 +55,11 @@ public class StringUtils {
      * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.</p>
      *
      * <pre>
-     * StringUtils.isNotBlank(null)      = false
-     * StringUtils.isNotBlank("")        = false
-     * StringUtils.isNotBlank(" ")       = false
-     * StringUtils.isNotBlank("bob")     = true
-     * StringUtils.isNotBlank("  bob  ") = true
+     * YtStringUtils.isNotBlank(null)      = false
+     * YtStringUtils.isNotBlank("")        = false
+     * YtStringUtils.isNotBlank(" ")       = false
+     * YtStringUtils.isNotBlank("bob")     = true
+     * YtStringUtils.isNotBlank("  bob  ") = true
      * </pre>
      *
      * @param cs  the CharSequence to check, may be null
@@ -78,11 +78,11 @@ public class StringUtils {
      * <p>Checks if a CharSequence is empty ("") or null.</p>
      *
      * <pre>
-     * StringUtils.isEmpty(null)      = true
-     * StringUtils.isEmpty("")        = true
-     * StringUtils.isEmpty(" ")       = false
-     * StringUtils.isEmpty("bob")     = false
-     * StringUtils.isEmpty("  bob  ") = false
+     * YtStringUtils.isEmpty(null)      = true
+     * YtStringUtils.isEmpty("")        = true
+     * YtStringUtils.isEmpty(" ")       = false
+     * YtStringUtils.isEmpty("bob")     = false
+     * YtStringUtils.isEmpty("  bob  ") = false
      * </pre>
      *
      * <p>NOTE: This method changed in Lang version 2.0.
@@ -102,11 +102,11 @@ public class StringUtils {
      * <p>Checks if a CharSequence is not empty ("") and not null.</p>
      *
      * <pre>
-     * StringUtils.isNotEmpty(null)      = false
-     * StringUtils.isNotEmpty("")        = false
-     * StringUtils.isNotEmpty(" ")       = true
-     * StringUtils.isNotEmpty("bob")     = true
-     * StringUtils.isNotEmpty("  bob  ") = true
+     * YtStringUtils.isNotEmpty(null)      = false
+     * YtStringUtils.isNotEmpty("")        = false
+     * YtStringUtils.isNotEmpty(" ")       = true
+     * YtStringUtils.isNotEmpty("bob")     = true
+     * YtStringUtils.isNotEmpty("  bob  ") = true
      * </pre>
      *
      * @param cs  the CharSequence to check, may be null
@@ -128,11 +128,11 @@ public class StringUtils {
      * empty strings.</p>
      *
      * <pre>
-     * StringUtils.join(null)            = null
-     * StringUtils.join([])              = ""
-     * StringUtils.join([null])          = ""
-     * StringUtils.join(["a", "b", "c"]) = "abc"
-     * StringUtils.join([null, "", "a"]) = "a"
+     * YtStringUtils.join(null)            = null
+     * YtStringUtils.join([])              = ""
+     * YtStringUtils.join([null])          = ""
+     * YtStringUtils.join(["a", "b", "c"]) = "abc"
+     * YtStringUtils.join([null, "", "a"]) = "a"
      * </pre>
      *
      * @param <T> the specific type of values to join together
@@ -155,12 +155,12 @@ public class StringUtils {
      * empty strings.</p>
      *
      * <pre>
-     * StringUtils.join(null, *)               = null
-     * StringUtils.join([], *)                 = ""
-     * StringUtils.join([null], *)             = ""
-     * StringUtils.join(["a", "b", "c"], ';')  = "a;b;c"
-     * StringUtils.join(["a", "b", "c"], null) = "abc"
-     * StringUtils.join([null, "", "a"], ';')  = ";;a"
+     * YtStringUtils.join(null, *)               = null
+     * YtStringUtils.join([], *)                 = ""
+     * YtStringUtils.join([null], *)             = ""
+     * YtStringUtils.join(["a", "b", "c"], ';')  = "a;b;c"
+     * YtStringUtils.join(["a", "b", "c"], null) = "abc"
+     * YtStringUtils.join([null, "", "a"], ';')  = ";;a"
      * </pre>
      *
      * @param array  the array of values to join together, may be null
@@ -186,16 +186,16 @@ public class StringUtils {
      * empty strings.</p>
      *
      * <pre>
-     * StringUtils.join(null, *, *, *)                = null
-     * StringUtils.join([], *, *, *)                  = ""
-     * StringUtils.join([null], *, *, *)              = ""
-     * StringUtils.join(["a", "b", "c"], "--", 0, 3)  = "a--b--c"
-     * StringUtils.join(["a", "b", "c"], "--", 1, 3)  = "b--c"
-     * StringUtils.join(["a", "b", "c"], "--", 2, 3)  = "c"
-     * StringUtils.join(["a", "b", "c"], "--", 2, 2)  = ""
-     * StringUtils.join(["a", "b", "c"], null, 0, 3)  = "abc"
-     * StringUtils.join(["a", "b", "c"], "", 0, 3)    = "abc"
-     * StringUtils.join([null, "", "a"], ',', 0, 3)   = ",,a"
+     * YtStringUtils.join(null, *, *, *)                = null
+     * YtStringUtils.join([], *, *, *)                  = ""
+     * YtStringUtils.join([null], *, *, *)              = ""
+     * YtStringUtils.join(["a", "b", "c"], "--", 0, 3)  = "a--b--c"
+     * YtStringUtils.join(["a", "b", "c"], "--", 1, 3)  = "b--c"
+     * YtStringUtils.join(["a", "b", "c"], "--", 2, 3)  = "c"
+     * YtStringUtils.join(["a", "b", "c"], "--", 2, 2)  = ""
+     * YtStringUtils.join(["a", "b", "c"], null, 0, 3)  = "abc"
+     * YtStringUtils.join(["a", "b", "c"], "", 0, 3)    = "abc"
+     * YtStringUtils.join([null, "", "a"], ',', 0, 3)   = ",,a"
      * </pre>
      *
      * @param array  the array of values to join together, may be null
@@ -254,15 +254,15 @@ public class StringUtils {
      * <p>If nothing is found, the empty string is returned.</p>
      *
      * <pre>
-     * StringUtils.substringAfterLast(null, *)      = null
-     * StringUtils.substringAfterLast("", *)        = ""
-     * StringUtils.substringAfterLast(*, "")        = ""
-     * StringUtils.substringAfterLast(*, null)      = ""
-     * StringUtils.substringAfterLast("abc", "a")   = "bc"
-     * StringUtils.substringAfterLast("abcba", "b") = "a"
-     * StringUtils.substringAfterLast("abc", "c")   = ""
-     * StringUtils.substringAfterLast("a", "a")     = ""
-     * StringUtils.substringAfterLast("a", "z")     = ""
+     * YtStringUtils.substringAfterLast(null, *)      = null
+     * YtStringUtils.substringAfterLast("", *)        = ""
+     * YtStringUtils.substringAfterLast(*, "")        = ""
+     * YtStringUtils.substringAfterLast(*, null)      = ""
+     * YtStringUtils.substringAfterLast("abc", "a")   = "bc"
+     * YtStringUtils.substringAfterLast("abcba", "b") = "a"
+     * YtStringUtils.substringAfterLast("abc", "c")   = ""
+     * YtStringUtils.substringAfterLast("a", "a")     = ""
+     * YtStringUtils.substringAfterLast("a", "z")     = ""
      * </pre>
      *
      * @param str  the String to get a substring from, may be null

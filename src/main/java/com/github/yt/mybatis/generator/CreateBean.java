@@ -95,7 +95,7 @@ public class CreateBean {
             if (d.getIsPriKey()) {
                 str.append("\r\n\t@javax.persistence.Id");
             }
-//            if (StringUtils.isEmpty(columnDefault) && isNullAble != null && !isNullAble) {
+//            if (YtStringUtils.isEmpty(columnDefault) && isNullAble != null && !isNullAble) {
 //                str.append("\r\n\t@NotEmpty(message = \"" + name + "不能为空！\")");
 //            }
 //            if (length != null && length > 0) {

@@ -2,7 +2,6 @@ package com.github.yt.mybatis.utils;
 
 import com.github.yt.commons.exception.BaseErrorException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
-import com.github.yt.mybatis.utils.StringUtils;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.Id;
@@ -101,7 +100,7 @@ public class EntityUtils {
 
     public static String getTableName(Class<?> entityClass) {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
-        if (tableAnnotation == null || StringUtils.isEmpty(tableAnnotation.name())) {
+        if (tableAnnotation == null || YtStringUtils.isEmpty(tableAnnotation.name())) {
             return entityClass.getSimpleName();
         }
         return tableAnnotation.name();
@@ -195,7 +194,7 @@ public class EntityUtils {
 
             for (T main : mainCollection) {
                 collectionField = getField(main.getClass(), collectionProperty);
-                if (StringUtils.isBlank(mainProperty)) {
+                if (YtStringUtils.isBlank(mainProperty)) {
                     mainField = getIdField(main.getClass());
                     mainProperty = mainField.getName();
                 } else {
@@ -203,7 +202,7 @@ public class EntityUtils {
                 }
                 break;
             }
-            if (StringUtils.isBlank(relationProperty)) {
+            if (YtStringUtils.isBlank(relationProperty)) {
                 relationProperty = mainProperty;
             }
             for (R sub : subCollection) {

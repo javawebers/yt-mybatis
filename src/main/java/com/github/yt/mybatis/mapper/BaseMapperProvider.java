@@ -6,7 +6,7 @@ import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.SqlUtils;
 import com.github.yt.mybatis.utils.BaseEntityUtils;
 import com.github.yt.mybatis.utils.EntityUtils;
-import com.github.yt.mybatis.utils.StringUtils;
+import com.github.yt.mybatis.utils.YtStringUtils;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -124,7 +124,7 @@ public class BaseMapperProvider {
         List<String> fieldNameList = new ArrayList<>();
         List<String> dbFieldNameList = new ArrayList<>();
         for (T entity : entityCollection) {
-            if (StringUtils.isBlank(tableName)) {
+            if (YtStringUtils.isBlank(tableName)) {
                 tableName = EntityUtils.getTableName(entity.getClass());
             }
             for (Field field : EntityUtils.getTableFieldList(entity.getClass())) {
@@ -157,7 +157,7 @@ public class BaseMapperProvider {
         sql.append("insert into `").append(tableName).append("` ");
         // fields
 
-        sql.append(" (").append(StringUtils.join(dbFieldNameList.toArray(), ", ")).append(") ");
+        sql.append(" (").append(YtStringUtils.join(dbFieldNameList.toArray(), ", ")).append(") ");
         // values
         sql.append(" values ").append(valueParams);
         return sql.toString();
@@ -169,10 +169,10 @@ public class BaseMapperProvider {
             return;
         }
         BaseEntity baseEntity = (BaseEntity)entity;
-        if (StringUtils.isEmpty(baseEntity.getModifierId())) {
+        if (YtStringUtils.isEmpty(baseEntity.getModifierId())) {
             baseEntity.setModifierId(BaseEntityUtils.getModifierId());
         }
-        if (StringUtils.isEmpty(baseEntity.getModifierName())) {
+        if (YtStringUtils.isEmpty(baseEntity.getModifierName())) {
             baseEntity.setModifierName(BaseEntityUtils.getModifierName());
         }
         if (baseEntity.getModifyDateTime() == null) {
@@ -203,7 +203,7 @@ public class BaseMapperProvider {
             fieldParamList.add("`" + field.getName() + "` = #{" + field.getName() + "}");
         }
         String update = "update `" + tableName + "`";
-        String set = " set " + StringUtils.join(fieldParamList.toArray(), ", ");
+        String set = " set " + YtStringUtils.join(fieldParamList.toArray(), ", ");
         String where = " where `" + idField.getName() + "` = #{" + idField.getName() + "}";
         sql += update;
         sql += set;

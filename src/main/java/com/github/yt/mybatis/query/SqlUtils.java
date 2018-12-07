@@ -4,7 +4,7 @@ package com.github.yt.mybatis.query;
 import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.dialect.DialectFactory;
 import com.github.yt.mybatis.utils.EntityUtils;
-import com.github.yt.mybatis.utils.StringUtils;
+import com.github.yt.mybatis.utils.YtStringUtils;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ public class SqlUtils {
         fieldList.forEach(field -> {
             field.setAccessible(true);
             Column columnAnnotation = field.getAnnotation(Column.class);
-            if (columnAnnotation != null && StringUtils.isNotEmpty(columnAnnotation.name())) {
+            if (columnAnnotation != null && YtStringUtils.isNotEmpty(columnAnnotation.name())) {
                 String annotationName = aliasName + "." + columnAnnotation.name();
                 columnSet.add(annotationName);
                 columnSet.add(annotationName + " as " + field.getName());
@@ -33,14 +33,14 @@ public class SqlUtils {
 
     public static String getUpdateSet(Query query){
         String set;
-        set = StringUtils.join(query.takeUpdateColumnList().toArray(), ", ");
+        set = YtStringUtils.join(query.takeUpdateColumnList().toArray(), ", ");
         return " set " + set + " ";
     }
 
     public static String getSelectAndFrom(Class entityClass, Query query) {
         String columns;
         if (query != null && query.takeSelectColumnList() != null && !query.takeSelectColumnList().isEmpty()) {
-            columns = StringUtils.join(query.takeSelectColumnList().toArray(), ", ");
+            columns = YtStringUtils.join(query.takeSelectColumnList().toArray(), ", ");
         } else {
             LinkedHashSet<String> columnSet = getSelectColumnSet(entityClass, "t");
             StringBuilder columnSb = new StringBuilder();
@@ -85,7 +85,7 @@ public class SqlUtils {
                 field.setAccessible(true);
                 Column columnAnnotation = field.getAnnotation(Column.class);
                 String columnName;
-                if (columnAnnotation != null && StringUtils.isNotEmpty(columnAnnotation.name())) {
+                if (columnAnnotation != null && YtStringUtils.isNotEmpty(columnAnnotation.name())) {
                     columnName = columnAnnotation.name();
                 } else {
                     columnName = field.getName();
@@ -100,7 +100,7 @@ public class SqlUtils {
             // query.whereList
             // 拼接where查询条件
             if (query.takeWhereList() != null && !query.takeWhereList().isEmpty()) {
-                String where = StringUtils.join(query.takeWhereList().toArray(), ") and (");
+                String where = YtStringUtils.join(query.takeWhereList().toArray(), ") and (");
                 resultBuffer.append(" and (").append(where).append(")");
             }
 
@@ -118,7 +118,7 @@ public class SqlUtils {
                     for (int i = 0; i < inCondition.takeValues().size(); i++) {
                         inParamList.add("#{" + ParamUtils.IN_CONDITION + "." + column + "[" + i + "]}");
                     }
-                    inSql = "(" + StringUtils.join(inParamList.toArray(), ", ") + ")";
+                    inSql = "(" + YtStringUtils.join(inParamList.toArray(), ", ") + ")";
                 }
                 inParamListMap.put(column, inSql);
             });
@@ -129,14 +129,14 @@ public class SqlUtils {
 
     public static String getOrderBy(Query query) {
         if (query != null && query.takeOrderByList() != null && !query.takeOrderByList().isEmpty()) {
-            return " ORDER BY " + StringUtils.join(query.takeOrderByList().toArray(), ", ") + " ";
+            return " ORDER BY " + YtStringUtils.join(query.takeOrderByList().toArray(), ", ") + " ";
         } else {
             return "";
         }
     }
 
     public static String getGroupBy(Query query) {
-        if (query != null && StringUtils.isNotBlank(query.takeGroupBy())) {
+        if (query != null && YtStringUtils.isNotBlank(query.takeGroupBy())) {
             return " GROUP BY " + query.takeGroupBy() + " ";
         } else {
             return "";
