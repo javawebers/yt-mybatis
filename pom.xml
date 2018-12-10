@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.javawebers</groupId>
     <artifactId>yt-mybatis</artifactId>
-    <version>1.0.1</version>
+    <version>1.2.0</version>
     <url>https://github.com/limiaogithub/yt-mybatis</url>
     <name>yt-mybatis</name>
     <description>CURD on mybaits</description>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.github.javawebers</groupId>
             <artifactId>yt-commons</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.1</version>
         </dependency>
 
         <dependency>
