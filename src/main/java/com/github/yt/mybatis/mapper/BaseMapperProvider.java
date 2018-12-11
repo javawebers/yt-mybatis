@@ -179,7 +179,7 @@ public class BaseMapperProvider {
             baseEntity.setModifyDateTime(new Date());
         }
     }
-    private <T> String update(T entity, boolean isUpdateNumField) {
+    private <T> String update(T entity, boolean isUpdateNullField) {
         // 设置修改人信息
         setModifier(entity);
 
@@ -195,7 +195,7 @@ public class BaseMapperProvider {
                 idField = field;
                 continue;
             }
-            if (!isUpdateNumField) {
+            if (!isUpdateNullField) {
                 if (EntityUtils.getValue(entity, field.getName()) == null) {
                     continue;
                 }
