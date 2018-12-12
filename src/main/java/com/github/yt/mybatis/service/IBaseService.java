@@ -59,10 +59,11 @@ public interface IBaseService<T> {
     int updateByCondition(T entityCondition, Query query);
 
     /**
-     * 删除实体
-     *
+     * 逻辑删除实体
      */
-    int delete(T entity);
+    int logicDelete(T entityCondition, Query query);
+    int logicDelete(T entityCondition);
+
 
     /**
      * 删除实体
@@ -73,10 +74,12 @@ public interface IBaseService<T> {
     int delete(Class<T> clazz, Serializable id);
 
     /**
-     * 逻辑删除实体
+     * 删除实体
+     *
      */
-    int logicDelete(T entityCondition, Query query);
-    int logicDelete(T entityCondition);
+    int delete(T entityCondition);
+    int delete(T entityCondition, Query query);
+
     /**
      * 根据ID获取实体
      *

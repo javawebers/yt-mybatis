@@ -68,6 +68,26 @@ public class BaseMapperProvider {
         return sql.toString();
     }
 
+    public String delete(Map paramMap) {
+        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
+        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        StringBuffer sql = new StringBuffer();
+        // delete
+        sql.append("delete from ").append(EntityUtils.getTableName(entityCondition.getClass()));
+        // where
+        sql.append(SqlUtils.getWhere(entityCondition, query, ""));
+        return sql.toString();
+    }
+
+    public String deleteById(Map paramMap) {
+        Class entityClass = (Class) paramMap.get("entityClass");
+        Field idField = EntityUtils.getIdField(entityClass);
+        StringBuffer sql = new StringBuffer();
+        sql.append("delete from ").append(EntityUtils.getTableName(entityClass));
+        sql.append(" where ").append(idField.getName()).append(" = #{id}");
+        return sql.toString();
+    }
+
     private void setUpdateBaseColumn(Map paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);

@@ -133,35 +133,33 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int updateByCondition(T entityCondition, Query query) {
-        if (isInEmpty(query)) {
-            return 0;
-        }
         return getMapper().updateByCondition(ParamUtils.getParamMap(entityCondition, query));
     }
 
-    @Override
-    public int delete(T entity) {
-        // TODO
-        return 0;
-    }
-
-    @Override
-    public int delete(Class<T> entityClass, Serializable id) {
-        // TODO
-        return 0;
-    }
 
     @Override
     public int logicDelete(T entityCondition, Query query) {
-        if (isInEmpty(query)) {
-            return 0;
-        }
         return getMapper().logicDelete(ParamUtils.getParamMap(entityCondition, query));
     }
 
     @Override
     public int logicDelete(T entityCondition) {
         return logicDelete(entityCondition, new Query());
+    }
+
+    @Override
+    public int delete(Class<T> entityClass, Serializable id) {
+        return getMapper().delete(entityClass, id);
+    }
+
+    @Override
+    public int delete(T entityCondition) {
+        return delete(entityCondition, new Query());
+    }
+    @Override
+    public int delete(T entityCondition, Query query) {
+        return getMapper().delete(ParamUtils.getParamMap(entityCondition, query));
+
     }
 
     @Override
@@ -177,9 +175,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
     @Override
     public T find(T entityCondition, Query query) {
-        if (isInEmpty(query)) {
-            return null;
-        }
         if (query.takeLimitFrom() == null) {
             query.limit(0, 2);
         }
@@ -191,25 +186,16 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
     @Override
     public List<T> findList(T entityCondition, Query query) {
-        if (isInEmpty(query)) {
-            return new ArrayList<>();
-        }
         return getMapper().findList(ParamUtils.getParamMap(entityCondition, query));
     }
     public int count(T entityCondition) {
         return count(entityCondition, new Query());
     }
     public int count(T entityCondition, Query query) {
-        if (isInEmpty(query)) {
-            return 0;
-        }
         return getMapper().count(ParamUtils.getParamMap(entityCondition, query));
     }
     @Override
     public Page<T> findPage(T entityCondition, Query query) {
-        if (isInEmpty(query)) {
-            return PageUtils.createPage(query.takePageNo(), query.takePageSize(), 0, new ArrayList<>());
-        }
 	    // 设置页数页码
         ParamUtils.setPageInfo(query);
         Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query);
@@ -224,22 +210,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
         }
 		return page;
 	}
-
-
-	private boolean isInEmpty(Query query){
-	    // TODO
-        return false;
-//        if(query == null) {
-//            return false;
-//        }
-//        for (Query.InCondition inCondition : query.inList) {
-//            if (CollectionUtils.isEmpty(inCondition.values)) {
-//                logger.info("query中存在in为空，不进行数据库操作！");
-//                return true;
-//            }
-//        }
-//        return false;
-    }
 
     public static String generateIdValue() {
         return UUID.randomUUID().toString().replace("-", "");

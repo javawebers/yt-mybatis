@@ -74,8 +74,11 @@ public class SqlUtils {
         return resultBuffer.toString();
     }
 
-
     public static String getWhere(Object entityCondition, Query query) {
+        return getWhere(entityCondition, query, " t.");
+    }
+
+    public static String getWhere(Object entityCondition, Query query, String alias) {
         StringBuffer resultBuffer = new StringBuffer(" where 1=1 ");
         if (entityCondition != null) {
             StringBuilder where = new StringBuilder();
@@ -91,7 +94,7 @@ public class SqlUtils {
                     columnName = field.getName();
                 }
                 if (value != null) {
-                    where.append(" and t.").append(columnName).append(" = #{").append(ParamUtils.ENTITY_CONDITION).append(".").append(field.getName()).append("}");
+                    where.append(" and ").append(alias).append(columnName).append(" = #{").append(ParamUtils.ENTITY_CONDITION).append(".").append(field.getName()).append("}");
                 }
             }
             resultBuffer.append(where);

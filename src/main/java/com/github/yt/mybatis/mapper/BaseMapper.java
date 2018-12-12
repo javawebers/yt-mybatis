@@ -28,6 +28,12 @@ public interface BaseMapper<T> {
     @UpdateProvider(type = BaseMapperProvider.class, method = "logicDelete")
     int logicDelete(Map<String, Object> param);
 
+    @UpdateProvider(type = BaseMapperProvider.class, method = "delete")
+    int delete(Map<String, Object> paramMap);
+
+    @UpdateProvider(type = BaseMapperProvider.class, method = "deleteById")
+    int delete(@Param("entityClass") Class<T> entityClass, @Param("id") final Serializable id);
+
     @UpdateProvider(type = BaseMapperProvider.class, method = "updateByCondition")
     int updateByCondition(Map<String,Object> paramMap);
 
