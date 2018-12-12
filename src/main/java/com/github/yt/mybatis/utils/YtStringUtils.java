@@ -119,32 +119,6 @@ public class YtStringUtils {
 
     // Joining
     //-----------------------------------------------------------------------
-    /**
-     * <p>Joins the elements of the provided array into a single String
-     * containing the provided list of elements.</p>
-     *
-     * <p>No separator is added to the joined String.
-     * Null objects or empty strings within the array are represented by
-     * empty strings.</p>
-     *
-     * <pre>
-     * YtStringUtils.join(null)            = null
-     * YtStringUtils.join([])              = ""
-     * YtStringUtils.join([null])          = ""
-     * YtStringUtils.join(["a", "b", "c"]) = "abc"
-     * YtStringUtils.join([null, "", "a"]) = "a"
-     * </pre>
-     *
-     * @param <T> the specific type of values to join together
-     * @param elements  the values to join together, may be null
-     * @return the joined String, {@code null} if null array input
-     * @since 2.0
-     * @since 3.0 Changed signature to use varargs
-     */
-    @SafeVarargs
-    public static <T> String join(final T... elements) {
-        return join(elements, null);
-    }
 
     /**
      * <p>Joins the elements of the provided array into a single String
@@ -168,7 +142,7 @@ public class YtStringUtils {
      * @return the joined String, {@code null} if null array input
      * @since 2.0
      */
-    public static String join(final Object[] array, final char separator) {
+    public static String join(final Object[] array, final String separator) {
         if (array == null) {
             return null;
         }
@@ -186,16 +160,16 @@ public class YtStringUtils {
      * empty strings.</p>
      *
      * <pre>
-     * YtStringUtils.join(null, *, *, *)                = null
-     * YtStringUtils.join([], *, *, *)                  = ""
-     * YtStringUtils.join([null], *, *, *)              = ""
-     * YtStringUtils.join(["a", "b", "c"], "--", 0, 3)  = "a--b--c"
-     * YtStringUtils.join(["a", "b", "c"], "--", 1, 3)  = "b--c"
-     * YtStringUtils.join(["a", "b", "c"], "--", 2, 3)  = "c"
-     * YtStringUtils.join(["a", "b", "c"], "--", 2, 2)  = ""
-     * YtStringUtils.join(["a", "b", "c"], null, 0, 3)  = "abc"
-     * YtStringUtils.join(["a", "b", "c"], "", 0, 3)    = "abc"
-     * YtStringUtils.join([null, "", "a"], ',', 0, 3)   = ",,a"
+     * StringUtils.join(null, *, *, *)                = null
+     * StringUtils.join([], *, *, *)                  = ""
+     * StringUtils.join([null], *, *, *)              = ""
+     * StringUtils.join(["a", "b", "c"], "--", 0, 3)  = "a--b--c"
+     * StringUtils.join(["a", "b", "c"], "--", 1, 3)  = "b--c"
+     * StringUtils.join(["a", "b", "c"], "--", 2, 3)  = "c"
+     * StringUtils.join(["a", "b", "c"], "--", 2, 2)  = ""
+     * StringUtils.join(["a", "b", "c"], null, 0, 3)  = "abc"
+     * StringUtils.join(["a", "b", "c"], "", 0, 3)    = "abc"
+     * StringUtils.join([null, "", "a"], ',', 0, 3)   = ",,a"
      * </pre>
      *
      * @param array  the array of values to join together, may be null
@@ -238,6 +212,7 @@ public class YtStringUtils {
         }
         return buf.toString();
     }
+
     private static StringBuilder newStringBuilder(final int noOfItems) {
         return new StringBuilder(noOfItems * 16);
     }

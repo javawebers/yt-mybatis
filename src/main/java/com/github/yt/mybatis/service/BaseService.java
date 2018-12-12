@@ -84,7 +84,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Field idField = null;
         List<Field> fieldList = null;
         int i = 0;
-//        String generateIdValue = now.getTime() + "_" + UUID.randomUUID().toString().replace("-", "");
         String generateIdValue = generateIdValue();
         // 设置id字段的值
         for (T entity : entityCollection) {
@@ -123,13 +122,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int update(T entity) {
-		return getMapper().update(entity);
+    public int update(T entity, String... fieldNames) {
+		return getMapper().update(entity, fieldNames);
 	}
 
     @Override
-    public int updateForSelective(T entity) {
-		return getMapper().updateNotNull(entity);
+    public int updateForSelective(T entity, String... fieldNames) {
+		return getMapper().updateNotNull(entity, fieldNames);
 	}
 
     @Override

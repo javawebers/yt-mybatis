@@ -41,14 +41,14 @@ public interface IBaseService<T> {
      *
      * @param entity 业务实体
      */
-    int update(T entity);
+    int update(T entity, String... fieldNames);
 
     /**
      * 只更新非空字段
      *
      * @param entity 业务实体
      */
-    int updateForSelective(T entity);
+    int updateForSelective(T entity, String... fieldNames);
 
     /**
      * 根据条件更新
