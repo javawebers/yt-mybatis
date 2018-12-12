@@ -149,7 +149,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int delete(Class<T> entityClass, Serializable id) {
-        return getMapper().delete(entityClass, id);
+        return getMapper().deleteById(entityClass, id);
     }
 
     @Override
