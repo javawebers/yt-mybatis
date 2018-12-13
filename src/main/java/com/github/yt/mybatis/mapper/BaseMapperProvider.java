@@ -1,17 +1,16 @@
 package com.github.yt.mybatis.mapper;
 
 import com.github.yt.commons.query.Query;
+import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.domain.BaseEntity;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.SqlUtils;
-import com.github.yt.mybatis.utils.BaseEntityUtils;
-import com.github.yt.mybatis.utils.EntityUtils;
-import com.github.yt.mybatis.utils.YtStringUtils;
+import com.github.yt.mybatis.util.BaseEntityUtils;
+import com.github.yt.mybatis.util.EntityUtils;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 

@@ -3,7 +3,7 @@ package com.github.yt.mybatis.dialect;
 import com.github.yt.mybatis.YtMybatisConfig;
 import com.github.yt.commons.exception.BaseErrorException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
-import com.github.yt.mybatis.utils.SpringContextUtils;
+import com.github.yt.mybatis.util.SpringContextUtils;
 
 /**
  * @author limiao

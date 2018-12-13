@@ -2,9 +2,9 @@ package com.github.yt.mybatis.query;
 
 
 import com.github.yt.commons.query.Query;
+import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.dialect.DialectFactory;
-import com.github.yt.mybatis.utils.EntityUtils;
-import com.github.yt.mybatis.utils.YtStringUtils;
+import com.github.yt.mybatis.util.EntityUtils;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;

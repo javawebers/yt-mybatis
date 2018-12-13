@@ -1,8 +1,9 @@
 package com.github.yt.mybatis;
 
 import com.github.yt.mybatis.dialect.mysql.MysqlDialect;
-import com.github.yt.mybatis.utils.BaseEntityUtils;
-import com.github.yt.mybatis.utils.SpringContextUtils;
+import com.github.yt.mybatis.exception.DatabaseExceptionConverter;
+import com.github.yt.mybatis.util.BaseEntityUtils;
+import com.github.yt.mybatis.util.SpringContextUtils;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -17,6 +18,7 @@ import java.lang.annotation.*;
         YtMybatisConfig.class,
         BaseEntityUtils.class,
         MysqlDialect.class,
+        DatabaseExceptionConverter.class,
 })
 public @interface EnableYtMybatis {
 }

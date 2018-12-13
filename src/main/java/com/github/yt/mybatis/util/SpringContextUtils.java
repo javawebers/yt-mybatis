@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.utils;
+package com.github.yt.mybatis.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

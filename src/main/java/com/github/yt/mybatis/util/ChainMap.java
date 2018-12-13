@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.utils;
+package com.github.yt.mybatis.util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

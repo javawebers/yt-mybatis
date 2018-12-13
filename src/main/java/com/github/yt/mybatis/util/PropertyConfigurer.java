@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.utils;
+package com.github.yt.mybatis.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

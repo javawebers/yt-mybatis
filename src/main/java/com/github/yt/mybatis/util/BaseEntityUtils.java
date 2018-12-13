@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.utils;
+package com.github.yt.mybatis.util;
 
 import com.github.yt.mybatis.YtMybatisConfig;
 import com.github.yt.commons.exception.BaseErrorException;

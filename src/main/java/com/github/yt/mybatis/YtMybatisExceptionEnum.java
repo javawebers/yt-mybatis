@@ -7,8 +7,6 @@ package com.github.yt.mybatis;
 public enum YtMybatisExceptionEnum {
 
     //
-    CODE_11("参数错误,{0}", "参数校验不通过"),
-    CODE_12("参数错误,{0}", "json体和后端接口不一致"),
     CODE_21("系统异常", "数据库异常，记录已存在"),
     CODE_22("系统异常", "数据库异常，数据完整性异常(字段不为空，数据长度限制等)"),
     CODE_23("系统异常", "数据库异常，脚本语法异常(字段不存在等)"),

@@ -1,6 +1,7 @@
-package com.github.yt.mybatis.utils;
+package com.github.yt.mybatis.util;
 
 import com.github.yt.commons.exception.BaseErrorException;
+import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import org.springframework.beans.BeanUtils;
 

@@ -1,8 +1,8 @@
 package com.github.yt.mybatis.generator;
 
 
-import com.github.yt.mybatis.utils.YtArrayUtils;
-import com.github.yt.mybatis.utils.YtStringUtils;
+import com.github.yt.commons.util.YtArrayUtils;
+import com.github.yt.commons.util.YtStringUtils;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
