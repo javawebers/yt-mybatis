@@ -1,13 +1,10 @@
 package com.github.yt.mybatis.util;
 
-import com.github.yt.mybatis.YtMybatisConfig;
-import com.github.yt.commons.exception.BaseErrorException;
-import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.domain.BaseEntityValue;
 import com.github.yt.mybatis.domain.DefaultBaseEntityValue;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 
 /**
@@ -15,16 +12,11 @@ import org.springframework.stereotype.Component;
  * 静态获取登录人信息
  * @author liujiasheng
  */
-@Component
-@Configurable
+@Configuration
 public class BaseEntityUtils {
 
     private static BaseEntityValue getBaseEntityValue(){
-        try {
-            return  (BaseEntityValue)SpringContextUtils.getBean(Class.forName(YtMybatisConfig.baseEntityValueClass));
-        } catch (ClassNotFoundException e) {
-            throw new BaseErrorException(YtMybatisExceptionEnum.CODE_99, e);
-        }
+        return  (BaseEntityValue)SpringContextUtils.getBean("baseEntityValue");
     }
     public static String getFounderId(){
         return getBaseEntityValue().getFounderId();
@@ -42,7 +34,8 @@ public class BaseEntityUtils {
     }
 
     @Bean
-    public DefaultBaseEntityValue defaultBaseEntityValue() {
+    @ConditionalOnMissingBean
+    public BaseEntityValue baseEntityValue() {
         return new DefaultBaseEntityValue();
     }
 }

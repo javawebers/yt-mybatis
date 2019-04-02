@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class YtMybatisConfig {
-    public static String baseEntityValueClass;
     public static String dialect;
     public static String resultClass;
 
@@ -15,10 +14,6 @@ public class YtMybatisConfig {
     public static String pageTotalCountName;
     public static String pageDataName;
 
-    @Value("${yt.entity.baseEntityValue:com.github.yt.mybatis.domain.DefaultBaseEntityValue}")
-    public void setBaseEntityValueClass(String baseEntityValueClass) {
-        YtMybatisConfig.baseEntityValueClass = baseEntityValueClass;
-    }
 
     @Value("${yt.dialect:com.github.yt.mybatis.dialect.mysql.MysqlDialect}")
     public void setDialect(String dialect) {
