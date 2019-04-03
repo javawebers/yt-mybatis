@@ -2,11 +2,11 @@
 欢迎加入QQ群~ 489333310~，我们一起进步，不限于mybatis。
 
 # 介绍
-yt-mybatis是基于spring boot、mybaits封装的CURD项目。支持无xml复杂查询。  
+yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml复杂查询，支持无xml复杂查询，支持无xml复杂查询。  
 如果您是新项目，欢迎您使用整体解决方案；如果您是历史项目，您可以很快集成CURD。
 
 # 为什么使用yt-mybatis
-使后端开发效率提升三倍，代码更加简洁、异常控制等更加完善。
+通用CURD，使后端开发效率提升三倍，支持无xml复杂查询，代码更加简洁、异常控制等更加完善。
 
 # 特性
 * #### 免费开源，maven直接引用
