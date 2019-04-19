@@ -23,6 +23,7 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
 可参考```https://github.com/javawebers/yt-mybatis-example```
 
 * ##  maven引入yt-mybatis
+    在```https://mvnrepository.com/artifact/com.github.javawebers/yt-mybatis```找到最新版引入
     ```xml
     <dependency>
         <groupId>com.github.javawebers</groupId>
@@ -31,6 +32,7 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
     </dependency>
     ```
 * ## 启用yt-mybatis
+    在启动类上家注解```@EnableYtMybatis```
     ```java
     @SpringBootApplication
     @EnableYtMybatis
