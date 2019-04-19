@@ -1,4 +1,4 @@
-# yt-mybatis
+# 5分钟上手yt-mybatis！！！
 欢迎加入QQ群~ 489333310~，我们一起进步，不限于mybatis。
 
 # 介绍
