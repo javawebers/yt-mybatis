@@ -80,7 +80,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
             }
         }
 
-        Date now = new Date();
         Field idField = null;
         List<Field> fieldList = null;
         int i = 0;
