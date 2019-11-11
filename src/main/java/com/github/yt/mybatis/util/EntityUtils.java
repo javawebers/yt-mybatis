@@ -230,12 +230,12 @@ public class EntityUtils {
 
     /**
      * 将fromObject转为目标对象
-     * @param fromObject
-     * @param toClass
-     * @param converter
-     * @param <S>
-     * @param <T>
-     * @return
+     * @param fromObject 源对象
+     * @param toClass 目标对象类型类
+     * @param converter 转换器
+     * @param <S> 源对象类型
+     * @param <T> 目标对象类型
+     * @return 目标对象
      */
     public static <S, T> T convertObject(S fromObject, Class<T> toClass, Converter converter) {
         try {
@@ -252,12 +252,12 @@ public class EntityUtils {
     /**
      * 将集合转换成一个目标对象集合，默认是值复制
      * 可自己扩展
-     * @param fromCollection
-     * @param toClass
-     * @param converter
+     * @param fromCollection 源对象集合
+     * @param toClass 目标对象类
+     * @param converter 转换器
      * @param <S> source
      * @param <T> target
-     * @return
+     * @return 目标对象集合
      */
     public static <S, T> List<T> convertList(List<S> fromCollection, Class<T> toClass, Converter converter) {
         List<T> result = new ArrayList<>();
@@ -286,8 +286,8 @@ public class EntityUtils {
     public interface Converter<S, T> {
         /**
          * 转换
-         * @param source
-         * @param target
+         * @param source 源对象
+         * @param target 目标对象
          */
         default void convert(S source, T target) {
             BeanUtils.copyProperties(source, target);

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 通用mapper接口
  * @author liujiasheng
- * @param <T>
+ * @param <T> 实体类泛型类型
  */
 public interface BaseMapper<T> {
 

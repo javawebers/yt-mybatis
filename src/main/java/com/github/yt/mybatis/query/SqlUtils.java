@@ -152,9 +152,9 @@ public class SqlUtils {
 
     /**
      * 替换字符串中${values} 变量为指定字符串
-     * @param template
-     * @param params
-     * @return
+     * @param template 要替换的字符串
+     * @param params 替换参数
+     * @return 替换后的字符串
      */
     public static String format(String template, Map<String, Object> params){
         StringBuffer sb = new StringBuffer();

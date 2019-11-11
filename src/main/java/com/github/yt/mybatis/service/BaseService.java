@@ -20,7 +20,7 @@ import java.util.*;
 /**
  * 通用service实现
  * @author liujiasheng
- * @param <T>
+ * @param <T> 实体类泛型类型
  */
 public abstract class BaseService<T> implements IBaseService<T> {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(BaseService.class);
