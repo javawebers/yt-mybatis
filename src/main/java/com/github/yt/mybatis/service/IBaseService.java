@@ -39,22 +39,22 @@ public interface IBaseService<T> {
     int saveBatch(Collection<T> entities);
 
     /**
-     * 更新实体
+     * 根据主键更新实体
      *
      * @param entity 业务实体
-     * @param fieldNames 更新的字段
+     * @param fieldColumnNames 更新的字段对应数据库字段
      * @return 更新的条数
      */
-    int update(T entity, String... fieldNames);
+    int update(T entity, String... fieldColumnNames);
 
     /**
      * 只更新非空字段
      *
      * @param entity 业务实体
-     * @param fieldNames 更新的字段
+     * @param fieldColumnNames 更新的字段对应数据库字段
      * @return 更新的条数
      */
-    int updateForSelective(T entity, String... fieldNames);
+    int updateForSelective(T entity, String... fieldColumnNames);
 
     /**
      * 根据条件更新

@@ -20,10 +20,10 @@ public interface BaseMapper<T> {
     int saveBatch(Map<String, Object> param);
 
     @UpdateProvider(type = BaseMapperProvider.class, method = "update")
-    int update(@Param("entity") T entity, @Param("fieldNames") String... fieldNames);
+    int update(@Param("entity") T entity, @Param("fieldColumnNames") String... fieldColumnNames);
 
     @UpdateProvider(type = BaseMapperProvider.class, method = "updateNotNull")
-    int updateNotNull(@Param("entity") T entity, @Param("fieldNames") String... fieldNames);
+    int updateNotNull(@Param("entity") T entity, @Param("fieldColumnNames") String... fieldColumnNames);
 
     @UpdateProvider(type = BaseMapperProvider.class, method = "logicDelete")
     int logicDelete(Map<String, Object> param);

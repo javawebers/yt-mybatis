@@ -21,7 +21,7 @@ public class BaseMapperProvider {
         Field idField = EntityUtils.getIdField(entityClass);
 
         Query query = new Query();
-        query.addWhere("t." + idField.getName() + " = #{id}");
+        query.addWhere("t." + EntityUtils.getFieldColumnName(idField) + " = #{id}");
         String mybatisSql = "";
         mybatisSql += SqlUtils.getSelectAndFrom(entityClass, null);
         mybatisSql += SqlUtils.getJoinAndOnCondition(query);
@@ -83,7 +83,7 @@ public class BaseMapperProvider {
         Field idField = EntityUtils.getIdField(entityClass);
         StringBuffer sql = new StringBuffer();
         sql.append("delete from ").append(EntityUtils.getTableName(entityClass));
-        sql.append(" where ").append(idField.getName()).append(" = #{id}");
+        sql.append(" where ").append(EntityUtils.getFieldColumnName(idField)).append(" = #{id}");
         return sql.toString();
     }
 
@@ -139,19 +139,19 @@ public class BaseMapperProvider {
     public <T> String saveBatch(Map paramMap) {
         Collection<T> entityCollection = (Collection<T>) paramMap.get("entityCollection");
         String tableName = null;
-        Set<String> fieldNameSet = new HashSet<>();
-        List<String> fieldNameList = new ArrayList<>();
-        List<String> dbFieldNameList = new ArrayList<>();
+        Set<String> fieldColumnNameSet = new HashSet<>();
+        List<String> fieldColumnNameList = new ArrayList<>();
+        List<String> dbFieldColumnNameList = new ArrayList<>();
         for (T entity : entityCollection) {
             if (YtStringUtils.isBlank(tableName)) {
                 tableName = EntityUtils.getTableName(entity.getClass());
             }
             for (Field field : EntityUtils.getTableFieldList(entity.getClass())) {
-                if (!fieldNameSet.contains(field.getName())) {
+                if (!fieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
                     if (EntityUtils.getValue(entity, field) != null) {
-                        fieldNameSet.add(field.getName());
-                        fieldNameList.add(field.getName());
-                        dbFieldNameList.add("`" + field.getName() + "`" );
+                        fieldColumnNameSet.add(EntityUtils.getFieldColumnName(field));
+                        fieldColumnNameList.add(EntityUtils.getFieldColumnName(field));
+                        dbFieldColumnNameList.add("`" + EntityUtils.getFieldColumnName(field) + "`" );
                     }
                 }
             }
@@ -159,10 +159,10 @@ public class BaseMapperProvider {
         StringBuffer valueParams = new StringBuffer();
         for (int i = 0; i < entityCollection.size(); i++) {
             valueParams.append("(");
-            for (int j = 0; j < fieldNameList.size(); j++) {
-                String fieldName = fieldNameList.get(j);
-                valueParams.append("#{").append(fieldName).append("__").append(i).append("__}");
-                if (j != fieldNameList.size() - 1) {
+            for (int j = 0; j < fieldColumnNameList.size(); j++) {
+                String fieldColumnName = fieldColumnNameList.get(j);
+                valueParams.append("#{").append(fieldColumnName).append("__").append(i).append("__}");
+                if (j != fieldColumnNameList.size() - 1) {
                     valueParams.append(", ");
                 }
             }
@@ -176,7 +176,7 @@ public class BaseMapperProvider {
         sql.append("insert into `").append(tableName).append("` ");
         // fields
 
-        sql.append(" (").append(YtStringUtils.join(dbFieldNameList.toArray(), ", ")).append(") ");
+        sql.append(" (").append(YtStringUtils.join(dbFieldColumnNameList.toArray(), ", ")).append(") ");
         // values
         sql.append(" values ").append(valueParams);
         return sql.toString();
@@ -203,20 +203,20 @@ public class BaseMapperProvider {
      * 生成更新语句
      * @param entity
      * @param isUpdateNullField
-     * @param selectedFieldNames 为空更新所有字段，不为空则更新指定字段。
+     * @param selectedFieldColumnNames 为空更新所有字段，不为空则更新指定字段。
      * @param <T>
      * @return
      */
-    private <T> String update(T entity, boolean isUpdateNullField, String... selectedFieldNames) {
+    private <T> String update(T entity, boolean isUpdateNullField, String... selectedFieldColumnNames) {
         // 判断是否更新指定字段
         boolean isUpdateSelectedField = false;
-        Set<String> selectedFieldNameSet = null;
-        if (selectedFieldNames != null && selectedFieldNames.length > 0) {
+        Set<String> selectedFieldColumnNameSet = null;
+        if (selectedFieldColumnNames != null && selectedFieldColumnNames.length > 0) {
             isUpdateSelectedField = true;
-            selectedFieldNameSet = new HashSet<>(Arrays.asList(selectedFieldNames));
-            selectedFieldNameSet.add("modifierId");
-            selectedFieldNameSet.add("modifierName");
-            selectedFieldNameSet.add("modifyDateTime");
+            selectedFieldColumnNameSet = new HashSet<>(Arrays.asList(selectedFieldColumnNames));
+            selectedFieldColumnNameSet.add("modifierId");
+            selectedFieldColumnNameSet.add("modifierName");
+            selectedFieldColumnNameSet.add("modifyDateTime");
         }
         // 设置修改人信息
         setModifier(entity);
@@ -235,20 +235,20 @@ public class BaseMapperProvider {
                 continue;
             }
             if (!isUpdateNullField) {
-                if (EntityUtils.getValue(entity, field.getName()) == null) {
+                if (EntityUtils.getValue(entity, field) == null) {
                     continue;
                 }
             }
             if (isUpdateSelectedField) {
-                if(!selectedFieldNameSet.contains(field.getName())){
+                if(!selectedFieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))){
                     continue;
                 }
             }
-            fieldParamList.add("`" + field.getName() + "` = #{entity." + field.getName() + "}");
+            fieldParamList.add("`" + EntityUtils.getFieldColumnName(field) + "` = #{entity." + field.getName() + "}");
         }
         String update = "update `" + tableName + "`";
         String set = " set " + YtStringUtils.join(fieldParamList.toArray(), ", ");
-        String where = " where `" + idField.getName() + "` = #{entity." + idField.getName() + "}";
+        String where = " where `" + EntityUtils.getFieldColumnName(idField) + "` = #{entity." + idField.getName() + "}";
         sql += update;
         sql += set;
         sql += where;
@@ -258,14 +258,14 @@ public class BaseMapperProvider {
 
     public <T> String update(Map paramMap) {
         T entity = (T)paramMap.get("entity");
-        String[] fieldNames = (String[])paramMap.get("fieldNames");
-        return update(entity, true, fieldNames);
+        String[] fieldColumnNames = (String[])paramMap.get("fieldColumnNames");
+        return update(entity, true, fieldColumnNames);
     }
 
     public <T> String updateNotNull(Map paramMap) {
         T entity = (T)paramMap.get("entity");
-        String[] fieldNames = (String[])paramMap.get("fieldNames");
-        return update(entity, false, fieldNames);
+        String[] fieldColumnNames = (String[])paramMap.get("fieldColumnNames");
+        return update(entity, false, fieldColumnNames);
     }
 
 }

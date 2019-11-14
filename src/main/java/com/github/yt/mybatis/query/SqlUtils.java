@@ -85,14 +85,7 @@ public class SqlUtils {
             List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
             for (Field field : fieldList) {
                 Object value = EntityUtils.getValue(entityCondition, field);
-                field.setAccessible(true);
-                Column columnAnnotation = field.getAnnotation(Column.class);
-                String columnName;
-                if (columnAnnotation != null && YtStringUtils.isNotEmpty(columnAnnotation.name())) {
-                    columnName = columnAnnotation.name();
-                } else {
-                    columnName = field.getName();
-                }
+                String columnName = EntityUtils.getFieldColumnName(field);
                 if (value != null) {
                     where.append(" and ").append(alias).append(columnName).append(" = #{").append(ParamUtils.ENTITY_CONDITION).append(".").append(field.getName()).append("}");
                 }

@@ -5,6 +5,7 @@ import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import org.springframework.beans.BeanUtils;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -107,6 +108,18 @@ public class EntityUtils {
         return tableAnnotation.name();
     }
 
+    /**
+     * 获取 field 上 @javax.persistence.Column 注解的 name ，如果没有返回 field 的 name
+     * @param field field
+     * @return name
+     */
+    public static String getFieldColumnName(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        if (column == null || YtStringUtils.isEmpty(column.name())) {
+            return field.getName();
+        }
+        return column.name();
+    }
 
     public static <T> Map<String, T> getIdEntityMap(Collection<T> entityCollection) {
         Map<String, T> result = new HashMap<>();

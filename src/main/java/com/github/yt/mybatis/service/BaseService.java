@@ -111,7 +111,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Map<String, Object> param = new HashMap<>();
         for (T entity : entityCollection) {
             for (Field field : fieldList) {
-                param.put(field.getName() + "__" + i + "__", EntityUtils.getValue(entity, field));
+                param.put(EntityUtils.getFieldColumnName(field) + "__" + i + "__", EntityUtils.getValue(entity, field));
             }
             i++;
         }
@@ -121,13 +121,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int update(T entity, String... fieldNames) {
-		return getMapper().update(entity, fieldNames);
+    public int update(T entity, String... fieldColumnNames) {
+		return getMapper().update(entity, fieldColumnNames);
 	}
 
     @Override
-    public int updateForSelective(T entity, String... fieldNames) {
-		return getMapper().updateNotNull(entity, fieldNames);
+    public int updateForSelective(T entity, String... fieldColumnNames) {
+		return getMapper().updateNotNull(entity, fieldColumnNames);
 	}
 
     @Override
