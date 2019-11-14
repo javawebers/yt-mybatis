@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 import com.github.yt.web.controller.BaseController;
 import io.swagger.annotations.ApiOperation;
-import ${importPackage}.domain.${className};
+import ${importPackage}.entity.${className};
 import ${importPackage}.service.${replaceSuffixClassName}Service;
 
 

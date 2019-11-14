@@ -1,6 +1,6 @@
 package com.github.yt.mybatis.example.message.domain;
 
-import com.github.yt.mybatis.domain.BaseEntity;
+import com.github.yt.mybatis.entity.BaseEntity;
 
 import javax.persistence.Column;
 
@@ -36,18 +36,6 @@ public class Message extends BaseEntity<Message> {
 	@Column(name = "field_column")
     private Integer fieldColumn;
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "messageId='" + messageId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", type='" + type + '\'' +
-                ", content='" + content + '\'' +
-                ", businessId='" + businessId + '\'' +
-                ", read=" + read +
-                ", fieldColumn=" + fieldColumn +
-                '}';
-    }
 
     public Integer getFieldColumn() {
 		return fieldColumn;

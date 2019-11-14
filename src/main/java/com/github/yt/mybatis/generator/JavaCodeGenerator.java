@@ -92,7 +92,7 @@ public class JavaCodeGenerator {
         //
         // File file=new File(pckPath);
         // java,xml文件名称
-        String modelPath = File.separator + "domain" + File.separator + className + ".java";
+        String modelPath = File.separator + "entity" + File.separator + className + ".java";
         String searchFormPath = File.separator + "controller" + File.separator + "form" + File.separator + className
                 + "SearchForm.java";
 
@@ -185,7 +185,7 @@ public class JavaCodeGenerator {
         }
         if (YtArrayUtils.isNotEmpty(templates) && YtArrayUtils.contains(templates, SERVICE)) {
             CommonPageParser.writerPage(context, "Service.java.vm", realPath + javaPath + modulePakPath, servicePath);// 生成Service
-//            CommonPageParser.writerPage(context, "ServiceImpl.java.vm", realPath + javaPath + modulePakPath, serviceImplPath);// 生成Service
+            CommonPageParser.writerPage(context, "ServiceImpl.java.vm", realPath + javaPath + modulePakPath, serviceImplPath);// 生成Service
         }
 
 //      配置controller

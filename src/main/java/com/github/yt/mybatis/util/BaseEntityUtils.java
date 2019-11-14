@@ -1,7 +1,7 @@
 package com.github.yt.mybatis.util;
 
-import com.github.yt.mybatis.domain.BaseEntityValue;
-import com.github.yt.mybatis.domain.DefaultBaseEntityValue;
+import com.github.yt.mybatis.entity.BaseEntityValue;
+import com.github.yt.mybatis.entity.DefaultBaseEntityValue;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

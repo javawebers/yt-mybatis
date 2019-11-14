@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.domain;
+package com.github.yt.mybatis.entity;
 
 
 /**

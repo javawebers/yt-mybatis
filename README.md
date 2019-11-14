@@ -85,7 +85,7 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
     * ### domain，继承BaseEntity\<T\>
     ```java
     package demo.com.github.yt.message.domain;
-    import com.github.yt.mybatis.domain.BaseEntity;
+    import com.github.yt.mybatis.entity.BaseEntity;
     @javax.persistence.Table(name = "Message")
     public class Message extends BaseEntity<Message> {
         @javax.persistence.Id

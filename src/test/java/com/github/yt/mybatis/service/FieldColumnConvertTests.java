@@ -2,7 +2,6 @@ package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
-import com.github.yt.mybatis.domain.BaseEntity;
 import com.github.yt.mybatis.example.message.domain.Message;
 import com.github.yt.mybatis.example.message.service.MessageService;
 import org.junit.Assert;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {YtMybatisDemoApplication.class})
@@ -52,7 +50,7 @@ public class FieldColumnConvertTests {
         messageService.save(message);
 
         // 根据主键更新
-        messageService.update(message.setFieldColumn(fieldColumn333));
+        messageService.update(message.setFieldColumn(fieldColumn333).setDeleteFlag(false));
         Message messageDb = messageService.find(new Message().setMessageId(message.getMessageId()));
         Assert.assertEquals("查询出内容和保存的内容不一致，messageDb.getFieldColumn()：" + messageDb.getFieldColumn(),
                 messageDb.getFieldColumn(), fieldColumn333);

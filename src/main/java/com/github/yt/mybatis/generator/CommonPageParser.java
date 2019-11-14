@@ -77,7 +77,7 @@ public class CommonPageParser {
                 if (isReplace) {
                     System.out.println("替换文件" + file.getAbsolutePath());
                 } else {
-                    System.out.println("页面生成失败" + file.getAbsolutePath() + "文件已存在");
+                    System.out.println("文件生成失败" + file.getAbsolutePath() + "文件已存在");
                     return;
                 }
             }
@@ -88,7 +88,7 @@ public class CommonPageParser {
             writer.flush();
             writer.close();
             fos.close();
-            System.out.println("页面生成成功" + file.getAbsolutePath());
+            System.out.println("文件生成成功" + file.getAbsolutePath());
         } catch (Exception e) {
             log.error("", e);
         }

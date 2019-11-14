@@ -1,5 +1,7 @@
 package com.github.yt.mybatis.generator;
 
+import com.github.yt.mybatis.util.EntityUtils;
+
 import java.sql.*;
 import java.util.*;
 
@@ -83,14 +85,15 @@ public class CreateBean {
         StringBuffer str = new StringBuffer();
         StringBuffer getset = new StringBuffer();
         for (ColumnData d : dataList) {
-            String name = getTablesColumnToAttributeName(d.getColumnName());
+            String columnName = d.getColumnName();
+            String fieldName = getTablesColumnToAttributeName(columnName);
             String type = d.getDataType();
             String comment = d.getColumnComment();
             Long length = d.getColumnLength();
             Boolean isNullAble = d.getIsNullable();
             String columnDefault = d.getColumnDefault();
             // type=this.getType(type);
-            String maxChar = name.substring(0, 1).toUpperCase();
+            String maxChar = fieldName.substring(0, 1).toUpperCase();
             str.append("\r\n\t/** \r\n\t * ").append(comment).append("  \r\n\t */");
             if (d.getIsPriKey()) {
                 str.append("\r\n\t@javax.persistence.Id");
@@ -101,13 +104,16 @@ public class CreateBean {
 //            if (length != null && length > 0) {
 //                str.append("\r\n\t@Length(max = " + length + ", message = \"" + name + "长度不能超过" + length + "！\")");
 //            }
-            str.append("\r\n\t").append("private ").append(type + " ").append(name).append(";");
-            String method = maxChar + name.substring(1, name.length());
+            if (!columnName.equals(fieldName)) {
+                str.append("\r\n\t").append("@Column(name=\"").append(columnName).append("\")");
+            }
+            str.append("\r\n\t").append("private ").append(type + " ").append(fieldName).append(";");
+            String method = maxChar + fieldName.substring(1, fieldName.length());
             getset.append("\r\n\t\r\n\t").append("public ").append(type + " ").append("get" + method + "() {\r\n\t");
-            getset.append("    return this.").append(name).append(";\r\n\t}");
+            getset.append("    return this.").append(fieldName).append(";\r\n\t}");
             getset.append("\r\n\t\r\n\t").append("public ").append(getTablesNameToClassName(tableName)).append(" ")
-                    .append("set" + method + "(" + type + " " + name + ") {\r\n\t");
-            getset.append("\tthis.").append(name).append(" = ").append(name).append(";\r\n\t\treturn this;\r\n\t}");
+                    .append("set" + method + "(" + type + " " + fieldName + ") {\r\n\t");
+            getset.append("\tthis.").append(fieldName).append(" = ").append(fieldName).append(";\r\n\t\treturn this;\r\n\t}");
         }
         argv = str.toString();
         method = getset.toString();

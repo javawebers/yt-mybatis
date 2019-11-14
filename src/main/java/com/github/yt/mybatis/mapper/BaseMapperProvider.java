@@ -2,7 +2,7 @@ package com.github.yt.mybatis.mapper;
 
 import com.github.yt.commons.query.Query;
 import com.github.yt.commons.util.YtStringUtils;
-import com.github.yt.mybatis.domain.BaseEntity;
+import com.github.yt.mybatis.entity.BaseEntity;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.SqlUtils;
 import com.github.yt.mybatis.util.BaseEntityUtils;
