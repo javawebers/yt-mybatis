@@ -1,7 +1,5 @@
 package com.github.yt.mybatis.generator;
 
-import com.github.yt.mybatis.util.EntityUtils;
-
 import java.sql.*;
 import java.util.*;
 

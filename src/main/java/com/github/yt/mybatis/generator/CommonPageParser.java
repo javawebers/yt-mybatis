@@ -1,7 +1,5 @@
 package com.github.yt.mybatis.generator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -20,7 +18,7 @@ public class CommonPageParser {
 
     private final static String CONTENT_ENCODING = "UTF-8";
 
-    private static final Log log = LogFactory.getLog(CommonPageParser.class);
+//    private static final Log log = LogFactory.getLog(CommonPageParser.class);
 
     private static boolean isReplace = true;
 
@@ -64,7 +62,7 @@ public class CommonPageParser {
             velocityEngine.init(properties);
             ve = velocityEngine;
         } catch (Exception e) {
-            log.error(e);
+            e.printStackTrace();
         }
     }
 
@@ -90,7 +88,7 @@ public class CommonPageParser {
             fos.close();
             System.out.println("文件生成成功" + file.getAbsolutePath());
         } catch (Exception e) {
-            log.error("", e);
+            e.printStackTrace();
         }
     }
 
