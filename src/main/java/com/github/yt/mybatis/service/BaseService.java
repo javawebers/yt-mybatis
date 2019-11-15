@@ -94,6 +94,9 @@ public abstract class BaseService<T> implements IBaseService<T> {
             // id
             Object idValue = EntityUtils.getValue(entity, idField);
             if (idField != null && idValue == null) {
+                if (idField.getType() != String.class) {
+                    continue;
+                }
                 if (batch) {
                     idValue = generateIdValue + "_" + i;
                 } else {
