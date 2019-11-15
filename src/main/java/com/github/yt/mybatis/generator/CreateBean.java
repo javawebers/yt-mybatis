@@ -122,8 +122,14 @@ public class CreateBean {
         switch (type = type.toLowerCase()) {
             case "char":
             case "varchar":
+            case "tinytext":
+            case "longtext":
+            case "mediumtext":
             case "text":
                 return "String";
+            case "smallint":
+            case "mediumint":
+            case "integer":
             case "int":
                 return "Integer";
             case "bigint":
@@ -132,6 +138,8 @@ public class CreateBean {
                 return "java.math.BigDecimal";
             case "timestamp":
             case "date":
+            case "time":
+            case "year":
             case "datetime":
                 // return "java.sql.Timestamp";
                 return "java.util.Date";

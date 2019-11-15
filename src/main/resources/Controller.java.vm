@@ -4,10 +4,9 @@ import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.*;
 import com.github.yt.web.controller.BaseController;
-import io.swagger.annotations.ApiOperation;
+import com.github.yt.web.result.PackageResponseBody;
 import ${importPackage}.entity.${className};
 import ${importPackage}.service.${replaceSuffixClassName}Service;
-
 
 /**
  * ${codeName}控制器
@@ -15,6 +14,7 @@ import ${importPackage}.service.${replaceSuffixClassName}Service;
  */
 @RestController
 @RequestMapping("/${replaceSuffixLowerName}")
+@PackageResponseBody
 public class ${replaceSuffixClassName}Controller extends BaseController {
 
 	@Resource
@@ -22,7 +22,7 @@ public class ${replaceSuffixClassName}Controller extends BaseController {
 
 
 //    @ApiOperation(value = "分页查询${codeName}")
-//    @RequestMapping(value = "/findPage", method = RequestMethod.GET)
+//    @GetMapping(value = "/findPage")
 //    public Page<${className}> findPage(${className} ${lowerName}, Query query) {
 //        return ${replaceSuffixLowerName}Service.findPage(${lowerName}, query.addOrderBy("createDateTime desc"));
 //    }
