@@ -2,8 +2,8 @@ package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
-import com.github.yt.mybatis.example.message.domain.Message;
-import com.github.yt.mybatis.example.message.service.MessageService;
+import com.github.yt.mybatis.entity.message.domain.Message;
+import com.github.yt.mybatis.entity.message.service.MessageService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

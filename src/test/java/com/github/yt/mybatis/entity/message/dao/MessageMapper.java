@@ -1,6 +1,6 @@
-package com.github.yt.mybatis.example.message.dao;
+package com.github.yt.mybatis.entity.message.dao;
 
-import com.github.yt.mybatis.example.message.domain.Message;
+import com.github.yt.mybatis.entity.message.domain.Message;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,6 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
-
 
 }

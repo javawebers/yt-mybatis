@@ -11,6 +11,7 @@ import com.github.yt.mybatis.query.PageUtils;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.EntityUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
@@ -19,27 +20,29 @@ import java.util.*;
 
 /**
  * 通用service实现
- * @author liujiasheng
+ *
  * @param <T> 实体类泛型类型
+ * @author liujiasheng
  */
 public abstract class BaseService<T> implements IBaseService<T> {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(BaseService.class);
 
     private BaseMapper mapper;
+
     // 如果子类中没有getMapper方法会调用baseService中的getMapper方法，在这个方法中直接获取mapper属性
     @Override
-    public  <M extends BaseMapper<T>>M getMapper(){
+    public <M extends BaseMapper<T>> M getMapper() {
         if (mapper == null) {
             Field mapperField = EntityUtils.getField(this.getClass(), "mapper");
-            mapper = (M)EntityUtils.getValue(this, mapperField);
+            mapper = (M) EntityUtils.getValue(this, mapperField);
         }
         // 没有覆盖getMapper方法，也没有mapper字段，抛出异常
         Assert.notNull(mapper, YtMybatisExceptionEnum.CODE_85);
-        return (M)mapper;
+        return (M) mapper;
     }
 
     @Override
-	public int save(T entity) {
+    public int save(T entity) {
         List<T> entityList = new ArrayList<>();
         entityList.add(entity);
         return saveBatch(entityList, false);
@@ -48,90 +51,34 @@ public abstract class BaseService<T> implements IBaseService<T> {
     @Override
     public int saveBatch(Collection<T> entityCollection) {
         return saveBatch(entityCollection, true);
-	}
+    }
 
     /**
      * 所有的保存都走这里
+     *
      * @param entityCollection
      * @param batch
      * @return
      */
-	private int saveBatch(Collection<T> entityCollection, boolean batch) {
-        if (entityCollection == null || entityCollection.isEmpty()) {
+    private int saveBatch(Collection<T> entityCollection, boolean batch) {
+        if (CollectionUtils.isEmpty(entityCollection)) {
             return 0;
         }
-        String creatorId = BaseEntityUtils.getFounderId();
-        String creatorName = BaseEntityUtils.getFounderName();
-        Date createTime = new Date();
-        // 设置creator信息
-        for (T entity : entityCollection) {
-            if (!(entity instanceof BaseEntity)) {
-                break;
-            }
-            BaseEntity baseEntity = (BaseEntity)entity;
-            if (YtStringUtils.isEmpty(baseEntity.getFounderId())) {
-                baseEntity.setFounderId(creatorId);
-            }
-            if (YtStringUtils.isEmpty(baseEntity.getFounderName())) {
-                baseEntity.setFounderName(creatorName);
-            }
-            if (baseEntity.getCreateDateTime() == null) {
-                baseEntity.setCreateDateTime(createTime);
-            }
-        }
-
-        Field idField = null;
-        List<Field> fieldList = null;
-        int i = 0;
-        String generateIdValue = generateIdValue();
-        // 设置id字段的值
-        for (T entity : entityCollection) {
-            fieldList = EntityUtils.getTableFieldList(entity.getClass());
-
-            if (idField == null) {
-                idField = EntityUtils.getIdField(entity.getClass());
-            }
-            // id
-            Object idValue = EntityUtils.getValue(entity, idField);
-            if (idField != null && idValue == null) {
-                if (idField.getType() != String.class) {
-                    continue;
-                }
-                if (batch) {
-                    idValue = generateIdValue + "_" + i;
-                } else {
-                    idValue = generateIdValue;
-                }
-                try {
-                    idField.set(entity, idValue);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-                i++;
-            }
-        }
-        i = 0;
-        Map<String, Object> param = new HashMap<>();
-        for (T entity : entityCollection) {
-            for (Field field : fieldList) {
-                param.put(EntityUtils.getFieldColumnName(field) + "__" + i + "__", EntityUtils.getValue(entity, field));
-            }
-            i++;
-        }
-        param.put("entityCollection", entityCollection);
-        // 设置id，创建人，修改人等信息
+        setCreatorInfo(entityCollection);
+        setEntityId(entityCollection, batch);
+        Map<String, Object> param = getMybatisParamForSave(entityCollection);
         return getMapper().saveBatch(param);
     }
 
     @Override
     public int update(T entity, String... fieldColumnNames) {
-		return getMapper().update(entity, fieldColumnNames);
-	}
+        return getMapper().update(entity, fieldColumnNames);
+    }
 
     @Override
     public int updateForSelective(T entity, String... fieldColumnNames) {
-		return getMapper().updateNotNull(entity, fieldColumnNames);
-	}
+        return getMapper().updateNotNull(entity, fieldColumnNames);
+    }
 
     @Override
     public int updateByCondition(T entityCondition, Query query) {
@@ -158,6 +105,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public int delete(T entityCondition) {
         return delete(entityCondition, new Query());
     }
+
     @Override
     public int delete(T entityCondition, Query query) {
         return getMapper().delete(ParamUtils.getParamMap(entityCondition, query));
@@ -166,15 +114,17 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public T get(Class<T> entityClass, Serializable id) {
-	    if (id == null) {
-	        return null;
+        if (id == null) {
+            return null;
         }
         return getMapper().get(entityClass, id);
     }
+
     @Override
     public T find(T entityCondition) {
         return find(entityCondition, new Query());
     }
+
     @Override
     public T find(T entityCondition, Query query) {
         if (query.takeLimitFrom() == null) {
@@ -182,23 +132,28 @@ public abstract class BaseService<T> implements IBaseService<T> {
         }
         return getMapper().find(ParamUtils.getParamMap(entityCondition, query));
     }
+
     @Override
     public List<T> findList(T entityCondition) {
         return findList(entityCondition, new Query());
     }
+
     @Override
     public List<T> findList(T entityCondition, Query query) {
         return getMapper().findList(ParamUtils.getParamMap(entityCondition, query));
     }
+
     public int count(T entityCondition) {
         return count(entityCondition, new Query());
     }
+
     public int count(T entityCondition, Query query) {
         return getMapper().count(ParamUtils.getParamMap(entityCondition, query));
     }
+
     @Override
     public Page<T> findPage(T entityCondition, Query query) {
-	    // 设置页数页码
+        // 设置页数页码
         ParamUtils.setPageInfo(query);
         Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query);
         Page<T> page;
@@ -210,10 +165,104 @@ public abstract class BaseService<T> implements IBaseService<T> {
             List<T> entityList = getMapper().findPageList(paramMap);
             page = PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, entityList);
         }
-		return page;
-	}
+        return page;
+    }
 
-    public static String generateIdValue() {
+    private void setId(){
+
+    }
+
+    /**
+     * 生成一个 uuid 作为主键，去除其中的"-"
+     *
+     * @return
+     */
+    private static String generateUUIDIdValue() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    /**
+     * 设置创建人信息
+     * @param entityCollection 实体类集合
+     */
+    private void setCreatorInfo(Collection<T> entityCollection) {
+        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
+        // 判断 entityClass 是否继承 BaseEntity
+        if (!BaseEntity.class.isAssignableFrom(entityClass)) {
+            return;
+        }
+        String creatorId = BaseEntityUtils.getFounderId();
+        String creatorName = BaseEntityUtils.getFounderName();
+        Date createTime = new Date();
+        for (T entity : entityCollection) {
+            BaseEntity baseEntity = (BaseEntity) entity;
+            if (YtStringUtils.isEmpty(baseEntity.getFounderId())) {
+                baseEntity.setFounderId(creatorId);
+            }
+            if (YtStringUtils.isEmpty(baseEntity.getFounderName())) {
+                baseEntity.setFounderName(creatorName);
+            }
+            if (baseEntity.getCreateDateTime() == null) {
+                baseEntity.setCreateDateTime(createTime);
+            }
+        }
+    }
+
+    /**
+     * 生成 param 用于拼接 sql
+     * @param entityCollection 实体集合
+     * @return param
+     */
+    private Map<String, Object> getMybatisParamForSave(Collection<T> entityCollection) {
+        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
+        List<Field> fieldList = EntityUtils.getTableFieldList(entityClass);
+        int i = 0;
+        Map<String, Object> param = new HashMap<>();
+        for (T entity : entityCollection) {
+            for (Field field : fieldList) {
+                param.put(EntityUtils.getFieldColumnName(field) + "__" + i + "__", EntityUtils.getValue(entity, field));
+            }
+            i++;
+        }
+        param.put("entityCollection", entityCollection);
+        return param;
+    }
+
+    /**
+     * id 为 String 类型，自动生成 uuid id
+     * id 为空直接返回
+     * @param entityCollection 实体集合
+     * @param batch 是否批量保存
+     */
+    private void setEntityId(Collection<T> entityCollection, boolean batch) {
+        // 设置id字段的值
+        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
+        Field idField = EntityUtils.getIdField(entityClass);
+        if (idField != null) {
+            if (idField.getType() != String.class) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        int i = 0;
+        String generateIdValue = generateUUIDIdValue();
+        for (T entity : entityCollection) {
+            String idValue = (String)EntityUtils.getValue(entity, idField);
+            if (idValue == null) {
+                if (batch) {
+                    idValue = generateIdValue + "_" + i;
+                } else {
+                    idValue = generateIdValue;
+                }
+                try {
+                    idField.set(entity, idValue);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                i++;
+            }
+        }
     }
 }

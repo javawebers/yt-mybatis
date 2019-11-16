@@ -40,7 +40,7 @@ public class EntityUtils {
                 return true;
             }
         }
-        if (clazz.getSuperclass() == null || clazz.getSuperclass().equals(Object.class)){
+        if (clazz.getSuperclass() == null || clazz.getSuperclass().equals(Object.class)) {
             return false;
         }
         return hasField(clazz.getSuperclass(), fieldName);
@@ -99,7 +99,6 @@ public class EntityUtils {
         return getValue(entity, idField);
     }
 
-
     public static String getTableName(Class<?> entityClass) {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
         if (tableAnnotation == null || YtStringUtils.isEmpty(tableAnnotation.name())) {
@@ -110,6 +109,7 @@ public class EntityUtils {
 
     /**
      * 获取 field 上 @javax.persistence.Column 注解的 name ，如果没有返回 field 的 name
+     *
      * @param field field
      * @return name
      */
@@ -167,7 +167,6 @@ public class EntityUtils {
         }
         return result;
     }
-
 
     private static <T, R> void setListToEntity(Collection<T> mainCollection, Collection<R> subCollection,
                                                Field collectionField, Field mainField, Field relationField) throws IllegalAccessException {
@@ -230,7 +229,6 @@ public class EntityUtils {
 
     }
 
-
     public static <T, R> void setListToEntity(Collection<T> mainCollection, Collection<R> subCollection,
                                               String collectionProperty, String relationProperty) {
         setListToEntity(mainCollection, subCollection, collectionProperty, null, relationProperty);
@@ -243,11 +241,12 @@ public class EntityUtils {
 
     /**
      * 将fromObject转为目标对象
+     *
      * @param fromObject 源对象
-     * @param toClass 目标对象类型类
-     * @param converter 转换器
-     * @param <S> 源对象类型
-     * @param <T> 目标对象类型
+     * @param toClass    目标对象类型类
+     * @param converter  转换器
+     * @param <S>        源对象类型
+     * @param <T>        目标对象类型
      * @return 目标对象
      */
     public static <S, T> T convertObject(S fromObject, Class<T> toClass, Converter converter) {
@@ -259,17 +258,21 @@ public class EntityUtils {
             throw new BaseErrorException(YtMybatisExceptionEnum.CODE_99, e);
         }
     }
+
     public static <S, T> T convertObject(S fromObject, Class<T> toClass) {
-        return convertObject(fromObject, toClass, new Converter() {});
+        return convertObject(fromObject, toClass, new Converter() {
+        });
     }
+
     /**
      * 将集合转换成一个目标对象集合，默认是值复制
      * 可自己扩展
+     *
      * @param fromCollection 源对象集合
-     * @param toClass 目标对象类
-     * @param converter 转换器
-     * @param <S> source
-     * @param <T> target
+     * @param toClass        目标对象类
+     * @param converter      转换器
+     * @param <S>            source
+     * @param <T>            target
      * @return 目标对象集合
      */
     public static <S, T> List<T> convertList(List<S> fromCollection, Class<T> toClass, Converter converter) {
@@ -290,20 +293,37 @@ public class EntityUtils {
     }
 
     public static <S, T> List<T> convertList(List<S> fromCollection, Class<T> toClass) {
-        return convertList(fromCollection, toClass, new Converter() {});
+        return convertList(fromCollection, toClass, new Converter() {
+        });
     }
+
     /**
      * 转换器回调
+     *
      * @author liujiasheng
      */
     public interface Converter<S, T> {
         /**
          * 转换
+         *
          * @param source 源对象
          * @param target 目标对象
          */
         default void convert(S source, T target) {
             BeanUtils.copyProperties(source, target);
         }
+    }
+
+    /**
+     *
+     * @param collection
+     * @param <T>
+     * @return
+     */
+    public static <T> Class<T> getEntityClass(Collection<T> collection) {
+        for (T t: collection) {
+            return (Class<T>) t.getClass();
+        }
+        throw new RuntimeException("获取集合泛型数据类型失败");
     }
 }

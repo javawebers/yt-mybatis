@@ -1,7 +1,7 @@
-package com.github.yt.mybatis.example.message.service;
+package com.github.yt.mybatis.entity.message.service;
 
-import com.github.yt.mybatis.example.message.dao.MessageMapper;
-import com.github.yt.mybatis.example.message.domain.Message;
+import com.github.yt.mybatis.entity.message.dao.MessageMapper;
+import com.github.yt.mybatis.entity.message.domain.Message;
 import com.github.yt.mybatis.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

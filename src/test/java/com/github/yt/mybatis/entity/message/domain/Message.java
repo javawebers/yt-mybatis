@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.example.message.domain;
+package com.github.yt.mybatis.entity.message.domain;
 
 import com.github.yt.mybatis.entity.BaseEntity;
 

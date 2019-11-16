@@ -175,7 +175,6 @@ public class BaseMapperProvider {
         // insert into
         sql.append("insert into `").append(tableName).append("` ");
         // fields
-
         sql.append(" (").append(YtStringUtils.join(dbFieldColumnNameList.toArray(), ", ")).append(") ");
         // values
         sql.append(" values ").append(valueParams);
