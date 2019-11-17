@@ -1,7 +1,7 @@
 package com.github.yt.mybatis.entity;
 
 /**
- * domain默认值注入接口
+ * entity 默认值注入接口
  * @author liujiasheng
  */
 public interface BaseEntityValue {
@@ -11,7 +11,7 @@ public interface BaseEntityValue {
      *
      * @return 操作人id
      */
-    String getFounderId();
+    Object getFounderId();
     /**
      * 获取操作人name
      *
@@ -23,7 +23,7 @@ public interface BaseEntityValue {
      *
      * @return 修改人id
      */
-    String getModifierId();
+    Object getModifierId();
     /**
      * 获取修改人name
      *

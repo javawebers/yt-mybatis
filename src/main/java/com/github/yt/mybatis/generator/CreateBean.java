@@ -12,7 +12,7 @@ public class CreateBean {
     private static String dbInstance;
 
     private static final List IGNORE_COLUMNS = Arrays.asList("founderId", "founderName", "modifierId",
-            "modifierName", "deleteFlag", "createDateTime", "modifyDateTime");
+            "modifierName", "deleteFlag", "createTime", "modifyTime");
 
     static {
         try {

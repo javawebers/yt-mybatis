@@ -9,10 +9,10 @@ CREATE TABLE  if not exists `DbEntitySame` (
   `testBoolean` tinyint(1) DEFAULT NULL COMMENT 'boolean类型',
   `founderId` varchar(255) DEFAULT NULL,
   `founderName` varchar(255) DEFAULT NULL,
-  `createDateTime` datetime DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
   `modifierId` varchar(255) DEFAULT NULL,
   `modifierName` varchar(255) DEFAULT NULL,
-  `modifyDateTime` datetime DEFAULT NULL,
+  `modifyTime` datetime DEFAULT NULL,
   `deleteFlag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dbEntitySameId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表名和实体名一致';
@@ -24,11 +24,9 @@ CREATE TABLE  if not exists `db_entity_not_same` (
   `test_int` int(11) DEFAULT NULL COMMENT 'int类型',
   `test_boolean` tinyint(1) DEFAULT NULL COMMENT 'boolean类型',
   `founder_id` varchar(255) DEFAULT NULL,
-  `founder_name` varchar(255) DEFAULT NULL,
-  `create_date_time` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
   `modifier_id` varchar(255) DEFAULT NULL,
-  `modifier_name` varchar(255) DEFAULT NULL,
-  `modify_date_time` datetime DEFAULT NULL,
+  `modify_time` datetime DEFAULT NULL,
   `delete_flag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`db_entity_not_same_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表名和实体名不一致(驼峰)';
@@ -40,10 +38,10 @@ CREATE TABLE  if not exists `IntId` (
   `testVarchar` varchar(36) DEFAULT NULL COMMENT 'String类型',
   `founderId` varchar(255) DEFAULT NULL,
   `founderName` varchar(255) DEFAULT NULL,
-  `createDateTime` datetime DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
   `modifierId` varchar(255) DEFAULT NULL,
   `modifierName` varchar(255) DEFAULT NULL,
-  `modifyDateTime` datetime DEFAULT NULL,
+  `modifyTime` datetime DEFAULT NULL,
   `deleteFlag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`intId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='int类型id';

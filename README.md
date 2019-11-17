@@ -64,20 +64,20 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
       `read` tinyint(1) DEFAULT '0' COMMENT '是否已读',
       `founderId` varchar(255) DEFAULT NULL,
       `founderName` varchar(255) DEFAULT NULL,
-      `createDateTime` datetime DEFAULT NULL,
+      `createTime` datetime DEFAULT NULL,
       `modifierId` varchar(255) DEFAULT NULL,
       `modifierName` varchar(255) DEFAULT NULL,
-      `modifyDateTime` datetime DEFAULT NULL,
+      `modifyTime` datetime DEFAULT NULL,
       `deleteFlag` tinyint(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`messageId`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息';
 
 
-    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createDateTime`, `modifierId`, `modifierName`, `modifyDateTime`, `deleteFlag`) VALUES ('message_1', 'user_1_admin', 'INVITE_GROUP', 'null邀请你加入到群组移民和闺蜜中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-22 05:06:53', 'user_2_student', '张三feng', '2019-01-23 02:19:10', 0);
-    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createDateTime`, `modifierId`, `modifierName`, `modifyDateTime`, `deleteFlag`) VALUES ('message_2', 'user_1_admin', 'INVITE_GROUP', '杨幂邀请你加入到群组uu中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-23 05:47:01', 'user_2_student', '张三feng', '2019-01-23 05:47:09', 0);
-    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createDateTime`, `modifierId`, `modifierName`, `modifyDateTime`, `deleteFlag`) VALUES ('message_3', 'user_2_student', 'INVITE_GROUP', '杨幂邀请你加入到群组uu中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-23 03:14:26', 'user_2_student', '张三feng', '2019-01-25 03:59:30', 0);
-    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createDateTime`, `modifierId`, `modifierName`, `modifyDateTime`, `deleteFlag`) VALUES ('message_4', 'user_2_student', 'INVITE_GROUP', 'null邀请你加入到群组xkxkxk中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-22 05:04:31', 'user_2_student', '张三feng', '2019-01-22 05:05:37', 0);
-    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createDateTime`, `modifierId`, `modifierName`, `modifyDateTime`, `deleteFlag`) VALUES ('message_5', 'user_2_student', 'INVITE_GROUP', '杨幂邀请你加入到群组bnnj中', 'business_1', 0, 'user_2_student', '张三feng', '2019-01-28 21:17:03', NULL, NULL, NULL, 0);
+    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createTime`, `modifierId`, `modifierName`, `modifyTime`, `deleteFlag`) VALUES ('message_1', 'user_1_admin', 'INVITE_GROUP', 'null邀请你加入到群组移民和闺蜜中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-22 05:06:53', 'user_2_student', '张三feng', '2019-01-23 02:19:10', 0);
+    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createTime`, `modifierId`, `modifierName`, `modifyTime`, `deleteFlag`) VALUES ('message_2', 'user_1_admin', 'INVITE_GROUP', '杨幂邀请你加入到群组uu中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-23 05:47:01', 'user_2_student', '张三feng', '2019-01-23 05:47:09', 0);
+    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createTime`, `modifierId`, `modifierName`, `modifyTime`, `deleteFlag`) VALUES ('message_3', 'user_2_student', 'INVITE_GROUP', '杨幂邀请你加入到群组uu中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-23 03:14:26', 'user_2_student', '张三feng', '2019-01-25 03:59:30', 0);
+    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createTime`, `modifierId`, `modifierName`, `modifyTime`, `deleteFlag`) VALUES ('message_4', 'user_2_student', 'INVITE_GROUP', 'null邀请你加入到群组xkxkxk中', 'business_1', 1, 'user_2_student', '张三feng', '2019-01-22 05:04:31', 'user_2_student', '张三feng', '2019-01-22 05:05:37', 0);
+    INSERT INTO `yt-mybatis`.`Message`(`messageId`, `userId`, `type`, `content`, `businessId`, `read`, `founderId`, `founderName`, `createTime`, `modifierId`, `modifierName`, `modifyTime`, `deleteFlag`) VALUES ('message_5', 'user_2_student', 'INVITE_GROUP', '杨幂邀请你加入到群组bnnj中', 'business_1', 0, 'user_2_student', '张三feng', '2019-01-28 21:17:03', NULL, NULL, NULL, 0);
 
     ```
     
@@ -167,21 +167,21 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
         public void test() {
             // 1.1.根据主键查询一条记录
             Message message1 = messageService.get(Message.class, "message_1");
-            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createDateTime, t.modifyDateTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and (t.messageId = ?)
+            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createTime, t.modifyTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and (t.messageId = ?)
             //==> Parameters: message_1(String)
     
             // 1.2.根据条件查询一条记录
             // 查询 messageId为"message_1"的记录
             Message condition2 = new Message().setMessageId("message_1");
             Message message2 = messageService.find(condition2);
-            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createDateTime, t.modifyDateTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and t.messageId = ? limit 0, 2
+            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createTime, t.modifyTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and t.messageId = ? limit 0, 2
             //==> Parameters: message_1(String)
     
             // 1.3.根据条件查询列表
             // 查询 消息状态为"已读"，并且userId为"user_1"的所有记录
             Message condition3 = new Message().setRead(true).setUserId("user_1");
             List<Message> messageList3 = messageService.findList(condition3);
-            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createDateTime, t.modifyDateTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and t.userId = ? and t.read = ?
+            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createTime, t.modifyTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and t.userId = ? and t.read = ?
             //==> Parameters: user_1(String), true(Boolean)
     
             // 1.4.根据条件查询分页
@@ -190,7 +190,7 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
             Page<Message> messagePage4 = messageService.findPage(condition4, query4);
             //==>  Preparing: select count(1) from Message t where 1=1 and t.read = ?
             //==> Parameters: true(Boolean)
-            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createDateTime, t.modifyDateTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and t.read = ? limit 0, 20
+            //==>  Preparing: select t.messageId, t.userId, t.type, t.content, t.businessId, t.read, t.createTime, t.modifyTime, t.founderId, t.founderName, t.modifierId, t.modifierName, t.deleteFlag from Message t where 1=1 and t.read = ? limit 0, 20
             //==> Parameters: true(Boolean)
     
             // 1.5.复杂查询，以findList为例，find和findPage均支持

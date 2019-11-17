@@ -12,6 +12,7 @@ public enum YtMybatisExceptionEnum {
     CODE_23("系统异常", "数据库异常，脚本语法异常(字段不存在等)"),
 
     // error
+    CODE_78("删除标志位字段不存在"),
     CODE_79("实例化resultConfig对象异常，{0}"),
     CODE_80("不是根据id比较，不可调用map差异"),
     CODE_81("实体未配置Table注解 entityClass = {0}"),

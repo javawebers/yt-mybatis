@@ -27,8 +27,8 @@ public class JavaCodeGeneratorTest {
     @Test
     public void createNew1() {
         javaCodeGenerator.create("db_entity_not_same",
-                "DbEntitySame 中文描述",
-                "test.yt.mybatis",
+                "db_entity_not_same 中文描述",
+                "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 JavaCodeGenerator.TemplateEnum.BEAN,
                 JavaCodeGenerator.TemplateEnum.MAPPER,
@@ -39,7 +39,17 @@ public class JavaCodeGeneratorTest {
     @Test
     public void createNew2() {
         javaCodeGenerator.create("IntId",
-                "test.yt.mybatis",
+                "com.github.yt.mybatis.business",
+                JavaCodeGenerator.TemplateEnum.BEAN,
+                JavaCodeGenerator.TemplateEnum.MAPPER,
+                JavaCodeGenerator.TemplateEnum.SERVICE
+        );
+    }
+
+    @Test
+    public void createNew3() {
+        javaCodeGenerator.create("DbEntitySame",
+                "com.github.yt.mybatis.business",
                 JavaCodeGenerator.TemplateEnum.BEAN,
                 JavaCodeGenerator.TemplateEnum.MAPPER,
                 JavaCodeGenerator.TemplateEnum.SERVICE

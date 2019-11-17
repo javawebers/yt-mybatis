@@ -3,6 +3,8 @@ package com.github.yt.mybatis.util;
 import com.github.yt.commons.exception.BaseErrorException;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
+import com.github.yt.mybatis.entity.YtBaseEntityColumn;
+import com.github.yt.mybatis.entity.YtColumnType;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.Column;
@@ -19,17 +21,26 @@ public class EntityUtils {
         try {
             field.setAccessible(true);
             return field.get(source);
-        } catch (Exception e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Object getValue(Object po, String fieldName) {
+    public static Object getValue(Object source, String fieldName) {
         try {
-            Field field = getField(po.getClass(), fieldName);
+            Field field = getField(source.getClass(), fieldName);
             field.setAccessible(true);  //设置私有属性范围
-            return field.get(po);
-        } catch (Exception e) {
+            return field.get(source);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setValue(Object source, Field field, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(source, value);
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -315,15 +326,31 @@ public class EntityUtils {
     }
 
     /**
-     *
-     * @param collection
-     * @param <T>
-     * @return
+     * @param collection 集合
+     * @param <T>        实体类泛型
+     * @return 泛型类型
      */
     public static <T> Class<T> getEntityClass(Collection<T> collection) {
-        for (T t: collection) {
+        for (T t : collection) {
             return (Class<T>) t.getClass();
         }
         throw new RuntimeException("获取集合泛型数据类型失败");
     }
+
+    public static <T> Field getYtColumnField(Class<T> entityClass, YtColumnType type) {
+        List<Field> tableFieldList = getTableFieldList(entityClass);
+        // 判断是否包含 YtBaseEntityColumn 注解， 并且值与 type 相同
+        for (Field tableField : tableFieldList) {
+            // 排除Transient
+            YtBaseEntityColumn ytBaseEntityColumn = tableField.getAnnotation(YtBaseEntityColumn.class);
+            if (null == ytBaseEntityColumn) {
+                continue;
+            }
+            if (type.equals(ytBaseEntityColumn.value())) {
+                return tableField;
+            }
+        }
+        return null;
+    }
+
 }

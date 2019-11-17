@@ -18,14 +18,14 @@ public class BaseEntityUtils {
     private static BaseEntityValue getBaseEntityValue(){
         return  (BaseEntityValue)SpringContextUtils.getBean("baseEntityValue");
     }
-    public static String getFounderId(){
+    public static Object getFounderId(){
         return getBaseEntityValue().getFounderId();
     }
     public static String getFounderName(){
         return getBaseEntityValue().getFounderName();
     }
 
-    public static String getModifierId(){
+    public static Object getModifierId(){
         return getBaseEntityValue().getModifierId();
     }
 

@@ -24,7 +24,7 @@ public class ${replaceSuffixClassName}Controller extends BaseController {
 //    @ApiOperation(value = "分页查询${codeName}")
 //    @GetMapping(value = "/findPage")
 //    public Page<${className}> findPage(${className} ${lowerName}, Query query) {
-//        return ${replaceSuffixLowerName}Service.findPage(${lowerName}, query.addOrderBy("createDateTime desc"));
+//        return ${replaceSuffixLowerName}Service.findPage(${lowerName}, query.addOrderBy("createTime desc"));
 //    }
 
 }

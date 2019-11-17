@@ -2,7 +2,7 @@ package com.github.yt.mybatis.entity;
 
 
 /**
- * domain操作人信息默认实现
+ * entity 操作人信息默认实现
  * @author liujiasheng
  */
 public class DefaultBaseEntityValue implements BaseEntityValue {
