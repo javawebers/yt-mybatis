@@ -115,13 +115,13 @@ public class BaseMapperProvider {
             }
             if (modifierNameField != null) {
                 modifierName = BaseEntityUtils.getModifierName();
-                String modifierNameColumn = EntityUtils.getFieldColumnName(modifierIdField);
+                String modifierNameColumn = EntityUtils.getFieldColumnName(modifierNameField);
                 paramMap.put("_modifierName_", modifierName);
                 query.addUpdate("t." + modifierNameColumn + " = #{_modifierName_}");
             }
             if (modifyTimeField != null) {
                 modifyTime = new Date();
-                String modifyTimeFColumn = EntityUtils.getFieldColumnName(modifierIdField);
+                String modifyTimeFColumn = EntityUtils.getFieldColumnName(modifyTimeField);
                 paramMap.put("_modifyTime_", modifyTime);
                 query.addUpdate("t." + modifyTimeFColumn + " = #{_modifyTime_}");
             }

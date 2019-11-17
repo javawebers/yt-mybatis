@@ -1,5 +1,6 @@
 package com.github.yt.mybatis.service;
 
+import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
@@ -46,7 +47,6 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntitySame> dbEntitySameList = Arrays.asList(entity1, entity2);
         dbEntitySameService.saveBatch(dbEntitySameList);
         // TODO 验证
-
     }
 
     @Test
@@ -56,6 +56,44 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntityNotSame> dbEntitySameList = Arrays.asList(entity1, entity2);
         dbEntityNotSameService.saveBatch(dbEntitySameList);
         // TODO 验证
+    }
 
+    @Test
+    public void update_same() {
+        DbEntitySame entity = new DbEntitySame();
+        dbEntitySameService.save(entity);
+        entity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
+        entity.setTestInt(222);
+        dbEntitySameService.update(entity);
+        // TODO 验证
+    }
+    @Test
+    public void update_notSame() {
+        DbEntityNotSame entity = new DbEntityNotSame();
+        dbEntityNotSameService.save(entity);
+        entity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        entity.setTestInt(222);
+        dbEntityNotSameService.update(entity);
+        // TODO 验证
+    }
+    @Test
+    public void updateByCondition_same() {
+        DbEntitySame entity1 = new DbEntitySame().setTestInt(222);
+        DbEntitySame entity2 = new DbEntitySame().setTestInt(222);
+        List<DbEntitySame> dbEntitySameList = Arrays.asList(entity1, entity2);
+        dbEntitySameService.saveBatch(dbEntitySameList);
+        dbEntitySameService.updateByCondition(new DbEntitySame().setTestInt(222), new Query().addUpdate("testVarchar = 'varchar222'"));
+
+        // TODO 验证
+    }
+    @Test
+    public void updateByCondition_notSame() {
+        DbEntityNotSame entity1 = new DbEntityNotSame().setTestInt(222);
+        DbEntityNotSame entity2 = new DbEntityNotSame().setTestInt(222);
+        List<DbEntityNotSame> dbEntitySameList = Arrays.asList(entity1, entity2);
+        dbEntityNotSameService.saveBatch(dbEntitySameList);
+        dbEntityNotSameService.updateByCondition(new DbEntityNotSame().setTestInt(222), new Query().addUpdate("test_varchar = 'varchar222'"));
+
+        // TODO 验证
     }
 }
