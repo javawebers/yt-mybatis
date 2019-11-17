@@ -13,11 +13,13 @@ public class JavaCodeGeneratorDemo {
                 "yt-mybatis",
                 "jdbc:mysql://localhost:3306/yt-mybatis?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC");
 
-        javaCodeGenerator.create("Message",
-                "message 中文描述",
-                "message 模块",
+        javaCodeGenerator.create("DbEntitySame",
                 "test.yt.mybatis",
-                "bean", "mapper", "service", "controller");
+                JavaCodeGenerator.TemplateEnum.BEAN,
+                JavaCodeGenerator.TemplateEnum.MAPPER,
+                JavaCodeGenerator.TemplateEnum.SERVICE,
+                JavaCodeGenerator.TemplateEnum.CONTROLLER
+        );
     }
 
     public static void main(String[] args) {

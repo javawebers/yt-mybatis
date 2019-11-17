@@ -11,7 +11,6 @@ import com.github.yt.mybatis.query.PageUtils;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.EntityUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
@@ -61,7 +60,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      * @return
      */
     private int saveBatch(Collection<T> entityCollection, boolean batch) {
-        if (CollectionUtils.isEmpty(entityCollection)) {
+        if (entityCollection == null || entityCollection.size() == 0) {
             return 0;
         }
         setCreatorInfo(entityCollection);

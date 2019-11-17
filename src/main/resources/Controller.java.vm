@@ -5,8 +5,8 @@ import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 import com.github.yt.web.controller.BaseController;
 import com.github.yt.web.result.PackageResponseBody;
-import ${importPackage}.entity.${className};
-import ${importPackage}.service.${replaceSuffixClassName}Service;
+import ${modulePackage}.entity.${className};
+import ${modulePackage}.service.${replaceSuffixClassName}Service;
 
 /**
  * ${codeName}控制器

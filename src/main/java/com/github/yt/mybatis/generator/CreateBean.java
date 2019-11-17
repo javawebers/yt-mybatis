@@ -34,6 +34,23 @@ public class CreateBean {
         return DriverManager.getConnection(url, username, password);
     }
 
+
+    public String getTableComment(String tableName) throws SQLException {
+        String sqlTable = "SELECT distinct TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE table_name='" + tableName + "' " + "and table_schema='" + dbInstance + "' ";
+        Connection con = this.getConnection();
+        PreparedStatement ps = con.prepareStatement(sqlTable);
+        ResultSet rs = ps.executeQuery();
+        String comment = tableName;
+        while (rs.next()) {
+            comment = rs.getString(1);
+        }
+        rs.close();
+        ps.close();
+        con.close();
+        return comment;
+    }
+
+
     public List<ColumnData> getColumnDatas(String tableName) throws SQLException {
         String sqlColumns = "SELECT distinct COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT,COLUMN_KEY,CHARACTER_MAXIMUM_LENGTH" +
                 ",IS_NULLABLE,COLUMN_DEFAULT  FROM information_schema.columns WHERE table_name =  '" + tableName + "' " + "and table_schema='" + dbInstance + "' ";
@@ -96,12 +113,6 @@ public class CreateBean {
             if (d.getIsPriKey()) {
                 str.append("\r\n\t@javax.persistence.Id");
             }
-//            if (YtStringUtils.isEmpty(columnDefault) && isNullAble != null && !isNullAble) {
-//                str.append("\r\n\t@NotEmpty(message = \"" + name + "不能为空！\")");
-//            }
-//            if (length != null && length > 0) {
-//                str.append("\r\n\t@Length(max = " + length + ", message = \"" + name + "长度不能超过" + length + "！\")");
-//            }
             if (!columnName.equals(fieldName)) {
                 str.append("\r\n\t").append("@Column(name=\"").append(columnName).append("\")");
             }
