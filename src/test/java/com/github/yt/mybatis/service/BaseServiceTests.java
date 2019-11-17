@@ -67,6 +67,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntitySameService.update(entity);
         // TODO 验证
     }
+
     @Test
     public void update_notSame() {
         DbEntityNotSame entity = new DbEntityNotSame();
@@ -76,6 +77,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntityNotSameService.update(entity);
         // TODO 验证
     }
+
     @Test
     public void updateByCondition_same() {
         DbEntitySame entity1 = new DbEntitySame().setTestInt(222);
@@ -86,6 +88,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
 
         // TODO 验证
     }
+
     @Test
     public void updateByCondition_notSame() {
         DbEntityNotSame entity1 = new DbEntityNotSame().setTestInt(222);
@@ -96,4 +99,31 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
 
         // TODO 验证
     }
+
+    @Test
+    public void delete_same() {
+        // TODO
+    }
+
+    @Test
+    public void delete_notSame() {
+        // TODO
+    }
+
+    @Test
+    public void logicDelete_same() {
+        DbEntitySame entity = new DbEntitySame();
+        dbEntitySameService.save(entity);
+        dbEntitySameService.logicDelete(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        // TODO 验证
+    }
+    @Test
+    public void logicDelete_notSame() {
+        DbEntityNotSame entity = new DbEntityNotSame();
+        dbEntityNotSameService.save(entity);
+        dbEntityNotSameService.logicDelete(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+
+        // TODO
+    }
+
 }
