@@ -1,9 +1,11 @@
 package com.github.yt.mybatis.business.dao;
 
 import com.github.yt.commons.util.YtStringUtils;
+import com.github.yt.mybatis.business.entity.IntId;
 import com.github.yt.mybatis.util.EntityUtils;
 
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
 import java.util.*;
 
 public class IntIdProvider {
@@ -45,8 +47,8 @@ public class IntIdProvider {
         return sql.toString();
     }
 
-    public <T> String saveBatch(Map paramMap) {
-        Collection<T> entityCollection = (Collection<T>) paramMap.get("entityCollection");
+    public <T> String saveBatch(Map map) {
+        Collection<T> entityCollection = (List<T>)map.get("collection");
         Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
         String tableName = EntityUtils.getTableName(entityClass);
         List<Field> fieldList = EntityUtils.getTableFieldList(entityClass);
@@ -66,11 +68,12 @@ public class IntIdProvider {
             }
         }
         StringBuffer valueParams = new StringBuffer();
+
         for (int i = 0; i < entityCollection.size(); i++) {
             valueParams.append("(");
             for (int j = 0; j < fieldColumnNameList.size(); j++) {
                 String fieldColumnName = fieldColumnNameList.get(j);
-                valueParams.append("#{").append(fieldColumnName).append("__").append(i).append("__}");
+                valueParams.append("#{list[").append(i).append("].").append(fieldColumnName).append("}");
                 if (j != fieldColumnNameList.size() - 1) {
                     valueParams.append(", ");
                 }
@@ -90,5 +93,4 @@ public class IntIdProvider {
         System.out.println(sql.toString());
         return sql.toString();
     }
-
 }

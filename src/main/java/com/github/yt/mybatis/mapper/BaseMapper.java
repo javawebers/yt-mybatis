@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 public interface BaseMapper<T> {
 
     @InsertProvider(type = BaseMapperProvider.class, method = "saveBatch")
-    int saveBatch(Map<String, Object> param);
+    int saveBatch(Collection<T> entityCollection);
 
     @UpdateProvider(type = BaseMapperProvider.class, method = "update")
     int update(@Param("entity") T entity, @Param("fieldColumnNames") String... fieldColumnNames);

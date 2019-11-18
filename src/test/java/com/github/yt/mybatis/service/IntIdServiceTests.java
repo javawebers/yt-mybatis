@@ -26,11 +26,13 @@ public class IntIdServiceTests extends AbstractTestNGSpringContextTests {
     }
     @Test
     public void saveBatch_intId() {
-        IntId entity1 = new IntId();
-        IntId entity2 = new IntId();
-        List<IntId> intIdList = Arrays.asList(entity1);
-        intIdService.saveBatch(intIdList);
+        IntId entity1 = new IntId().setTestVarchar("222");
+        IntId entity2 = new IntId().setTestVarchar("233");
+        List<IntId> intIdList = Arrays.asList(entity1, entity2);
+        intIdService.saveBatch2(intIdList);
         System.out.println(entity1.getIntId());
         System.out.println(entity1.getTestVarchar());
+        System.out.println(entity2.getIntId());
+        System.out.println(entity2.getTestVarchar());
     }
 }

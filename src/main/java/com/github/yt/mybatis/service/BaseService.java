@@ -61,10 +61,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
         if (entityCollection == null || entityCollection.size() == 0) {
             return 0;
         }
-        setCreatorInfo(entityCollection);
         setEntityId(entityCollection, batch);
-        Map<String, Object> param = getMybatisParamForSave(entityCollection);
-        return getMapper().saveBatch(param);
+        return getMapper().saveBatch(entityCollection);
     }
 
     @Override
@@ -172,52 +170,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
      */
     private static String generateUUIDIdValue() {
         return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    /**
-     * 设置创建人信息
-     *
-     * @param entityCollection 实体类集合
-     */
-    private void setCreatorInfo(Collection<T> entityCollection) {
-        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
-        Field founderIdField = EntityUtils.getYtColumnField(entityClass, YtColumnType.FOUNDER_ID);
-        Field founderNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.FOUNDER_NAME);
-        Field createTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.CREATE_TIME);
-
-        Object founderId = null;
-        String founderName = null;
-        Date createTime = null;
-        if (founderIdField != null) {
-            founderId = BaseEntityUtils.getFounderId();
-        }
-        if (founderNameField != null) {
-            founderName = BaseEntityUtils.getFounderName();
-        }
-        if (createTimeField != null) {
-            createTime = new Date();
-        }
-
-        for (T entity : entityCollection) {
-            if (founderIdField != null && founderId != null) {
-                Object trueFounderId = EntityUtils.getValue(entity, founderIdField);
-                if (trueFounderId == null) {
-                    EntityUtils.setValue(entity, founderIdField, founderId);
-                }
-            }
-            if (founderNameField != null && founderName != null) {
-                Object trueFounderName = EntityUtils.getValue(entity, founderNameField);
-                if (trueFounderName == null) {
-                    EntityUtils.setValue(entity, founderNameField, founderName);
-                }
-            }
-            if (createTimeField != null) {
-                Object trueCreateTime = EntityUtils.getValue(entity, createTimeField);
-                if (trueCreateTime == null) {
-                    EntityUtils.setValue(entity, createTimeField, createTime);
-                }
-            }
-        }
     }
 
     /**

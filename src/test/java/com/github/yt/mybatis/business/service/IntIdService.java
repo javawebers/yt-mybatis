@@ -6,6 +6,9 @@ import com.github.yt.mybatis.business.entity.IntId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * int 主键服务层
  *
@@ -13,4 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public interface IntIdService extends IBaseService<IntId> {
     @Override
     int save(IntId entity);
+
+    int saveBatch2(List<IntId> entityCollection);
 }

@@ -96,38 +96,6 @@ public class BaseMapperProvider {
         return sql.toString();
     }
 
-    private void setUpdateBaseColumn(Map paramMap) {
-        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
-        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
-
-        if (query.takeUpdateBaseColumn()) {
-            Field modifierIdField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_ID);
-            Field modifierNameField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_NAME);
-            Field modifyTimeField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFY_TIME);
-            Object modifierId = null;
-            String modifierName = null;
-            Date modifyTime = null;
-            if (modifierIdField != null) {
-                modifierId = BaseEntityUtils.getModifierId();
-                String modifierIdColumn = EntityUtils.getFieldColumnName(modifierIdField);
-                paramMap.put("_modifierId_", modifierId);
-                query.addUpdate("t." + modifierIdColumn + " = #{_modifierId_}");
-            }
-            if (modifierNameField != null) {
-                modifierName = BaseEntityUtils.getModifierName();
-                String modifierNameColumn = EntityUtils.getFieldColumnName(modifierNameField);
-                paramMap.put("_modifierName_", modifierName);
-                query.addUpdate("t." + modifierNameColumn + " = #{_modifierName_}");
-            }
-            if (modifyTimeField != null) {
-                modifyTime = new Date();
-                String modifyTimeFColumn = EntityUtils.getFieldColumnName(modifyTimeField);
-                paramMap.put("_modifyTime_", modifyTime);
-                query.addUpdate("t." + modifyTimeFColumn + " = #{_modifyTime_}");
-            }
-        }
-    }
-
     public String updateByCondition(Map paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
@@ -163,12 +131,14 @@ public class BaseMapperProvider {
         return mybatisSql;
     }
 
-    public <T> String saveBatch(Map paramMap) {
-        Collection<T> entityCollection = (Collection<T>) paramMap.get("entityCollection");
+    public <T> String saveBatch(Map map) {
+        Collection<T> entityCollection = (Collection<T>) map.get("collection");
+        setCreatorInfo(entityCollection);
+
         String tableName = null;
         Set<String> fieldColumnNameSet = new HashSet<>();
-        List<String> fieldColumnNameList = new ArrayList<>();
-        List<String> dbFieldColumnNameList = new ArrayList<>();
+        List<String> fieldNameList = new ArrayList<>();
+        List<String> columnNameList = new ArrayList<>();
         for (T entity : entityCollection) {
             if (YtStringUtils.isBlank(tableName)) {
                 tableName = EntityUtils.getTableName(entity.getClass());
@@ -177,8 +147,8 @@ public class BaseMapperProvider {
                 if (!fieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
                     if (EntityUtils.getValue(entity, field) != null) {
                         fieldColumnNameSet.add(EntityUtils.getFieldColumnName(field));
-                        fieldColumnNameList.add(EntityUtils.getFieldColumnName(field));
-                        dbFieldColumnNameList.add("`" + EntityUtils.getFieldColumnName(field) + "`");
+                        fieldNameList.add(field.getName());
+                        columnNameList.add("`" + EntityUtils.getFieldColumnName(field) + "`");
                     }
                 }
             }
@@ -186,10 +156,10 @@ public class BaseMapperProvider {
         StringBuffer valueParams = new StringBuffer();
         for (int i = 0; i < entityCollection.size(); i++) {
             valueParams.append("(");
-            for (int j = 0; j < fieldColumnNameList.size(); j++) {
-                String fieldColumnName = fieldColumnNameList.get(j);
-                valueParams.append("#{").append(fieldColumnName).append("__").append(i).append("__}");
-                if (j != fieldColumnNameList.size() - 1) {
+            for (int j = 0; j < fieldNameList.size(); j++) {
+                String fieldColumnName = fieldNameList.get(j);
+                valueParams.append("#{collection[").append(i).append("].").append(fieldColumnName).append("}");
+                if (j != fieldNameList.size() - 1) {
                     valueParams.append(", ");
                 }
             }
@@ -202,38 +172,10 @@ public class BaseMapperProvider {
         // insert into
         sql.append("insert into `").append(tableName).append("` ");
         // fields
-        sql.append(" (").append(YtStringUtils.join(dbFieldColumnNameList.toArray(), ", ")).append(") ");
+        sql.append(" (").append(YtStringUtils.join(columnNameList.toArray(), ", ")).append(") ");
         // values
         sql.append(" values ").append(valueParams);
         return sql.toString();
-    }
-
-    // 设置修改人信息
-    private <T> void setModifier(T entity) {
-        Field modifierIdField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_ID);
-        Field modifierNameField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_NAME);
-        Field modifyTimeField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFY_TIME);
-        if (modifierIdField != null) {
-            Object modifierId = BaseEntityUtils.getModifierId();
-            Object trueModifierId = EntityUtils.getValue(entity, modifierIdField);
-            if (trueModifierId == null) {
-                EntityUtils.setValue(entity, modifierIdField, modifierId);
-            }
-        }
-        if (modifierNameField != null) {
-            String modifierName = BaseEntityUtils.getModifierName();
-            Object trueModifierName = EntityUtils.getValue(entity, modifierNameField);
-            if (trueModifierName == null) {
-                EntityUtils.setValue(entity, modifierNameField, modifierName);
-            }
-        }
-        if (modifyTimeField != null) {
-            Date modifyTime = new Date();
-            Object trueModifyTime = EntityUtils.getValue(entity, modifyTimeField);
-            if (trueModifyTime == null) {
-                EntityUtils.setValue(entity, modifyTimeField, modifyTime);
-            }
-        }
     }
 
     /**
@@ -304,6 +246,116 @@ public class BaseMapperProvider {
         T entity = (T) paramMap.get("entity");
         String[] fieldColumnNames = (String[]) paramMap.get("fieldColumnNames");
         return update(entity, false, fieldColumnNames);
+    }
+
+    /**
+     * 设置创建人信息
+     *
+     * @param entityCollection 实体类集合
+     */
+    private <T> void setCreatorInfo(Collection<T> entityCollection) {
+        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
+        Field founderIdField = EntityUtils.getYtColumnField(entityClass, YtColumnType.FOUNDER_ID);
+        Field founderNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.FOUNDER_NAME);
+        Field createTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.CREATE_TIME);
+
+        Object founderId = null;
+        String founderName = null;
+        Date createTime = null;
+        if (founderIdField != null) {
+            founderId = BaseEntityUtils.getFounderId();
+        }
+        if (founderNameField != null) {
+            founderName = BaseEntityUtils.getFounderName();
+        }
+        if (createTimeField != null) {
+            createTime = new Date();
+        }
+
+        for (T entity : entityCollection) {
+            if (founderIdField != null && founderId != null) {
+                Object trueFounderId = EntityUtils.getValue(entity, founderIdField);
+                if (trueFounderId == null) {
+                    EntityUtils.setValue(entity, founderIdField, founderId);
+                }
+            }
+            if (founderNameField != null && founderName != null) {
+                Object trueFounderName = EntityUtils.getValue(entity, founderNameField);
+                if (trueFounderName == null) {
+                    EntityUtils.setValue(entity, founderNameField, founderName);
+                }
+            }
+            if (createTimeField != null) {
+                Object trueCreateTime = EntityUtils.getValue(entity, createTimeField);
+                if (trueCreateTime == null) {
+                    EntityUtils.setValue(entity, createTimeField, createTime);
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置修改人信息
+     *
+     * @param entity 实体类
+     */
+    private <T> void setModifier(T entity) {
+        Field modifierIdField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_ID);
+        Field modifierNameField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_NAME);
+        Field modifyTimeField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFY_TIME);
+        if (modifierIdField != null) {
+            Object modifierId = BaseEntityUtils.getModifierId();
+            Object trueModifierId = EntityUtils.getValue(entity, modifierIdField);
+            if (trueModifierId == null) {
+                EntityUtils.setValue(entity, modifierIdField, modifierId);
+            }
+        }
+        if (modifierNameField != null) {
+            String modifierName = BaseEntityUtils.getModifierName();
+            Object trueModifierName = EntityUtils.getValue(entity, modifierNameField);
+            if (trueModifierName == null) {
+                EntityUtils.setValue(entity, modifierNameField, modifierName);
+            }
+        }
+        if (modifyTimeField != null) {
+            Date modifyTime = new Date();
+            Object trueModifyTime = EntityUtils.getValue(entity, modifyTimeField);
+            if (trueModifyTime == null) {
+                EntityUtils.setValue(entity, modifyTimeField, modifyTime);
+            }
+        }
+    }
+
+    private void setUpdateBaseColumn(Map paramMap) {
+        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
+        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+
+        if (query.takeUpdateBaseColumn()) {
+            Field modifierIdField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_ID);
+            Field modifierNameField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_NAME);
+            Field modifyTimeField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFY_TIME);
+            Object modifierId = null;
+            String modifierName = null;
+            Date modifyTime = null;
+            if (modifierIdField != null) {
+                modifierId = BaseEntityUtils.getModifierId();
+                String modifierIdColumn = EntityUtils.getFieldColumnName(modifierIdField);
+                paramMap.put("_modifierId_", modifierId);
+                query.addUpdate("t." + modifierIdColumn + " = #{_modifierId_}");
+            }
+            if (modifierNameField != null) {
+                modifierName = BaseEntityUtils.getModifierName();
+                String modifierNameColumn = EntityUtils.getFieldColumnName(modifierNameField);
+                paramMap.put("_modifierName_", modifierName);
+                query.addUpdate("t." + modifierNameColumn + " = #{_modifierName_}");
+            }
+            if (modifyTimeField != null) {
+                modifyTime = new Date();
+                String modifyTimeFColumn = EntityUtils.getFieldColumnName(modifyTimeField);
+                paramMap.put("_modifyTime_", modifyTime);
+                query.addUpdate("t." + modifyTimeFColumn + " = #{_modifyTime_}");
+            }
+        }
     }
 
 }

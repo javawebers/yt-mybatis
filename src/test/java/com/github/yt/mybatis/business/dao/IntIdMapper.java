@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,12 +18,11 @@ import java.util.Map;
 @Mapper
 public interface IntIdMapper extends BaseMapper<IntId> {
 
-    @InsertProvider(type = IntIdProvider.class, method = "saveBatch")
-    @Options(useGeneratedKeys = true, keyProperty = "entityCollection.intId")
-    int saveBatch(Map<String, Object> param);
-
     @InsertProvider(type = IntIdProvider.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "intId")
     int save(IntId entity);
 
+    @InsertProvider(type = IntIdProvider.class, method = "saveBatch")
+    @Options(useGeneratedKeys = true, keyProperty = "intId")
+    int saveBatch2(List<IntId> entityCollection);
 }
