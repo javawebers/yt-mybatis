@@ -26,6 +26,6 @@ public class IntIdServiceImpl extends BaseService<IntId> implements IntIdService
 
     @Override
     public int saveBatch2(List<IntId> entityCollection) {
-        return mapper.saveBatch2(entityCollection);
+        return mapper.saveBatch(entityCollection);
     }
 }

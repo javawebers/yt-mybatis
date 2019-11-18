@@ -24,5 +24,6 @@ public interface IntIdMapper extends BaseMapper<IntId> {
 
     @InsertProvider(type = IntIdProvider.class, method = "saveBatch")
     @Options(useGeneratedKeys = true, keyProperty = "intId")
-    int saveBatch2(List<IntId> entityCollection);
+    @Override
+    int saveBatch(Collection<IntId> entityCollection);
 }
