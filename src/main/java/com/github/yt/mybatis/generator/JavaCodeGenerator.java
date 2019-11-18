@@ -46,14 +46,14 @@ public class JavaCodeGenerator {
     /**
      * 模板枚举
      */
-    enum TemplateEnum {
+    public enum TemplateEnum {
         BEAN, MAPPER, MAPPER_XML, SERVICE, CONTROLLER, HTML;
     }
 
     /**
      * 生成文件位置
      */
-    enum CodePath {
+    public enum CodePath {
         SRC_MAIN("src" + File.separator + "main"),
         SRC_TEST("src" + File.separator + "test");
         String path;
