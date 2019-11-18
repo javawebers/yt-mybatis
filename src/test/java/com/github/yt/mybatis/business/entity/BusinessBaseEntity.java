@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Table
-public class BaseEntity<T extends BaseEntity<T>> implements Serializable {
+public class BusinessBaseEntity<T extends BusinessBaseEntity<T>> implements Serializable {
 
     private static final long serialVersionUID = 6468926052770326495L;
 

@@ -2,9 +2,10 @@ package com.github.yt.mybatis.business.entity;
 
 import javax.persistence.Table;
 import javax.persistence.Column;
+import com.github.yt.mybatis.entity.BaseEntity;
 
 @Table(name = "IntId")
-public class IntId extends com.github.yt.mybatis.entity.BaseEntity<IntId>{
+public class IntId extends BaseEntity<IntId>{
 	
 	/** 
 	 * id  

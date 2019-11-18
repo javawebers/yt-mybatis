@@ -2,10 +2,10 @@ package ${modulePackage}.entity;
 
 import javax.persistence.Table;
 import javax.persistence.Column;
-import com.github.yt.mybatis.entity.BaseEntity;
+${importBaseEntity}
 
 ##@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 @Table(name = "${tableName}")
-public class ${className} extends BaseEntity<${className}>{
-	${feilds}
+public class ${className} ${extendsBaseEntity}{
+	${fieldList}
 }

@@ -1,5 +1,7 @@
 package com.github.yt.mybatis.generator;
 
+import com.github.yt.mybatis.business.entity.BusinessBaseEntity;
+import com.github.yt.mybatis.entity.BaseEntity;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -30,8 +32,10 @@ public class JavaCodeGeneratorTest {
                 "db_entity_not_same 中文描述",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
+                BusinessBaseEntity.class,
                 JavaCodeGenerator.TemplateEnum.BEAN,
                 JavaCodeGenerator.TemplateEnum.MAPPER,
+//                JavaCodeGenerator.TemplateEnum.MAPPER_XML,
                 JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
@@ -39,7 +43,10 @@ public class JavaCodeGeneratorTest {
     @Test
     public void createNew2() {
         javaCodeGenerator.create("IntId",
+                "int 主键",
                 "com.github.yt.mybatis.business",
+                JavaCodeGenerator.CodePath.SRC_TEST,
+                BaseEntity.class,
                 JavaCodeGenerator.TemplateEnum.BEAN,
                 JavaCodeGenerator.TemplateEnum.MAPPER,
                 JavaCodeGenerator.TemplateEnum.SERVICE
@@ -49,7 +56,10 @@ public class JavaCodeGeneratorTest {
     @Test
     public void createNew3() {
         javaCodeGenerator.create("DbEntitySame",
+                "数据库属性和bean字段名一致",
                 "com.github.yt.mybatis.business",
+                JavaCodeGenerator.CodePath.SRC_TEST,
+                BaseEntity.class,
                 JavaCodeGenerator.TemplateEnum.BEAN,
                 JavaCodeGenerator.TemplateEnum.MAPPER,
                 JavaCodeGenerator.TemplateEnum.SERVICE

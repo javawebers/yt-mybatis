@@ -9,7 +9,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class JavaCodeGenerator {
@@ -80,11 +79,11 @@ public class JavaCodeGenerator {
         for (int i = 0; i < templates.length; i++) {
             templateEnums[i] = TemplateEnum.valueOf(templates[i].toUpperCase());
         }
-        create(tableName, codeName, modulePackage, CodePath.SRC_MAIN, templateEnums);
+        create(tableName, codeName, modulePackage, CodePath.SRC_MAIN, null, templateEnums);
     }
 
     public void create(String tableName, String modulePackage, TemplateEnum... templates) {
-        create(tableName, null, modulePackage, CodePath.SRC_TEST, templates);
+        create(tableName, null, modulePackage, CodePath.SRC_TEST, null, templates);
     }
 
     /**
@@ -96,7 +95,7 @@ public class JavaCodeGenerator {
      * @param codePath      代码生成的位置
      * @param templates     生成哪些模板
      */
-    public void create(String tableName, String tableDesc, String modulePackage, CodePath codePath, TemplateEnum... templates) {
+    public void create(String tableName, String tableDesc, String modulePackage, CodePath codePath, Class<?> baseEntityClass, TemplateEnum... templates) {
         if (YtStringUtils.isBlank(tableName)) {
             return;
         }
@@ -153,34 +152,24 @@ public class JavaCodeGenerator {
         context.put("moduleSimplePackage", moduleSimplePackage);
         context.put("replaceSuffixClassName", replaceSuffixClassName);
         context.put("replaceSuffixLowerName", replaceSuffixLowerName);
+        if (baseEntityClass != null) {
+            context.put("importBaseEntity", "import " + baseEntityClass.getName() + ";");
+            context.put("extendsBaseEntity", "extends "+ baseEntityClass.getSimpleName() +"<"+className+">");
+        } else {
+            context.put("importBaseEntity", "");
+            context.put("extendsBaseEntity", "");
+        }
         /****************************** 生成bean字段 *********************************/
         try {
-            context.put("feilds", createBean.getBeanFeilds(tableName)); // 生成bean
+            List<ColumnData> columnDataList = createBean.getColumnDataList(tableName, baseEntityClass);
+            String fieldList = createBean.getBeanFieldList(columnDataList, tableName);
+            context.put("columnDataList", columnDataList); // 生成bean
+            context.put("fieldList", fieldList); // 生成bean
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         /******************************* 生成sql语句 **********************************/
-        try {
-            Map<String, Object> sqlMap = createBean.getAutoCreateSql(tableName);
-            List<ColumnData> columnDatas = createBean.getColumnDatas(tableName);
-            List<ColumnData> normalColumns = new ArrayList<>();
-            ColumnData columnDataPriKey = new ColumnData();
-            for (ColumnData columnData : columnDatas) {
-                if (columnData.getIsPriKey()) {
-                    columnDataPriKey = columnData;
-                    continue;
-                }
-                normalColumns.add(columnData);
-            }
-            context.put("columnDatas", columnDatas); // 生成bean
-            context.put("prikey", columnDataPriKey.getColumnName()); // 生成主见
-            context.put("normalColumns", normalColumns); // 生成非主键列表
-            context.put("SQL", sqlMap);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
+
 
         // -------------------生成文件代码---------------------/
         String modulePakPath = modulePackage.replaceAll("\\.", "/");

@@ -1,9 +1,11 @@
 package com.github.yt.mybatis.business.entity;
 
 import javax.persistence.Table;
+import javax.persistence.Column;
+import com.github.yt.mybatis.entity.BaseEntity;
 
 @Table(name = "DbEntitySame")
-public class DbEntitySame extends com.github.yt.mybatis.entity.BaseEntity<DbEntitySame>{
+public class DbEntitySame extends BaseEntity<DbEntitySame>{
 	
 	/** 
 	 * id  
@@ -11,17 +13,17 @@ public class DbEntitySame extends com.github.yt.mybatis.entity.BaseEntity<DbEnti
 	@javax.persistence.Id
 	private String dbEntitySameId;
 	/** 
-	 * String类型  
+	 * boolean类型  
 	 */
-	private String testVarchar;
+	private Boolean testBoolean;
 	/** 
 	 * int类型  
 	 */
 	private Integer testInt;
 	/** 
-	 * boolean类型  
+	 * String类型  
 	 */
-	private Boolean testBoolean;
+	private String testVarchar;
 	
 	public String getDbEntitySameId() {
 	    return this.dbEntitySameId;
@@ -32,12 +34,12 @@ public class DbEntitySame extends com.github.yt.mybatis.entity.BaseEntity<DbEnti
 		return this;
 	}
 	
-	public String getTestVarchar() {
-	    return this.testVarchar;
+	public Boolean getTestBoolean() {
+	    return this.testBoolean;
 	}
 	
-	public DbEntitySame setTestVarchar(String testVarchar) {
-		this.testVarchar = testVarchar;
+	public DbEntitySame setTestBoolean(Boolean testBoolean) {
+		this.testBoolean = testBoolean;
 		return this;
 	}
 	
@@ -50,12 +52,12 @@ public class DbEntitySame extends com.github.yt.mybatis.entity.BaseEntity<DbEnti
 		return this;
 	}
 	
-	public Boolean getTestBoolean() {
-	    return this.testBoolean;
+	public String getTestVarchar() {
+	    return this.testVarchar;
 	}
 	
-	public DbEntitySame setTestBoolean(Boolean testBoolean) {
-		this.testBoolean = testBoolean;
+	public DbEntitySame setTestVarchar(String testVarchar) {
+		this.testVarchar = testVarchar;
 		return this;
 	}
 }

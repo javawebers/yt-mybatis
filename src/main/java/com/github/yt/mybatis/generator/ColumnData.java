@@ -4,6 +4,7 @@ package com.github.yt.mybatis.generator;
 public class ColumnData {
 
 	private String columnName;
+	private String fieldName;
 	private String dataType;
 	private String columnComment;
 	private String columnNameContainEntity;
@@ -11,21 +12,22 @@ public class ColumnData {
 	private Long columnLength;
 	private Boolean isNullable;
 	private String columnDefault;
+	private Boolean isBaseEntityColumn;
 
-    public Boolean getIsPriKey() {
-        return isPriKey;
-    }
-
-    public void setIsPriKey(Boolean isPriKey) {
-        this.isPriKey = isPriKey;
-    }
-
-    public String getColumnName() {
+	public String getColumnName() {
 		return columnName;
 	}
 
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
+	}
+
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
 	}
 
 	public String getDataType() {
@@ -52,6 +54,14 @@ public class ColumnData {
 		this.columnNameContainEntity = columnNameContainEntity;
 	}
 
+	public Boolean getPriKey() {
+		return isPriKey;
+	}
+
+	public void setPriKey(Boolean priKey) {
+		isPriKey = priKey;
+	}
+
 	public Long getColumnLength() {
 		return columnLength;
 	}
@@ -60,12 +70,12 @@ public class ColumnData {
 		this.columnLength = columnLength;
 	}
 
-	public Boolean getIsNullable() {
+	public Boolean getNullable() {
 		return isNullable;
 	}
 
-	public void setIsNullable(Boolean isNullable) {
-		this.isNullable = isNullable;
+	public void setNullable(Boolean nullable) {
+		isNullable = nullable;
 	}
 
 	public String getColumnDefault() {
@@ -74,5 +84,13 @@ public class ColumnData {
 
 	public void setColumnDefault(String columnDefault) {
 		this.columnDefault = columnDefault;
+	}
+
+	public Boolean getBaseEntityColumn() {
+		return isBaseEntityColumn;
+	}
+
+	public void setBaseEntityColumn(Boolean baseEntityColumn) {
+		isBaseEntityColumn = baseEntityColumn;
 	}
 }

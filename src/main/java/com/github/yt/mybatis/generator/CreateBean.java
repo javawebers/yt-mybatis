@@ -1,5 +1,8 @@
 package com.github.yt.mybatis.generator;
 
+import com.github.yt.mybatis.util.EntityUtils;
+
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
 
@@ -11,8 +14,6 @@ public class CreateBean {
     private static String password;
     private static String dbInstance;
 
-    private static final List IGNORE_COLUMNS = Arrays.asList("founderId", "founderName", "modifierId",
-            "modifierName", "deleteFlag", "createTime", "modifyTime");
 
     static {
         try {
@@ -51,9 +52,18 @@ public class CreateBean {
     }
 
 
-    public List<ColumnData> getColumnDatas(String tableName) throws SQLException {
+    public List<ColumnData> getColumnDataList(String tableName, Class<?> baseEntityClass) throws SQLException {
         String sqlColumns = "SELECT distinct COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT,COLUMN_KEY,CHARACTER_MAXIMUM_LENGTH" +
                 ",IS_NULLABLE,COLUMN_DEFAULT  FROM information_schema.columns WHERE table_name =  '" + tableName + "' " + "and table_schema='" + dbInstance + "' ";
+        // 忽略父类中的字段
+        Set<String> baseEntityFieldSet = new HashSet<>();
+        if (baseEntityClass != null) {
+            List<Field> baseEntityFieldList = EntityUtils.getTableFieldList(baseEntityClass);
+            baseEntityFieldList.forEach(baseEntityField -> {
+                String baseColumnName = EntityUtils.getFieldColumnName(baseEntityField);
+                baseEntityFieldSet.add(baseColumnName);
+            });
+        }
         Connection con = this.getConnection();
         PreparedStatement ps = con.prepareStatement(sqlColumns);
         List<ColumnData> columnList = new ArrayList<ColumnData>();
@@ -69,17 +79,21 @@ public class CreateBean {
             String isNullable = rs.getString(6);
             String columnDefault = rs.getString(7);
             type = this.getType(type);
-            if (IGNORE_COLUMNS.contains(name)) {
-                continue;
-            }
+
             ColumnData cd = new ColumnData();
+            if (baseEntityFieldSet.contains(name)) {
+                cd.setBaseEntityColumn(true);
+            } else {
+                cd.setBaseEntityColumn(false);
+            }
             cd.setColumnName(name);
+            cd.setFieldName(getTablesColumnToAttributeName(name));
             cd.setDataType(type);
             cd.setColumnComment(comment);
             cd.setColumnNameContainEntity("${entity." + name + " }");
-            cd.setIsPriKey("PRI".equals(priKey));
+            cd.setPriKey("PRI".equals(priKey));
             cd.setColumnLength(length);
-            cd.setIsNullable("NO".equals(isNullable));
+            cd.setNullable("NO".equals(isNullable));
             cd.setColumnDefault(columnDefault);
             columnList.add(cd);
         }
@@ -95,22 +109,20 @@ public class CreateBean {
     private String argv;
 
 
-    public String getBeanFeilds(String tableName) throws SQLException {
-        List<ColumnData> dataList = getColumnDatas(tableName);
+    public String getBeanFieldList(List<ColumnData> columnDataList, String tableName) throws SQLException {
         StringBuffer str = new StringBuffer();
         StringBuffer getset = new StringBuffer();
-        for (ColumnData d : dataList) {
+        for (ColumnData d : columnDataList) {
+            if (d.getBaseEntityColumn()) {
+                continue;
+            }
             String columnName = d.getColumnName();
-            String fieldName = getTablesColumnToAttributeName(columnName);
+            String fieldName = d.getFieldName();
             String type = d.getDataType();
             String comment = d.getColumnComment();
-            Long length = d.getColumnLength();
-            Boolean isNullAble = d.getIsNullable();
-            String columnDefault = d.getColumnDefault();
-            // type=this.getType(type);
             String maxChar = fieldName.substring(0, 1).toUpperCase();
             str.append("\r\n\t/** \r\n\t * ").append(comment).append("  \r\n\t */");
-            if (d.getIsPriKey()) {
+            if (d.getPriKey()) {
                 str.append("\r\n\t@javax.persistence.Id");
             }
             if (!columnName.equals(fieldName)) {
@@ -202,17 +214,6 @@ public class CreateBean {
             String tempTables = split[0].substring(0, 1).toLowerCase() + split[0].substring(1, split[0].length());
             return tempTables;
         }
-    }
-
-    public Map<String, Object> getAutoCreateSql(String tableName) throws Exception {
-        Map<String, Object> sqlMap = new HashMap<String, Object>();
-        List<ColumnData> columnDatas = getColumnDatas(tableName);
-        String columns = this.getColumnSplit(columnDatas);
-        String[] columnList = getColumnList(columns);
-        String columnFields = getColumnFields(columns);
-        sqlMap.put("columnList", columnList);
-        sqlMap.put("columnFields", columnFields);
-        return sqlMap;
     }
 
     public String getColumnFields(String columns) throws SQLException {

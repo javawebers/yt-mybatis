@@ -3,8 +3,8 @@
 <mapper namespace="${modulePackage}.dao.${replaceSuffixClassName}Mapper">
     <!-- Result Map-->
     <resultMap id="cascadeResultMap" type="${modulePackage}.entity.$!{className}">
-    #foreach($item in $!{columnDatas})
-    <result param="$item.columnName" property="$item.columnName"/>
+    #foreach($item in $!{columnDataList})
+    <result property="$item.fieldName" column="$item.columnName"/>
     #end
 </resultMap>
 
