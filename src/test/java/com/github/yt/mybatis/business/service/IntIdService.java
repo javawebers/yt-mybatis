@@ -11,6 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public interface IntIdService extends IBaseService<IntId> {
-
-
+    @Override
+    int save(IntId entity);
 }

@@ -16,4 +16,8 @@ public class IntIdServiceImpl extends BaseService<IntId> implements IntIdService
 	@Autowired
     private IntIdMapper mapper;
 
+    @Override
+    public int save(IntId entity) {
+        return mapper.save(entity);
+    }
 }

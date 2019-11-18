@@ -34,7 +34,7 @@ CREATE TABLE  if not exists `db_entity_not_same` (
 
 -- 表名和实体名一致
 CREATE TABLE  if not exists `IntId` (
-  `intId` varchar(36) NOT NULL COMMENT 'id',
+  `intId` int(11) NOT NULL COMMENT 'id',
   `testVarchar` varchar(36) DEFAULT NULL COMMENT 'String类型',
   `founderId` varchar(255) DEFAULT NULL,
   `founderName` varchar(255) DEFAULT NULL,

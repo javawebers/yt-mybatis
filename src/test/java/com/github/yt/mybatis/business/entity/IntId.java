@@ -11,17 +11,17 @@ public class IntId extends BaseEntity<IntId>{
 	 * id  
 	 */
 	@javax.persistence.Id
-	private String intId;
+	private Integer intId;
 	/** 
 	 * String类型  
 	 */
 	private String testVarchar;
 	
-	public String getIntId() {
+	public Integer getIntId() {
 	    return this.intId;
 	}
 	
-	public IntId setIntId(String intId) {
+	public IntId setIntId(Integer intId) {
 		this.intId = intId;
 		return this;
 	}
