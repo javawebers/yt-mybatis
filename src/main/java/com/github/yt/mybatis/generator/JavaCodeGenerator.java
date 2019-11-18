@@ -87,15 +87,17 @@ public class JavaCodeGenerator {
     }
 
     /**
-     * 代码生成参数
+     * 代码生成
      *
-     * @param tableName     表名
-     * @param tableDesc     表名对应的注释
-     * @param modulePackage 生成在包下：com.fdcz.pro.system
-     * @param codePath      代码生成的位置
-     * @param templates     生成哪些模板
+     * @param tableName       表名
+     * @param tableDesc       表名对应的注释
+     * @param modulePackage   生成在包下：com.fdcz.pro.system
+     * @param codePath        代码生成的位置
+     * @param baseEntityClass 指定继承的 BaseEntity
+     * @param templates       生成哪些模板
      */
-    public void create(String tableName, String tableDesc, String modulePackage, CodePath codePath, Class<?> baseEntityClass, TemplateEnum... templates) {
+    public void create(String tableName, String tableDesc, String modulePackage, CodePath codePath,
+                       Class<?> baseEntityClass, TemplateEnum... templates) {
         if (YtStringUtils.isBlank(tableName)) {
             return;
         }
@@ -154,7 +156,7 @@ public class JavaCodeGenerator {
         context.put("replaceSuffixLowerName", replaceSuffixLowerName);
         if (baseEntityClass != null) {
             context.put("importBaseEntity", "import " + baseEntityClass.getName() + ";");
-            context.put("extendsBaseEntity", "extends "+ baseEntityClass.getSimpleName() +"<"+className+">");
+            context.put("extendsBaseEntity", "extends " + baseEntityClass.getSimpleName() + "<" + className + ">");
         } else {
             context.put("importBaseEntity", "");
             context.put("extendsBaseEntity", "");

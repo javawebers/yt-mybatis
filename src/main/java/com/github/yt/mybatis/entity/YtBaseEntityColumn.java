@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 public @interface YtBaseEntityColumn {
     /**
      * 字段类型
-     * @return
+     * @return 字段类型
      */
     YtColumnType value();
 }
