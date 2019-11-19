@@ -22,7 +22,6 @@ public class SqlUtils {
             Column columnAnnotation = field.getAnnotation(Column.class);
             if (columnAnnotation != null && YtStringUtils.isNotEmpty(columnAnnotation.name())) {
                 String annotationName = aliasName + "." + columnAnnotation.name();
-                columnSet.add(annotationName);
                 columnSet.add(annotationName + " as " + field.getName());
             } else {
                 columnSet.add(aliasName + "." + field.getName());
