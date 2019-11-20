@@ -18,12 +18,42 @@ public class JavaCodeGenerator {
     private String dbInstance;
     private String url;
 
+    /**
+     * 最后一位包名，默认如下
+     */
+    private String packageEntity = "entity";
+    private String packageDao = "dao";
+    private String packageService = "service";
+    private String packageController = "controller";
+
+    public JavaCodeGenerator setPackageEntity(String packageEntity) {
+        this.packageEntity = packageEntity;
+        return this;
+    }
+
+    public JavaCodeGenerator setPackageDao(String packageDao) {
+        this.packageDao = packageDao;
+        return this;
+    }
+
+    public JavaCodeGenerator setPackageService(String packageService) {
+        this.packageService = packageService;
+        return this;
+    }
+
+    public JavaCodeGenerator setPackageController(String packageController) {
+        this.packageController = packageController;
+        return this;
+    }
+
     public JavaCodeGenerator(String username, String passWord, String dbInstance, String url) {
         this.username = username;
         this.passWord = passWord;
         this.dbInstance = dbInstance;
         this.url = url;
     }
+
+
 
     private static List<String> CLASS_NAME_SUFFIX_LIST = new ArrayList<>();
 
@@ -128,13 +158,13 @@ public class JavaCodeGenerator {
                 .substring(modulePackage.lastIndexOf(".") + 1, modulePackage.length());
 
         // java,xml文件名称
-        String modelPath = File.separator + "entity" + File.separator + className + ".java";
-        String mapperPath = File.separator + "dao" + File.separator + replaceSuffixClassName + "Mapper.java";
-        String mapperXmlPath = File.separator + "dao" + File.separator + replaceSuffixClassName + "Mapper.xml";
-        String servicePath = File.separator + "service" + File.separator + replaceSuffixClassName + "Service.java";
-        String serviceImplPath = File.separator + "service" + File.separator + "impl" + File.separator + replaceSuffixClassName
+        String modelPath = File.separator + packageEntity + File.separator + className + ".java";
+        String mapperPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.java";
+        String mapperXmlPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.xml";
+        String servicePath = File.separator + packageService + File.separator + replaceSuffixClassName + "Service.java";
+        String serviceImplPath = File.separator + packageService + File.separator + "impl" + File.separator + replaceSuffixClassName
                 + "ServiceImpl.java";
-        String controllerPath = File.separator + "controller" + File.separator + replaceSuffixClassName + "Controller.java";
+        String controllerPath = File.separator + packageController + File.separator + replaceSuffixClassName + "Controller.java";
         String htmlPath = File.separator + replaceSuffixLowerName + ".html";
 
         try {
@@ -154,6 +184,12 @@ public class JavaCodeGenerator {
         context.put("moduleSimplePackage", moduleSimplePackage);
         context.put("replaceSuffixClassName", replaceSuffixClassName);
         context.put("replaceSuffixLowerName", replaceSuffixLowerName);
+
+        context.put("packageEntity", packageEntity);
+        context.put("packageDao", packageDao);
+        context.put("packageService", packageService);
+        context.put("packageController", packageController);
+
         if (baseEntityClass != null) {
             context.put("importBaseEntity", "import " + baseEntityClass.getName() + ";");
             context.put("extendsBaseEntity", "extends " + baseEntityClass.getSimpleName() + "<" + className + ">");

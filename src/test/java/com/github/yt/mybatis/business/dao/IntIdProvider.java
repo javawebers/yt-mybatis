@@ -38,12 +38,15 @@ public class IntIdProvider {
         valueParams.append(")");
 
         StringBuffer sql = new StringBuffer();
+        sql.append("<script>");
         // insert into
         sql.append("insert into `").append(tableName).append("` ");
         // fields
         sql.append(" (").append(YtStringUtils.join(dbFieldColumnNameList.toArray(), ", ")).append(") ");
         // values
         sql.append(" values ").append(valueParams);
+        sql.append("</script>");
+        System.out.println(sql.toString());
         return sql.toString();
     }
 

@@ -1,8 +1,8 @@
-package ${modulePackage}.service;
+package ${modulePackage}.${packageService};
 
 import com.github.yt.mybatis.service.IBaseService;
-import ${modulePackage}.dao.${replaceSuffixClassName}Mapper;
-import ${modulePackage}.entity.${className};
+import ${modulePackage}.${packageDao}.${replaceSuffixClassName}Mapper;
+import ${modulePackage}.${packageEntity}.${className};
 
 import org.springframework.beans.factory.annotation.Autowired;
 

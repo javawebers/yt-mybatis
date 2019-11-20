@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${modulePackage}.dao.${replaceSuffixClassName}Mapper">
     <!-- Result Map-->
-    <resultMap id="cascadeResultMap" type="${modulePackage}.entity.$!{className}">
+    <resultMap id="cascadeResultMap" type="${modulePackage}.${packageEntity}.$!{className}">
     #foreach($item in $!{columnDataList})
     <result property="$item.fieldName" column="$item.columnName"/>
     #end

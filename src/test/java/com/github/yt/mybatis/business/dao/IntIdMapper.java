@@ -19,7 +19,6 @@ import java.util.Map;
 public interface IntIdMapper extends BaseMapper<IntId> {
 
     @InsertProvider(type = IntIdProvider.class, method = "save")
-    @Options(useGeneratedKeys = true, keyProperty = "intId")
     int save(IntId entity);
 
     @InsertProvider(type = IntIdProvider.class, method = "saveBatch")

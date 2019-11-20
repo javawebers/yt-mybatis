@@ -1,4 +1,4 @@
-package ${modulePackage}.entity;
+package ${modulePackage}.${packageEntity};
 
 import javax.persistence.Table;
 import javax.persistence.Column;
@@ -7,5 +7,5 @@ ${importBaseEntity}
 ##@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 @Table(name = "${tableName}")
 public class ${className} ${extendsBaseEntity}{
-	${fieldList}
+    ${fieldList}
 }

@@ -1,12 +1,12 @@
-package ${modulePackage}.controller;
+package ${modulePackage}.${packageController};
 
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.*;
 import com.github.yt.web.controller.BaseController;
 import com.github.yt.web.result.PackageResponseBody;
-import ${modulePackage}.entity.${className};
-import ${modulePackage}.service.${replaceSuffixClassName}Service;
+import ${modulePackage}.${packageEntity}.${className};
+import ${modulePackage}.${packageService}.${replaceSuffixClassName}Service;
 
 /**
  * ${codeName}控制器
@@ -17,8 +17,8 @@ import ${modulePackage}.service.${replaceSuffixClassName}Service;
 @PackageResponseBody
 public class ${replaceSuffixClassName}Controller extends BaseController {
 
-	@Resource
-	private ${replaceSuffixClassName}Service ${replaceSuffixLowerName}Service;
+    @Resource
+    private ${replaceSuffixClassName}Service ${replaceSuffixLowerName}Service;
 
 
 //    @ApiOperation(value = "分页查询${codeName}")

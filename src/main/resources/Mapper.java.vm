@@ -1,6 +1,6 @@
-package ${modulePackage}.dao;
+package ${modulePackage}.${packageDao};
 
-import ${modulePackage}.entity.${className};
+import ${modulePackage}.${packageEntity}.${className};
 import com.github.yt.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

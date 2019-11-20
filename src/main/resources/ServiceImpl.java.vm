@@ -1,9 +1,9 @@
-package ${modulePackage}.service.impl;
+package ${modulePackage}.${packageService}.impl;
 
 import com.github.yt.mybatis.service.BaseService;
-import ${modulePackage}.dao.${replaceSuffixClassName}Mapper;
-import ${modulePackage}.entity.${className};
-import ${modulePackage}.service.${replaceSuffixClassName}Service;
+import ${modulePackage}.${packageDao}.${replaceSuffixClassName}Mapper;
+import ${modulePackage}.${packageEntity}.${className};
+import ${modulePackage}.${packageService}.${replaceSuffixClassName}Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ${replaceSuffixClassName}ServiceImpl extends BaseService<${className}> implements ${replaceSuffixClassName}Service {
 
-	@Autowired
+    @Autowired
     private ${replaceSuffixClassName}Mapper mapper;
 
 }
