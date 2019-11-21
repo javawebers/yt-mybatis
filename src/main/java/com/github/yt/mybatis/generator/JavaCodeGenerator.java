@@ -158,7 +158,7 @@ public class JavaCodeGenerator {
                 .substring(modulePackage.lastIndexOf(".") + 1, modulePackage.length());
 
         // java,xml文件名称
-        String modelPath = File.separator + packageEntity + File.separator + className + ".java";
+        String entityPath = File.separator + packageEntity + File.separator + className + ".java";
         String mapperPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.java";
         String mapperXmlPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.xml";
         String servicePath = File.separator + packageService + File.separator + replaceSuffixClassName + "Service.java";
@@ -197,14 +197,17 @@ public class JavaCodeGenerator {
             context.put("importBaseEntity", "");
             context.put("extendsBaseEntity", "");
         }
+        List<ColumnData> columnDataList = null;
+
         /****************************** 生成bean字段 *********************************/
         try {
-            List<ColumnData> columnDataList = createBean.getColumnDataList(tableName, baseEntityClass);
-            String fieldList = createBean.getBeanFieldList(columnDataList, tableName);
+            columnDataList = createBean.getColumnDataList(tableName, baseEntityClass);
+            String fieldList = createBean.getBeanFieldList(columnDataList);
             context.put("columnDataList", columnDataList); // 生成bean
             context.put("fieldList", fieldList); // 生成bean
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
         /******************************* 生成sql语句 **********************************/
 
@@ -215,7 +218,16 @@ public class JavaCodeGenerator {
         for (TemplateEnum templateEnum : templates) {
             switch (templateEnum) {
                 case BEAN:
-                    CommonPageParser.writerPage(context, "Bean.java.vm", rootPath + javaPath + modulePakPath, modelPath); //
+                    for (ColumnData columnData : columnDataList) {
+                        if ("enum".equals(columnData.getDataType())) {
+                            context.put("columnComment", columnData.getColumnComment()); // 生成enum
+                            context.put("enumClassName", columnData.getEnumClassName()); // 生成enum
+                            String enumPath = File.separator + packageEntity + File.separator + columnData.getEnumClassName() + ".java";
+                            context.put("enumColumnDataList", columnData.getEnumColumnDataList()); // 生成bean
+                            CommonPageParser.writerPage(context, "Enum.java.vm", rootPath + javaPath + modulePakPath, enumPath); //
+                        }
+                    }
+                    CommonPageParser.writerPage(context, "Bean.java.vm", rootPath + javaPath + modulePakPath, entityPath); //
                     break;
                 case MAPPER:
                     CommonPageParser.writerPage(context, "Mapper.java.vm", rootPath + javaPath + modulePakPath, mapperPath); // 生成MybatisMapper接口

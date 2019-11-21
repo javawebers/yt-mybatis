@@ -7,6 +7,8 @@ CREATE TABLE  if not exists `DbEntitySame` (
   `testVarchar` varchar(36) DEFAULT NULL COMMENT 'String类型',
   `testInt` int(11) DEFAULT NULL COMMENT 'int类型',
   `testBoolean` tinyint(1) DEFAULT NULL COMMENT 'boolean类型',
+  `testEnum` enum('MALE','FEMALE') DEFAULT NULL COMMENT 'enum 类型，MALE:男 ，FEMALE:女',
+  `testEnum2` enum('MALE','FEMALE','OTHER') DEFAULT NULL COMMENT 'enum 类型，MALE:男 ，FEMALE:女，OTHER:其他',
   `founderId` varchar(255) DEFAULT NULL,
   `founderName` varchar(255) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,

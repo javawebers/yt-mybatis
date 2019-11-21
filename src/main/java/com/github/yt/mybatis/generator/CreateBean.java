@@ -54,7 +54,7 @@ public class CreateBean {
 
     public List<ColumnData> getColumnDataList(String tableName, Class<?> baseEntityClass) throws SQLException {
         String sqlColumns = "SELECT distinct COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT,COLUMN_KEY,CHARACTER_MAXIMUM_LENGTH" +
-                ",IS_NULLABLE,COLUMN_DEFAULT  FROM information_schema.columns WHERE table_name =  '" + tableName + "' " + "and table_schema='" + dbInstance + "' ";
+                ",IS_NULLABLE,COLUMN_DEFAULT, COLUMN_TYPE  FROM information_schema.columns WHERE table_name =  '" + tableName + "' " + "and table_schema='" + dbInstance + "' ";
         // 忽略父类中的字段
         Set<String> baseEntityFieldSet = new HashSet<>();
         if (baseEntityClass != null) {
@@ -78,6 +78,7 @@ public class CreateBean {
             Long length = rs.getLong(5);
             String isNullable = rs.getString(6);
             String columnDefault = rs.getString(7);
+            String columnType = rs.getString(8);
             type = this.getType(type);
 
             ColumnData cd = new ColumnData();
@@ -86,6 +87,8 @@ public class CreateBean {
             } else {
                 cd.setBaseEntityColumn(false);
             }
+            cd.setTableName(tableName);
+            cd.setClassName(getTablesNameToClassName(tableName));
             cd.setColumnName(name);
             cd.setFieldName(getTablesColumnToAttributeName(name));
             cd.setDataType(type);
@@ -95,6 +98,8 @@ public class CreateBean {
             cd.setColumnLength(length);
             cd.setNullable("NO".equals(isNullable));
             cd.setColumnDefault(columnDefault);
+            cd.setColumnType(columnType);
+            processEnumColumn(cd);
             columnList.add(cd);
         }
         argv = str.toString();
@@ -105,11 +110,34 @@ public class CreateBean {
         return columnList;
     }
 
+    /**
+     * 枚举特殊处理
+     * @param cd
+     */
+    private void processEnumColumn(ColumnData cd) {
+        if ("enum".equals(cd.getDataType())) {
+            String fieldName = cd.getFieldName();
+            String enumClassName = cd.getClassName() + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1) + "Enum";
+            List<EnumColumnData> enumColumnDataList = new ArrayList<>();
+
+            // enum('MALE','FEMALE')
+            String enumType = cd.getColumnType();
+            String[] enumColumns = enumType.replaceAll("enum\\(", "").replaceAll("\\)", "").replaceAll("'", "").split(",");
+            for (String enumColumn : enumColumns) {
+                EnumColumnData enumColumnData = new EnumColumnData();
+                enumColumnData.setName(enumColumn);
+                enumColumnDataList.add(enumColumnData);
+            }
+            cd.setEnumClassName(enumClassName);
+            cd.setEnumColumnDataList(enumColumnDataList);
+        }
+    }
+
     private String method;
     private String argv;
 
 
-    public String getBeanFieldList(List<ColumnData> columnDataList, String tableName) throws SQLException {
+    public String getBeanFieldList(List<ColumnData> columnDataList) throws SQLException {
         StringBuffer str = new StringBuffer();
         StringBuffer getset = new StringBuffer();
         for (ColumnData d : columnDataList) {
@@ -119,6 +147,9 @@ public class CreateBean {
             String columnName = d.getColumnName();
             String fieldName = d.getFieldName();
             String type = d.getDataType();
+            if ("enum".equals(type)) {
+                type = d.getEnumClassName();
+            }
             String comment = d.getColumnComment();
             String maxChar = fieldName.substring(0, 1).toUpperCase();
             str.append("\r\n    /** \r\n     * ").append(comment).append("  \r\n     */");
@@ -132,7 +163,7 @@ public class CreateBean {
             String method = maxChar + fieldName.substring(1, fieldName.length());
             getset.append("\r\n    \r\n    ").append("public ").append(type + " ").append("get" + method + "() {\r\n    ");
             getset.append("    return this.").append(fieldName).append(";\r\n    }");
-            getset.append("\r\n    \r\n    ").append("public ").append(getTablesNameToClassName(tableName)).append(" ")
+            getset.append("\r\n    \r\n    ").append("public ").append(d.getClassName()).append(" ")
                     .append("set" + method + "(" + type + " " + fieldName + ") {\r\n    ");
             getset.append("    this.").append(fieldName).append(" = ").append(fieldName).append(";\r\n        return this;\r\n    }");
         }
@@ -150,6 +181,8 @@ public class CreateBean {
             case "mediumtext":
             case "text":
                 return "String";
+            case "enum":
+                return "enum";
             case "smallint":
             case "mediumint":
             case "integer":

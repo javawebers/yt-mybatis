@@ -5,11 +5,13 @@ import com.github.yt.mybatis.YtMybatisDemoApplication;
 
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
+import com.github.yt.mybatis.business.entity.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.business.service.IntIdService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
@@ -26,11 +28,19 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     @Resource
     IntIdService intIdService;
 
+
+
+
     @Test
     public void save_same() {
         DbEntitySame entity = new DbEntitySame();
+        entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22").setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
         dbEntitySameService.save(entity);
-        // TODO 验证
+        // id 不为空
+        Assert.assertNotNull(entity.getDbEntitySameId());
+        // find 然后判断各个值
+        DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertEquals(DbEntitySameTestEnumEnum.FEMALE, dbEntity.getTestEnum());
     }
 
     @Test

@@ -1,0 +1,10 @@
+package ${modulePackage}.${packageEntity};
+
+##@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
+public enum ${enumClassName} {
+    // ${columnComment}
+#foreach($item in $!{enumColumnDataList})
+    $item.name,
+#end
+
+}
