@@ -63,8 +63,11 @@ public class EntityUtils {
                 return field;
             }
         }
-        return getField(clazz.getSuperclass(), fieldName);
-
+        if (clazz.getSuperclass() == null || clazz.getSuperclass().equals(Object.class)) {
+            throw new BaseErrorException(YtMybatisExceptionEnum.CODE_94);
+        } else {
+            return getField(clazz.getSuperclass(), fieldName);
+        }
     }
 
     public static List<Field> getTableFieldList(Class<?> entityClass) {
@@ -147,12 +150,7 @@ public class EntityUtils {
         Map<Object, T> result = new HashMap<>();
         if (entityCollection != null && !entityCollection.isEmpty()) {
             for (T entity : entityCollection) {
-                Field propertyField = null;
-                try {
-                    propertyField = entity.getClass().getDeclaredField(propertyName);
-                } catch (NoSuchFieldException e) {
-                    throw new BaseErrorException(YtMybatisExceptionEnum.CODE_94, e);
-                }
+                Field propertyField = getField(entity.getClass(), propertyName);
                 result.put(getValue(entity, propertyField), entity);
             }
         }
