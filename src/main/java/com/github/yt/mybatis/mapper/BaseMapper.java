@@ -50,8 +50,4 @@ public interface BaseMapper<T> {
     @SelectProvider(type = BaseMapperProvider.class, method = "count")
     int count(Map<String, Object> param);
 
-    @SelectProvider(type = BaseMapperProvider.class, method = "findPageList")
-    List<T> findPageList(Map<String, Object> param);
-
-
 }

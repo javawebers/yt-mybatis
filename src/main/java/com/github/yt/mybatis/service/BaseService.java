@@ -157,7 +157,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
             page = PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, new ArrayList<>());
         } else {
             query.limit((query.takePageNo() - 1) * query.takePageSize(), query.takePageSize());
-            List<T> entityList = getMapper().findPageList(paramMap);
+            List<T> entityList = getMapper().findList(paramMap);
             page = PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, entityList);
         }
         return page;

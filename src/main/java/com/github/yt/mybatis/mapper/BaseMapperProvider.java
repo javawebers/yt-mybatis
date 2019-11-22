@@ -24,30 +24,31 @@ public class BaseMapperProvider {
 
         Query query = new Query();
         query.addWhere("t." + EntityUtils.getFieldColumnName(idField) + " = #{id}");
-        String mybatisSql = "";
-        mybatisSql += SqlUtils.getSelectAndFrom(entityClass, null);
-        mybatisSql += SqlUtils.getJoinAndOnCondition(query);
-        mybatisSql += SqlUtils.getWhere(null, query);
-        return mybatisSql;
+        StringBuffer sql = new StringBuffer();
+        sql.append(SqlUtils.getSelectAndFrom(entityClass, null));
+        sql.append(SqlUtils.getJoinAndOnCondition(query));
+        sql.append(SqlUtils.getWhere(null, query));
+        return sql.toString();
     }
 
     private String findSql(Map paramMap) {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
-        String mybatisSql = "";
-        mybatisSql += SqlUtils.getSelectAndFrom(entityCondition.getClass(), query);
-        mybatisSql += SqlUtils.getJoinAndOnCondition(query);
-        mybatisSql += SqlUtils.getWhere(entityCondition, query);
-        return mybatisSql;
+        StringBuffer sql = new StringBuffer();
+        sql.append(SqlUtils.getSelectAndFrom(entityCondition.getClass(), query));
+        sql.append(SqlUtils.getJoinAndOnCondition(query));
+        sql.append(SqlUtils.getWhere(entityCondition, query));
+        return SqlUtils.replaceInParam(sql, query).toString();
     }
 
     public String findList(Map paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         String mybatisSql = findSql(paramMap);
-        mybatisSql += SqlUtils.getGroupBy(query);
-        mybatisSql += SqlUtils.getOrderBy(query);
-        mybatisSql += SqlUtils.getLimit(query);
-        return mybatisSql;
+        StringBuffer sql = new StringBuffer(mybatisSql);
+        sql.append(SqlUtils.getGroupBy(query));
+        sql.append(SqlUtils.getOrderBy(query));
+        sql.append(SqlUtils.getLimit(query));
+        return SqlUtils.replaceInParam(sql, query).toString();
 
     }
 
@@ -73,7 +74,7 @@ public class BaseMapperProvider {
         // where
         query.addWhere("t." + deleteFlagColumn + " = false");
         sql.append(SqlUtils.getWhere(entityCondition, query));
-        return sql.toString();
+        return SqlUtils.replaceInParam(sql, query).toString();
     }
 
     public String delete(Map paramMap) {
@@ -84,7 +85,7 @@ public class BaseMapperProvider {
         sql.append("delete from ").append(EntityUtils.getTableName(entityCondition.getClass()));
         // where
         sql.append(SqlUtils.getWhere(entityCondition, query, ""));
-        return sql.toString();
+        return SqlUtils.replaceInParam(sql, query).toString();
     }
 
     public String deleteById(Map paramMap) {
@@ -110,25 +111,18 @@ public class BaseMapperProvider {
 
         // where
         sql.append(SqlUtils.getWhere(entityCondition, query));
-        return sql.toString();
+        return SqlUtils.replaceInParam(sql, query).toString();
     }
 
     public String count(Map paramMap) {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
-        String mybatisSql = "";
-        mybatisSql += SqlUtils.getSelectCountAndFrom(entityCondition.getClass());
-        mybatisSql += SqlUtils.getJoinAndOnCondition(query);
-        mybatisSql += SqlUtils.getWhere(entityCondition, query);
-        mybatisSql += SqlUtils.getGroupBy(query);
-        return mybatisSql;
-    }
-
-    public String findPageList(Map paramMap) {
-        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
-        String mybatisSql = "";
-        mybatisSql += findList(paramMap);
-        return mybatisSql;
+        StringBuffer sql = new StringBuffer();
+        sql.append(SqlUtils.getSelectCountAndFrom(entityCondition.getClass()));
+        sql.append(SqlUtils.getJoinAndOnCondition(query));
+        sql.append(SqlUtils.getWhere(entityCondition, query));
+        sql.append(SqlUtils.getGroupBy(query));
+        return SqlUtils.replaceInParam(sql, query).toString();
     }
 
     public <T> String saveBatch(Map map) {

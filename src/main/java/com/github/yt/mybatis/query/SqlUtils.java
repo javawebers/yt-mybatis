@@ -98,28 +98,43 @@ public class SqlUtils {
                 String where = YtStringUtils.join(query.takeWhereList().toArray(), ") and (");
                 resultBuffer.append(" and (").append(where).append(")");
             }
-
-            // query.inParamList
-            // 替换查询条件中的in参数
-            Map<String, Object> inParamListMap = new HashMap<>();
-            query.takeInParamList().forEach(inCondition -> {
-                String inSql;
-                String column = inCondition.takeParam().replaceAll("\\.", "__");
-                if (inCondition.takeValues() == null || inCondition.takeValues().isEmpty()) {
-                    inSql = "(null)";
-                } else {
-                    // #{_inCondition_.t__userId[0]}, #{_inCondition_.t__userId[1]}
-                    List<String> inParamList = new ArrayList<>();
-                    for (int i = 0; i < inCondition.takeValues().size(); i++) {
-                        inParamList.add("#{" + ParamUtils.IN_CONDITION + "." + column + "[" + i + "]}");
-                    }
-                    inSql = "(" + YtStringUtils.join(inParamList.toArray(), ", ") + ")";
-                }
-                inParamListMap.put(column, inSql);
-            });
-            resultBuffer = new StringBuffer(format(resultBuffer.toString(), inParamListMap));
         }
         return resultBuffer.toString();
+    }
+
+    /**
+     * 将sql中的 in 参数替换
+     * #{_inCondition_.t__userId[0]}, #{_inCondition_.t__userId[1]}
+     * @param sql sql 语句
+     * @param query query对象
+     * @return 新的语句
+     */
+    public static StringBuffer replaceInParam(StringBuffer sql, Query query){
+        if (query == null) {
+            return sql;
+        }
+        if (query.takeInParamList().size() == 0) {
+            return sql;
+        }
+        // query.inParamList
+        // 替换查询条件中的in参数
+        Map<String, Object> inParamListMap = new HashMap<>();
+        query.takeInParamList().forEach(inCondition -> {
+            String inSql;
+            String column = inCondition.takeParam().replaceAll("\\.", "__");
+            if (inCondition.takeValues() == null || inCondition.takeValues().isEmpty()) {
+                inSql = "(null)";
+            } else {
+                // #{_inCondition_.t__userId[0]}, #{_inCondition_.t__userId[1]}
+                List<String> inParamList = new ArrayList<>();
+                for (int i = 0; i < inCondition.takeValues().size(); i++) {
+                    inParamList.add("#{" + ParamUtils.IN_CONDITION + "." + column + "[" + i + "]}");
+                }
+                inSql = "(" + YtStringUtils.join(inParamList.toArray(), ", ") + ")";
+            }
+            inParamListMap.put(column, inSql);
+        });
+        return new StringBuffer(format(sql.toString(), inParamListMap));
     }
 
     public static String getOrderBy(Query query) {
