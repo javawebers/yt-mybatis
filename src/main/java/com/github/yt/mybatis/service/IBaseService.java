@@ -121,19 +121,36 @@ public interface IBaseService<T> {
     /**
      * 按条件查询记录集合
      *
-     * @param entity 业务实体类或业务查询实体类
+     * @param entityCondition 业务实体类或业务查询实体类
      * @return 业务实体集合
      */
-    List<T> findList(T entity);
+    List<T> findList(T entityCondition);
 
     /**
      * 按条件查询记录集合
      *
-     * @param entity       业务实体类或业务查询实体类
+     * @param entityCondition       业务实体类或业务查询实体类
      * @param query 查询辅助类
      * @return 业务实体集合
      */
-    List<T> findList(T entity, Query query);
+    List<T> findList(T entityCondition, Query query);
+
+    /**
+     * 查询数量
+     *
+     * @param entityCondition       业务实体类或业务查询实体类
+     * @return 数量
+     */
+    int count(T entityCondition);
+
+    /**
+     * 查询数量
+     *
+     * @param entityCondition       业务实体类或业务查询实体类
+     * @param query 查询辅助类
+     * @return 数量
+     */
+    int count(T entityCondition, Query query);
 
     /**
      * 获取数据

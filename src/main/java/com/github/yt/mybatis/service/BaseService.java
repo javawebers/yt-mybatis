@@ -138,10 +138,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
         return getMapper().findList(ParamUtils.getParamMap(entityCondition, query));
     }
 
+    @Override
     public int count(T entityCondition) {
         return count(entityCondition, new Query());
     }
 
+    @Override
     public int count(T entityCondition, Query query) {
         return getMapper().count(ParamUtils.getParamMap(entityCondition, query));
     }

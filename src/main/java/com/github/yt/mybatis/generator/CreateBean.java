@@ -189,7 +189,7 @@ public class CreateBean {
             case "int":
                 return "Integer";
             case "bigint":
-                return "java.math.BigInteger";
+                return "Long";
             case "decimal":
                 return "java.math.BigDecimal";
             case "timestamp":
