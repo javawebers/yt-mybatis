@@ -3,9 +3,19 @@ package com.github.yt.mybatis.entity;
 
 /**
  * entity 操作人信息默认实现
+ *
  * @author liujiasheng
  */
 public class DefaultBaseEntityValue implements BaseEntityValue {
+
+    private static final DefaultBaseEntityValue instance = new DefaultBaseEntityValue();
+
+    private DefaultBaseEntityValue() {
+    }
+
+    public static DefaultBaseEntityValue getInstance() {
+        return instance;
+    }
 
     @Override
     public String getFounderId() {
