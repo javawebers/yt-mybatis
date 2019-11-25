@@ -2,6 +2,7 @@ package com.github.yt.mybatis.mapper;
 
 import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.commons.query.Query;
+import com.github.yt.commons.util.YtArrayUtils;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.entity.YtColumnType;
@@ -183,21 +184,14 @@ public class BaseMapperProvider {
      */
     private <T> String update(T entity, boolean isUpdateNullField, String... selectedFieldColumnNames) {
         // 判断是否更新指定字段
-        boolean isUpdateSelectedField = false;
-        Set<String> selectedFieldColumnNameSet = null;
-        if (selectedFieldColumnNames != null && selectedFieldColumnNames.length > 0) {
-            isUpdateSelectedField = true;
-            selectedFieldColumnNameSet = new HashSet<>(Arrays.asList(selectedFieldColumnNames));
-            selectedFieldColumnNameSet.add("modifierId");
-            selectedFieldColumnNameSet.add("modifierName");
-            selectedFieldColumnNameSet.add("modifyTime");
-        }
+        Set<String> selectedFieldColumnNameSet = getSelectedFieldColumnNameSet(selectedFieldColumnNames, entity);
+
         // 设置修改人信息
         setModifier(entity);
 
-        Field idField = null;
         String sql = "";
 
+        Field idField = EntityUtils.getIdField(entity.getClass());
         Table tableAnnotation = entity.getClass().getAnnotation(Table.class);
         String tableName = tableAnnotation.name();
         List<String> fieldParamList = new ArrayList<>();
@@ -205,7 +199,6 @@ public class BaseMapperProvider {
             field.setAccessible(true);
             //处理主键
             if (null != field.getAnnotation(Id.class) || null != field.getAnnotation(Transient.class)) {
-                idField = field;
                 continue;
             }
             if (!isUpdateNullField) {
@@ -213,13 +206,14 @@ public class BaseMapperProvider {
                     continue;
                 }
             }
-            if (isUpdateSelectedField) {
+            if (selectedFieldColumnNameSet != null && selectedFieldColumnNameSet.size() > 0) {
                 if (!selectedFieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
                     continue;
                 }
             }
             fieldParamList.add("`" + EntityUtils.getFieldColumnName(field) + "` = #{entity." + field.getName() + "}");
         }
+
         String update = "update `" + tableName + "`";
         String set = " set " + YtStringUtils.join(fieldParamList.toArray(), ", ");
         String where = " where `" + EntityUtils.getFieldColumnName(idField) + "` = #{entity." + idField.getName() + "}";
@@ -286,6 +280,33 @@ public class BaseMapperProvider {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * @param selectedFieldColumnNames
+     * @param entity
+     * @param <T>
+     * @return
+     */
+    private <T> Set<String> getSelectedFieldColumnNameSet(String[] selectedFieldColumnNames, T entity) {
+        Set<String> selectedFieldColumnNameSet = null;
+        if (selectedFieldColumnNames != null && selectedFieldColumnNames.length > 0) {
+            selectedFieldColumnNameSet = new HashSet<>(Arrays.asList(selectedFieldColumnNames));
+            Field modifierIdField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_ID);
+            Field modifierNameField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_NAME);
+            Field modifyTimeField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFY_TIME);
+            if (modifierIdField != null) {
+                selectedFieldColumnNameSet.add(EntityUtils.getFieldColumnName(modifierIdField));
+            }
+            if (modifierNameField != null) {
+                selectedFieldColumnNameSet.add(EntityUtils.getFieldColumnName(modifierNameField));
+            }
+            if (modifyTimeField != null) {
+                selectedFieldColumnNameSet.add(EntityUtils.getFieldColumnName(modifyTimeField));
+            }
+        }
+        return selectedFieldColumnNameSet;
     }
 
     /**

@@ -48,17 +48,37 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         Assert.assertNotNull(entity.getDbEntitySameId());
         // find 然后判断各个值
         DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
-        Assert.assertEquals(entity.getTestBoolean(), (Boolean) true);
-        Assert.assertEquals(entity.getTestInt(), (Integer) 22);
-        Assert.assertEquals(entity.getTestVarchar(), "22");
+        Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean)true);
+        Assert.assertEquals(dbEntity.getTestInt(), (Integer) 22);
+        Assert.assertEquals(dbEntity.getTestVarchar(), "22");
         Assert.assertEquals(dbEntity.getTestEnum(), DbEntitySameTestEnumEnum.FEMALE);
+        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean)false);
+        //
+        Assert.assertNotNull(dbEntity.getCreateTime());
+        Assert.assertNotNull(dbEntity.getFounderId());
+        Assert.assertNotNull(dbEntity.getFounderName());
+        Assert.assertNull(dbEntity.getModifyTime());
+        Assert.assertNull(dbEntity.getModifierId());
+        Assert.assertNull(dbEntity.getModifierName());
     }
 
     @Test
     public void save_notSame() {
         DbEntityNotSame entity = new DbEntityNotSame();
+        entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22");
         dbEntityNotSameService.save(entity);
-        // TODO 验证
+        // id 不为空
+        Assert.assertNotNull(entity.getDbEntityNotSameId());
+        // find 然后判断各个值
+        DbEntityNotSame dbEntity = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean) true);
+        Assert.assertEquals(dbEntity.getTestInt(), (Integer) 22);
+        Assert.assertEquals(dbEntity.getTestVarchar(), "22");
+        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean)false);
+        Assert.assertNotNull(dbEntity.getCreateTime());
+        Assert.assertNotNull(dbEntity.getFounderId());
+        Assert.assertNull(dbEntity.getModifyTime());
+        Assert.assertNull(dbEntity.getModifierId());
     }
 
     @Test
@@ -84,30 +104,85 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         DbEntitySame entity = new DbEntitySame();
         dbEntitySameService.save(entity);
         entity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
-        entity.setTestInt(222);
-        dbEntitySameService.update(entity);
-        // TODO 验证
+        Assert.assertNull(entity.getTestInt());
+        Assert.assertNull(entity.getModifyTime());
+        Assert.assertNull(entity.getModifierId());
+        dbEntitySameService.update(entity.setTestInt(222));
+        // 验证
+        DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertEquals(dbEntity.getTestInt(), (Integer) 222);
+        Assert.assertNotNull(dbEntity.getModifyTime());
+        Assert.assertNotNull(dbEntity.getModifierId());
     }
+
+    @Test
+    public void update_sameWithFields() {
+        DbEntitySame entity = new DbEntitySame();
+        dbEntitySameService.save(entity);
+        entity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
+        Assert.assertNull(entity.getTestInt());
+        Assert.assertNull(entity.getModifyTime());
+        Assert.assertNull(entity.getModifierId());
+        // 指定字段更新
+        dbEntitySameService.update(entity.setTestInt(233), "testInt");
+        // 验证
+        DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertEquals(dbEntity.getTestInt(), (Integer) 233);
+        Assert.assertNotNull(dbEntity.getModifyTime());
+        Assert.assertNotNull(dbEntity.getModifierId());
+    }
+
 
     @Test
     public void update_notSame() {
         DbEntityNotSame entity = new DbEntityNotSame();
         dbEntityNotSameService.save(entity);
         entity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
-        entity.setTestInt(222);
-        dbEntityNotSameService.update(entity);
-        // TODO 验证
+        Assert.assertNull(entity.getTestInt());
+        Assert.assertNull(entity.getModifyTime());
+        Assert.assertNull(entity.getModifierId());
+        dbEntityNotSameService.update(entity.setTestInt(222));
+        // 验证
+        DbEntityNotSame dbEntity = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        Assert.assertEquals(dbEntity.getTestInt(), (Integer) 222);
+        Assert.assertNotNull(dbEntity.getModifyTime());
+        Assert.assertNotNull(dbEntity.getModifierId());
+    }
+
+    @Test
+    public void update_notSameWithFields() {
+        DbEntityNotSame entity = new DbEntityNotSame();
+        dbEntityNotSameService.save(entity);
+        entity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        Assert.assertNull(entity.getTestInt());
+        Assert.assertNull(entity.getModifyTime());
+        Assert.assertNull(entity.getModifierId());
+        dbEntityNotSameService.update(entity.setTestInt(222), "test_int");
+        // 验证
+        DbEntityNotSame dbEntity = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        Assert.assertEquals(dbEntity.getTestInt(), (Integer) 222);
+        Assert.assertNotNull(dbEntity.getModifyTime());
+        Assert.assertNotNull(dbEntity.getModifierId());
     }
 
     @Test
     public void updateByCondition_same() {
         DbEntitySame entity1 = new DbEntitySame().setTestInt(222);
         DbEntitySame entity2 = new DbEntitySame().setTestInt(222);
-        List<DbEntitySame> dbEntitySameList = Arrays.asList(entity1, entity2);
-        dbEntitySameService.saveBatch(dbEntitySameList);
-        dbEntitySameService.updateByCondition(new DbEntitySame().setTestInt(222), new Query().addUpdate("testVarchar = 'varchar222'"));
-
-        // TODO 验证
+        DbEntitySame entity3 = new DbEntitySame().setTestInt(233);
+        List<DbEntitySame> entityList = Arrays.asList(entity1, entity2, entity3);
+        dbEntitySameService.saveBatch(entityList);
+        Assert.assertNull(entity1.getTestVarchar());
+        Assert.assertNull(entity1.getModifyTime());
+        Assert.assertNull(entity1.getModifierId());
+        int num = dbEntitySameService.updateByCondition(new DbEntitySame().setTestInt(222), new Query().addUpdate("testVarchar = 'varchar222'"));
+        // 验证
+        Assert.assertEquals(num, 2);
+        List<DbEntitySame> dbEntityList = dbEntitySameService.findList(new DbEntitySame().setTestInt(222));
+        Assert.assertEquals(dbEntityList.size(), 2);
+        Assert.assertEquals(dbEntityList.get(0).getTestVarchar(), "varchar222");
+        Assert.assertNotNull(dbEntityList.get(0).getModifyTime());
+        Assert.assertNotNull(dbEntityList.get(0).getModifierId());
     }
 
     @Test
@@ -116,36 +191,72 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         DbEntityNotSame entity2 = new DbEntityNotSame().setTestInt(222);
         List<DbEntityNotSame> dbEntitySameList = Arrays.asList(entity1, entity2);
         dbEntityNotSameService.saveBatch(dbEntitySameList);
-        dbEntityNotSameService.updateByCondition(new DbEntityNotSame().setTestInt(222), new Query().addUpdate("test_varchar = 'varchar222'"));
-
-        // TODO 验证
+        Assert.assertNull(entity1.getTestVarchar());
+        Assert.assertNull(entity1.getModifyTime());
+        Assert.assertNull(entity1.getModifierId());
+        int num = dbEntityNotSameService.updateByCondition(new DbEntityNotSame().setTestInt(222), new Query().addUpdate("test_varchar = 'varchar222'"));
+        // 验证
+        Assert.assertEquals(num, 2);
+        List<DbEntityNotSame> dbEntityList = dbEntityNotSameService.findList(new DbEntityNotSame().setTestInt(222));
+        Assert.assertEquals(dbEntityList.size(), 2);
+        Assert.assertEquals(dbEntityList.get(0).getTestVarchar(), "varchar222");
+        Assert.assertNotNull(dbEntityList.get(0).getModifyTime());
+        Assert.assertNotNull(dbEntityList.get(0).getModifierId());
     }
 
     @Test
     public void delete_same() {
-        // TODO
+        DbEntitySame entity = new DbEntitySame();
+        entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22").setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
+        dbEntitySameService.save(entity);
+        // id 不为空
+        int num = dbEntitySameService.delete(DbEntitySame.class, entity.getDbEntitySameId());
+        Assert.assertEquals(num, 1);
+        DbEntitySame dbEntitySame = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertNull(dbEntitySame);
     }
 
     @Test
     public void delete_notSame() {
-        // TODO
+        DbEntityNotSame entity = new DbEntityNotSame();
+        entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22");
+        dbEntityNotSameService.save(entity);
+        // id 不为空
+        int num = dbEntityNotSameService.delete(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        Assert.assertEquals(num, 1);
+        DbEntityNotSame dbEntitySame = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        Assert.assertNull(dbEntitySame);
     }
 
     @Test
     public void logicDelete_same() {
         DbEntitySame entity = new DbEntitySame();
         dbEntitySameService.save(entity);
-        dbEntitySameService.logicDelete(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
-        // TODO 验证
+        int num = dbEntitySameService.logicDelete(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        // 验证
+        Assert.assertEquals(num, 1);
+        DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertNotNull(dbEntity.getModifyTime());
+        Assert.assertNotNull(dbEntity.getModifierId());
+        Assert.assertNull(dbEntity.getModifierName());
+        Assert.assertTrue(dbEntity.getDeleteFlag());
+        dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()).setDeleteFlag(false));
+        Assert.assertNull(dbEntity);
     }
 
     @Test
     public void logicDelete_notSame() {
         DbEntityNotSame entity = new DbEntityNotSame();
         dbEntityNotSameService.save(entity);
-        dbEntityNotSameService.logicDelete(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
-
-        // TODO
+        int num = dbEntityNotSameService.logicDelete(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        // 验证
+        Assert.assertEquals(num, 1);
+        DbEntityNotSame dbEntity = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        Assert.assertNotNull(dbEntity.getModifyTime());
+        Assert.assertNotNull(dbEntity.getModifierId());
+        Assert.assertTrue(dbEntity.getDeleteFlag());
+        dbEntity = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()).setDeleteFlag(false));
+        Assert.assertNull(dbEntity);
     }
 
     /**
