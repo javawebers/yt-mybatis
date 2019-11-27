@@ -15,8 +15,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+/**
+ * 实体类工具类
+ */
 public class EntityUtils {
 
+    /**
+     * 获取对象的属性值
+     *
+     * @param source 对象
+     * @param field  属性
+     * @return 属性值
+     */
     public static Object getValue(Object source, Field field) {
         try {
             field.setAccessible(true);
@@ -26,6 +36,13 @@ public class EntityUtils {
         }
     }
 
+    /**
+     * 获取对象的属性值
+     *
+     * @param source    对象
+     * @param fieldName 属性名
+     * @return 属性值
+     */
     public static Object getValue(Object source, String fieldName) {
         try {
             Field field = getField(source.getClass(), fieldName);
@@ -36,6 +53,13 @@ public class EntityUtils {
         }
     }
 
+    /**
+     * 设置对象属性值
+     *
+     * @param source 对象
+     * @param field  属性
+     * @param value  属性值
+     */
     public static void setValue(Object source, Field field, Object value) {
         try {
             field.setAccessible(true);
@@ -45,6 +69,13 @@ public class EntityUtils {
         }
     }
 
+    /**
+     * 是否包含某个属性
+     *
+     * @param clazz     类型
+     * @param fieldName 字段名
+     * @return 是否包含
+     */
     public static boolean hasField(Class clazz, String fieldName) {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
@@ -57,6 +88,13 @@ public class EntityUtils {
         return hasField(clazz.getSuperclass(), fieldName);
     }
 
+    /**
+     * 获取字段
+     *
+     * @param clazz     类型
+     * @param fieldName 字段名
+     * @return 字段
+     */
     public static Field getField(Class clazz, String fieldName) {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
@@ -70,6 +108,12 @@ public class EntityUtils {
         }
     }
 
+    /**
+     * 获取对象的所有 table field
+     *
+     * @param entityClass 对象类型
+     * @return 所有的 table 字段
+     */
     public static List<Field> getTableFieldList(Class<?> entityClass) {
         Field[] fields = entityClass.getDeclaredFields();//获得属性
         return getTableFieldList(entityClass.getSuperclass(), new ArrayList<>(Arrays.asList(fields)));
@@ -96,6 +140,12 @@ public class EntityUtils {
         return getTableFieldList(entityClass.getSuperclass(), fieldList);
     }
 
+    /**
+     * 获取 id 字段属性
+     *
+     * @param entityClass 对象类型
+     * @return id 属性
+     */
     public static Field getIdField(Class<?> entityClass) {
         for (Class<?> c = entityClass; c != Object.class; c = c.getSuperclass()) {
             Field[] fields = c.getDeclaredFields();//获得属性
@@ -108,11 +158,23 @@ public class EntityUtils {
         return null;
     }
 
+    /**
+     * 获取 id 字段的值
+     *
+     * @param entity 实体类
+     * @return id 字段的值
+     */
     public static Object getIdValue(Object entity) {
         Field idField = getIdField(entity.getClass());
         return getValue(entity, idField);
     }
 
+    /**
+     * 获取实体类表名
+     *
+     * @param entityClass 对象类型
+     * @return 实体类表名
+     */
     public static String getTableName(Class<?> entityClass) {
         Table tableAnnotation = entityClass.getAnnotation(Table.class);
         if (tableAnnotation == null || YtStringUtils.isEmpty(tableAnnotation.name())) {
@@ -135,6 +197,13 @@ public class EntityUtils {
         return column.name();
     }
 
+    /**
+     * 获取 key：id ， value：entity 的 map
+     *
+     * @param entityCollection 实体类集合
+     * @param <T>              实体类泛型
+     * @return map
+     */
     public static <T> Map<String, T> getIdEntityMap(Collection<T> entityCollection) {
         Map<String, T> result = new HashMap<>();
         if (entityCollection != null && !entityCollection.isEmpty()) {
@@ -146,6 +215,14 @@ public class EntityUtils {
         return result;
     }
 
+    /**
+     * 获取 key：属性值 ， value：entity 的 map
+     *
+     * @param propertyName     属性名
+     * @param entityCollection 实体类集合
+     * @param <T>              实体类泛型
+     * @return map
+     */
     public static <T> Map<Object, T> propertyEntityMap(String propertyName, Collection<T> entityCollection) {
         Map<Object, T> result = new HashMap<>();
         if (entityCollection != null && !entityCollection.isEmpty()) {
@@ -157,6 +234,14 @@ public class EntityUtils {
         return result;
     }
 
+    /**
+     * 获取map，key：属性值，value：集合。集合的 property 值一样
+     *
+     * @param propertyName     属性
+     * @param entityCollection 包含所有的集合
+     * @param <T>              泛型
+     * @return map
+     */
     public static <T> Map<Object, Collection<T>> propertyCollectionMap(String propertyName, Collection<T> entityCollection) {
         Map<Object, Collection<T>> result = new HashMap<>();
         if (entityCollection != null && !entityCollection.isEmpty()) {
@@ -246,6 +331,51 @@ public class EntityUtils {
     public static <T, R> void setListToEntity(Collection<T> mainCollection, Collection<R> subCollection,
                                               String collectionProperty) {
         setListToEntity(mainCollection, subCollection, collectionProperty, null, null);
+    }
+
+    /**
+     * 将 subCollection 中的对象设置到 mainCollection 中
+     *
+     * @param mainCollection  main 对象集合
+     * @param subCollection   sub 对象集合
+     * @param entityFieldName main对象中sub对象的属性
+     * @param mainFieldName   main对象对应的字段名
+     * @param subFieldName    sub对象对应的字段名
+     * @param <T>             main对象泛型
+     * @param <R>             sub对象泛型
+     */
+    public static <T, R> void setSubEntityToEntity(Collection<T> mainCollection, Collection<R> subCollection,
+                                                   String entityFieldName, String mainFieldName, String subFieldName) {
+        // 未测试，不爱写了，有空再写
+//        if (mainCollection == null || mainCollection.isEmpty() || subCollection == null || subCollection.isEmpty()) {
+//            return;
+//        }
+//        Map<Object, R> subPropertyMap = propertyEntityMap(subFieldName, subCollection);
+//        mainCollection.forEach(main -> {
+//            Object relationValue = getValue(main, mainFieldName);
+//            if (subPropertyMap.containsKey(relationValue)) {
+//                setValue(main, getField(main.getClass(), entityFieldName), subPropertyMap.get(relationValue));
+//            }
+//        });
+    }
+
+    /**
+     * 将 subCollection 中的对象设置到 mainCollection 中
+     *
+     * @param mainCollection main 对象集合
+     * @param subCollection  sub 对象集合
+     * @param valueFieldName main对象中 要设置值的属性名
+     * @param mainFieldName  main对象对应的字段名
+     * @param subFieldName   sub对象对应的字段名
+     * @param <T>            main对象泛型
+     * @param <R>            sub对象泛型
+     */
+    public static <T, R> void setValueToEntity(Collection<T> mainCollection, Collection<R> subCollection,
+                                               String valueFieldName, String mainFieldName, String subFieldName) {
+        // TODO
+        if (mainCollection == null || mainCollection.isEmpty() || subCollection == null || subCollection.isEmpty()) {
+            return;
+        }
     }
 
     /**
