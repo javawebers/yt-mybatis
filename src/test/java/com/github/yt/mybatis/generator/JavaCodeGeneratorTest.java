@@ -39,21 +39,23 @@ public class JavaCodeGeneratorTest {
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 BaseEntity.class
-                ,JavaCodeGenerator.TemplateEnum.PO
-                ,JavaCodeGenerator.TemplateEnum.BEAN
-//                ,
-//                JavaCodeGenerator.TemplateEnum.MAPPER,
+//                ,JavaCodeGenerator.TemplateEnum.PO
+//                ,JavaCodeGenerator.TemplateEnum.BEAN
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER
+                , JavaCodeGenerator.TemplateEnum.MAPPER_XML
+
 //                JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
+
     public void createNew2() {
         javaCodeGenerator.create("IntId",
                 "int 主键",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 BaseEntity.class
-                ,JavaCodeGenerator.TemplateEnum.PO
-                ,JavaCodeGenerator.TemplateEnum.BEAN
+                , JavaCodeGenerator.TemplateEnum.PO
+                , JavaCodeGenerator.TemplateEnum.BEAN
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
 //                ,JavaCodeGenerator.TemplateEnum.SERVICE
@@ -67,8 +69,8 @@ public class JavaCodeGeneratorTest {
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 BusinessBaseEntity.class
 
-                ,JavaCodeGenerator.TemplateEnum.PO
-                ,JavaCodeGenerator.TemplateEnum.BEAN
+                , JavaCodeGenerator.TemplateEnum.PO
+                , JavaCodeGenerator.TemplateEnum.BEAN
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
 //                ,JavaCodeGenerator.TemplateEnum.SERVICE
