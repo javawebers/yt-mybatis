@@ -3,35 +3,14 @@ package com.github.yt.mybatis.business.entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import com.github.yt.mybatis.entity.BaseEntity;
+import com.github.yt.mybatis.business.po.IntIdPO;
 
+/**
+* PO 类的扩展类
+*/
 @Table(name = "IntId")
-public class IntId extends BaseEntity<IntId>{
-	
-	/** 
-	 * id  
-	 */
-	@javax.persistence.Id
-	private Integer intId;
-	/** 
-	 * String类型  
-	 */
-	private String testVarchar;
-	
-	public Integer getIntId() {
-	    return this.intId;
-	}
-	
-	public IntId setIntId(Integer intId) {
-		this.intId = intId;
-		return this;
-	}
-	
-	public String getTestVarchar() {
-	    return this.testVarchar;
-	}
-	
-	public IntId setTestVarchar(String testVarchar) {
-		this.testVarchar = testVarchar;
-		return this;
-	}
+public class IntId extends IntIdPO<IntId> {
+
+    // 扩展字段，一对一对象等。字段上加 @Transient 注解
+
 }

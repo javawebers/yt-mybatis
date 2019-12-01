@@ -1,4 +1,4 @@
-package ${modulePackage}.${packageEntity};
+package ${modulePackage}.${packagePO};
 
 ##@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 public enum ${enumClassName} {

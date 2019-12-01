@@ -1,0 +1,11 @@
+package ${modulePackage}.${packagePO};
+
+import javax.persistence.Table;
+import javax.persistence.Column;
+${importBaseEntity}
+
+##@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
+@Table(name = "${tableName}")
+public class ${poClassName}<T extends  ${poClassName}<T>> ${extendsBaseEntity}{
+    ${fieldList}
+}

@@ -22,9 +22,15 @@ public class JavaCodeGenerator {
      * 最后一位包名，默认如下
      */
     private String packageEntity = "entity";
+    private String packagePO = "po";
     private String packageDao = "dao";
     private String packageService = "service";
     private String packageController = "controller";
+
+    public JavaCodeGenerator setPackagePO(String packagePO) {
+        this.packagePO = packagePO;
+        return this;
+    }
 
     public JavaCodeGenerator setPackageEntity(String packageEntity) {
         this.packageEntity = packageEntity;
@@ -77,7 +83,14 @@ public class JavaCodeGenerator {
      * 模板枚举
      */
     public enum TemplateEnum {
-        BEAN, MAPPER, MAPPER_XML, SERVICE, CONTROLLER, HTML;
+        PO,
+        BEAN,
+        MAPPER,
+        MAPPER_XML,
+        SERVICE,
+        CONTROLLER,
+        HTML,
+        ;
     }
 
     /**
@@ -144,6 +157,7 @@ public class JavaCodeGenerator {
         CreateBean createBean = new CreateBean();
         createBean.setMysqlInfo(url, username, passWord, dbInstance);
         String className = createBean.getTablesNameToClassName(tableName);
+        String poClassName = className + "PO";
         String replaceSuffixClassName = getReplaceSuffixClassName(className);
         String lowerName = className.substring(0, 1).toLowerCase() + className.substring(1, className.length());
         String replaceSuffixLowerName = replaceSuffixClassName.substring(0, 1).toLowerCase() + replaceSuffixClassName.substring(1, replaceSuffixClassName.length());
@@ -159,6 +173,7 @@ public class JavaCodeGenerator {
 
         // java,xml文件名称
         String entityPath = File.separator + packageEntity + File.separator + className + ".java";
+        String poPath = File.separator + packagePO + File.separator + poClassName + ".java";
         String mapperPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.java";
         String mapperXmlPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.xml";
         String servicePath = File.separator + packageService + File.separator + replaceSuffixClassName + "Service.java";
@@ -177,6 +192,7 @@ public class JavaCodeGenerator {
         }
         VelocityContext context = new VelocityContext();
         context.put("className", className);
+        context.put("poClassName", poClassName);
         context.put("lowerName", lowerName);
         context.put("codeName", tableDesc);
         context.put("tableName", tableName);
@@ -186,13 +202,14 @@ public class JavaCodeGenerator {
         context.put("replaceSuffixLowerName", replaceSuffixLowerName);
 
         context.put("packageEntity", packageEntity);
+        context.put("packagePO", packagePO);
         context.put("packageDao", packageDao);
         context.put("packageService", packageService);
         context.put("packageController", packageController);
 
         if (baseEntityClass != null) {
             context.put("importBaseEntity", "import " + baseEntityClass.getName() + ";");
-            context.put("extendsBaseEntity", "extends " + baseEntityClass.getSimpleName() + "<" + className + ">");
+            context.put("extendsBaseEntity", "extends " + baseEntityClass.getSimpleName() + "<T>");
         } else {
             context.put("importBaseEntity", "");
             context.put("extendsBaseEntity", "");
@@ -217,16 +234,20 @@ public class JavaCodeGenerator {
         // 生成Model
         for (TemplateEnum templateEnum : templates) {
             switch (templateEnum) {
-                case BEAN:
+                case PO:
+                    // 生成枚举
                     for (ColumnData columnData : columnDataList) {
                         if ("enum".equals(columnData.getDataType())) {
                             context.put("columnComment", columnData.getColumnComment()); // 生成enum
                             context.put("enumClassName", columnData.getEnumClassName()); // 生成enum
-                            String enumPath = File.separator + packageEntity + File.separator + columnData.getEnumClassName() + ".java";
+                            String enumPath = File.separator + packagePO + File.separator + columnData.getEnumClassName() + ".java";
                             context.put("enumColumnDataList", columnData.getEnumColumnDataList()); // 生成bean
                             CommonPageParser.writerPage(context, "Enum.java.vm", rootPath + javaPath + modulePakPath, enumPath); //
                         }
                     }
+                    CommonPageParser.writerPage(context, "PO.java.vm", rootPath + javaPath + modulePakPath, poPath); //
+                    break;
+                case BEAN:
                     CommonPageParser.writerPage(context, "Bean.java.vm", rootPath + javaPath + modulePakPath, entityPath); //
                     break;
                 case MAPPER:

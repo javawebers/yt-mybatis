@@ -4,8 +4,8 @@ import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
-import com.github.yt.mybatis.business.entity.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.entity.IntId;
+import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.business.service.IntIdService;
@@ -47,7 +47,9 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         // id 不为空
         Assert.assertNotNull(entity.getDbEntitySameId());
         // find 然后判断各个值
-        DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        DbEntitySame dbEntitySame = new DbEntitySame();
+        dbEntitySame.setDbEntitySameId(entity.getDbEntitySameId());
+        DbEntitySame dbEntity = dbEntitySameService.find(dbEntitySame);
         Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean)true);
         Assert.assertEquals(dbEntity.getTestInt(), (Integer) 22);
         Assert.assertEquals(dbEntity.getTestVarchar(), "22");
