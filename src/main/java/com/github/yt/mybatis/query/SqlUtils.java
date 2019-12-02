@@ -18,9 +18,13 @@ public class SqlUtils {
         fieldList.forEach(field -> {
             field.setAccessible(true);
             String fieldColumnName = EntityUtils.getFieldColumnName(field);
+            String fieldName = field.getName();
             String fieldAliasName = aliasName + "." + fieldColumnName;
             // 排除字段
             if (!excludeColumnSet.contains(fieldColumnName) && !excludeColumnSet.contains(fieldAliasName)) {
+                if (!fieldColumnName.equals(fieldName)) {
+                    fieldAliasName = fieldAliasName + " as " + fieldName;
+                }
                 columnList.add(fieldAliasName);
             }
         });

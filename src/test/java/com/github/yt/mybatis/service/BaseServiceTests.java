@@ -227,7 +227,6 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22");
         dbEntityNotSameService.save(entity);
         // id 不为空
-        // id 不为空
         int num = dbEntityNotSameService.delete(DbEntityNotSame.class, entity.getDbEntityNotSameId());
         Assert.assertEquals(num, 1);
         DbEntityNotSame dbEntitySame = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
