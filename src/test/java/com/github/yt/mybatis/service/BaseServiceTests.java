@@ -301,8 +301,52 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     public void findList_extendField() {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
-                new Query().addSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
+                new Query().addExtendSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
         Assert.assertEquals(dbList.size(), 4);
+        // 清理数据
+        deleteSame(list);
+    }
+
+    @Test
+    public void find_excludeField() {
+        List<DbEntitySame> list = save12SameThenReturn();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().addExcludeSelectColumn("t.testVarchar, testInt"));
+        DbEntitySame dbEntity = dbList.get(0);
+        Assert.assertNull(dbEntity.getTestVarchar());
+        Assert.assertNull(dbEntity.getTestInt());
+        Assert.assertNotNull(dbEntity.getTestBoolean());
+        // 清理数据
+        deleteSame(list);
+    }
+
+    @Test
+    public void find_extendAndExcludeField() {
+        List<DbEntitySame> list = save12SameThenReturn();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query()
+                        .addExcludeSelectColumn("testInt")
+                        .addExtendSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
+        DbEntitySame dbEntity = dbList.get(0);
+        Assert.assertNull(dbEntity.getTestInt());
+        Assert.assertNotNull(dbEntity.getTestBoolean());
+        Assert.assertNotNull(dbEntity.getCountNum());
+        // 清理数据
+        deleteSame(list);
+    }
+
+    @Test
+    public void find_excludeAllField() {
+        List<DbEntitySame> list = save12SameThenReturn();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query()
+                        .excludeAllSelectColumn()
+                        .addExtendSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
+        Assert.assertEquals(dbList.size(), 4);
+        DbEntitySame dbEntity = dbList.get(0);
+        Assert.assertNotNull(dbEntity.getTestVarchar());
+        Assert.assertNotNull(dbEntity.getCountNum());
+        Assert.assertNull(dbEntity.getTestBoolean());
         // 清理数据
         deleteSame(list);
     }
@@ -325,6 +369,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         // 清理数据
         deleteSame(list);
     }
+
 
 //    /**
 //     * entity 类中扩展类

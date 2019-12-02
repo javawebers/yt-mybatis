@@ -6,9 +6,7 @@ import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.query.Query;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 import javax.annotation.Resource;
@@ -27,7 +25,7 @@ public class FieldColumnConvertTests extends AbstractTestNGSpringContextTests {
         dbEntityNotSameService.save(dbEntityNotSame);
         // 查询出来，对比 testInt 是否为222
         DbEntityNotSame dbEntityNotSameDb = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(dbEntityNotSame.getDbEntityNotSameId()),
-                new Query().addSelectColumn("db_entity_not_same_id as dbEntityNotSameId, test_int as testInt"));
+                new Query().addExtendSelectColumn("db_entity_not_same_id as dbEntityNotSameId, test_int as testInt"));
         Assert.assertEquals("查询出内容和保存的内容不一致，dbEntityNotSameDb.getTestInt()：" + dbEntityNotSameDb.getTestInt(),
                 dbEntityNotSameDb.getTestInt(), testInt);
         dbEntityNotSameDb = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(dbEntityNotSame.getDbEntityNotSameId()),

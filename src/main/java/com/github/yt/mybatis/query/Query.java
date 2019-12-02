@@ -1,7 +1,5 @@
 package com.github.yt.mybatis.query;
 
-import com.github.yt.commons.query.PageQuery;
-
 import java.util.*;
 
 /**
@@ -17,7 +15,10 @@ public class Query implements MybatisQuery<Query> {
     protected boolean updateBaseColumn = true;
 
     final protected List<String> updateColumnList = new ArrayList<>();
-    final protected List<String> selectColumnList = new ArrayList<>();
+    final protected List<String> extendSelectColumnList = new ArrayList<>();
+    final protected List<String> excludeSelectColumnList = new ArrayList<>();
+    protected boolean excludeAllSelectColumn = false;
+
     final protected List<String> whereList = new ArrayList<>();
 
     final protected List<QueryInCondition> inParamList = new ArrayList<>();
@@ -54,10 +55,21 @@ public class Query implements MybatisQuery<Query> {
         return this;
     }
 
+    @Override
+    public Query addExtendSelectColumn(String extendSelectColumn) {
+        extendSelectColumnList.add(extendSelectColumn);
+        return this;
+    }
 
     @Override
-    public Query addSelectColumn(String selectColumn) {
-        selectColumnList.add(selectColumn);
+    public Query addExcludeSelectColumn(String excludeSelectColumn) {
+        excludeSelectColumnList.add(excludeSelectColumn);
+        return this;
+    }
+
+    @Override
+    public Query excludeAllSelectColumn() {
+        excludeAllSelectColumn = true;
         return this;
     }
 
@@ -118,8 +130,18 @@ public class Query implements MybatisQuery<Query> {
     }
 
     @Override
-    public List<String> takeSelectColumnList() {
-        return selectColumnList;
+    public List<String> takeExtendSelectColumnList() {
+        return extendSelectColumnList;
+    }
+
+    @Override
+    public List<String> takeExcludeSelectColumnList() {
+        return excludeSelectColumnList;
+    }
+
+    @Override
+    public boolean takeExcludeAllSelectColumn() {
+        return excludeAllSelectColumn;
     }
 
     @Override

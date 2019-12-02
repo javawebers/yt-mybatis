@@ -16,7 +16,7 @@ public class DbEntitySame extends DbEntitySamePO<DbEntitySame> {
     // 扩展字段，一对一对象等。字段上加 @Transient 注解
 
     @Transient
-    private int countNum;
+    private Integer countNum;
     @Transient
     private DbEntityNotSame dbEntityNotSame;
 
@@ -29,11 +29,11 @@ public class DbEntitySame extends DbEntitySamePO<DbEntitySame> {
         return this;
     }
 
-    public int getCountNum() {
+    public Integer getCountNum() {
         return countNum;
     }
 
-    public DbEntitySame setCountNum(int countNum) {
+    public DbEntitySame setCountNum(Integer countNum) {
         this.countNum = countNum;
         return this;
     }
