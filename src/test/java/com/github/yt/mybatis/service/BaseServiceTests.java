@@ -1,5 +1,6 @@
 package com.github.yt.mybatis.service;
 
+import com.github.yt.mybatis.YtMybatisConfig;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
@@ -8,6 +9,7 @@ import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.business.service.IntIdService;
+import com.github.yt.mybatis.query.Page;
 import com.github.yt.mybatis.query.Query;
 import com.github.yt.mybatis.query.QueryJoinType;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,11 +53,11 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         DbEntitySame dbEntitySame = new DbEntitySame();
         dbEntitySame.setDbEntitySameId(entity.getDbEntitySameId());
         DbEntitySame dbEntity = dbEntitySameService.find(dbEntitySame);
-        Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean)true);
+        Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean) true);
         Assert.assertEquals(dbEntity.getTestInt(), (Integer) 22);
         Assert.assertEquals(dbEntity.getTestVarchar(), "22");
         Assert.assertEquals(dbEntity.getTestEnum(), DbEntitySameTestEnumEnum.FEMALE);
-        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean)false);
+        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean) false);
         //
         Assert.assertNotNull(dbEntity.getCreateTime());
         Assert.assertNotNull(dbEntity.getFounderId());
@@ -77,7 +79,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean) true);
         Assert.assertEquals(dbEntity.getTestInt(), (Integer) 22);
         Assert.assertEquals(dbEntity.getTestVarchar(), "22");
-        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean)false);
+        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean) false);
         Assert.assertNotNull(dbEntity.getCreateTime());
         Assert.assertNotNull(dbEntity.getFounderId());
         Assert.assertNull(dbEntity.getModifyTime());
@@ -305,6 +307,25 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         deleteSame(list);
     }
 
+    @Test
+    public void findPage_propertiesName() {
+        List<DbEntitySame> list = save12SameThenReturn();
+        Page<DbEntitySame> dbPage = dbEntitySameService.findPage(new DbEntitySame()
+                , new Query().makePageNo(2).makePageSize(2));
+        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageNoName));
+        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageSizeName));
+        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageTotalCountName));
+        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageDataName));
+        Assert.assertEquals(dbPage.getPageNo(), 2);
+
+        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageNoName), 2);
+        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageSizeName), 2);
+        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageTotalCountName), 12);
+        Assert.assertEquals(((List)dbPage.get(YtMybatisConfig.pageDataName)).size(), 2);
+        // 清理数据
+        deleteSame(list);
+    }
+
 //    /**
 //     * entity 类中扩展类
 //     * 需要修改mapper，不建议这么使用
@@ -331,6 +352,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
                 new Query().addWhere("dbEntitySameId in ${dbEntitySameIdList}")
                         .addParam("dbEntitySameIdList", list.stream().map(DbEntitySame::getDbEntitySameId).collect(Collectors.toList())));
     }
+
     private void deleteNotSame(List<DbEntityNotSame> list) {
         dbEntityNotSameService.delete(new DbEntityNotSame(),
                 new Query().addWhere("db_entity_not_same_id in ${dbEntityNotSameIdList}")
@@ -382,7 +404,6 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntityNotSameService.saveBatch(entityList);
         return entityList;
     }
-
 
 
 }

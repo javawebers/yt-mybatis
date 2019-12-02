@@ -31,7 +31,7 @@ public class Page<T> extends LinkedHashMap<String, Object> {
         return this;
     }
 
-    public Page initValue(int pageNo, int pageSize, long totalCount, List<T> data) {
+    public Page initValue(int pageNo, int pageSize, int totalCount, List<T> data) {
         return setPageNo(pageNo).
                 setPageSize(pageSize).
                 setTotalCount(totalCount).
@@ -48,7 +48,7 @@ public class Page<T> extends LinkedHashMap<String, Object> {
         return this;
     }
 
-    private Page setTotalCount(long totalCount) {
+    private Page setTotalCount(int totalCount) {
         this.put(pageTotalCountName, totalCount);
         return this;
     }
@@ -66,8 +66,8 @@ public class Page<T> extends LinkedHashMap<String, Object> {
         return (Integer) this.get(pageSizeName);
     }
 
-    public long getTotalCount() {
-        return (Long) this.get(pageTotalCountName);
+    public int getTotalCount() {
+        return (Integer) this.get(pageTotalCountName);
     }
 
     public List<T> getData() {
