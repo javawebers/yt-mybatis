@@ -3,9 +3,15 @@ package ${modulePackage}.${packageEntity};
 import javax.persistence.Table;
 import javax.persistence.Column;
 ${importBaseEntity}
+import ${modulePackage}.${packagePO}.${poClassName};
 
+/**
+* PO 类的扩展类
+*/
 ##@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 @Table(name = "${tableName}")
-public class ${className} ${extendsBaseEntity}{
-    ${fieldList}
+public class ${className} extends ${poClassName}<${className}> {
+
+    // 扩展字段，一对一对象等。字段上加 @Transient 注解
+
 }

@@ -3,8 +3,8 @@ package com.github.yt.mybatis.service;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
-import com.github.yt.mybatis.business.entity.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.entity.IntId;
+import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.business.service.IntIdService;
@@ -48,7 +48,9 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         // id 不为空
         Assert.assertNotNull(entity.getDbEntitySameId());
         // find 然后判断各个值
-        DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        DbEntitySame dbEntitySame = new DbEntitySame();
+        dbEntitySame.setDbEntitySameId(entity.getDbEntitySameId());
+        DbEntitySame dbEntity = dbEntitySameService.find(dbEntitySame);
         Assert.assertEquals(dbEntity.getTestBoolean(), (Boolean)true);
         Assert.assertEquals(dbEntity.getTestInt(), (Integer) 22);
         Assert.assertEquals(dbEntity.getTestVarchar(), "22");
@@ -223,6 +225,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22");
         dbEntityNotSameService.save(entity);
         // id 不为空
+        // id 不为空
         int num = dbEntityNotSameService.delete(DbEntityNotSame.class, entity.getDbEntityNotSameId());
         Assert.assertEquals(num, 1);
         DbEntityNotSame dbEntitySame = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
@@ -289,12 +292,49 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         deleteSame(list);
     }
 
+    /**
+     * entity 类中扩展字段，分组查询的 countNum 测试
+     */
+    @Test
+    public void findList_extendField() {
+        List<DbEntitySame> list = save12SameThenReturn();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().addSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
+        Assert.assertEquals(dbList.size(), 4);
+        // 清理数据
+        deleteSame(list);
+    }
 
+//    /**
+//     * entity 类中扩展类
+//     * 需要修改mapper，不建议这么使用
+//     */
+//    @Test
+//    public void findList_extendClass() {
+//        List<DbEntitySame> list = save12SameThenReturn();
+//        List<DbEntityNotSame> notSameList = save12NotSameThenReturn();
+//        DbEntitySame entitySame = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(list.get(1).getDbEntitySameId()),
+//                new Query().addJoin(Query.JoinType.JOIN, "db_entity_not_same t2 on t.testVarchar = t2.test_varchar")
+//                        .addSelectColumn("t.dbEntitySameId, t.testVarchar, t2.test_varchar, t2.db_entity_not_same_id")
+//                        .addWhere("t2.test_int = 1"));
+//        Assert.assertNotNull(entitySame);
+//        Assert.assertNotNull(entitySame.getDbEntityNotSame());
+//        Assert.assertEquals(entitySame.getDbEntityNotSame().getTestVarchar(), "1");
+//
+//        // 清理数据
+//        deleteSame(list);
+//        deleteNotSame(notSameList);
+//    }
 
     private void deleteSame(List<DbEntitySame> list) {
         dbEntitySameService.delete(new DbEntitySame(),
                 new Query().addWhere("dbEntitySameId in ${dbEntitySameIdList}")
                         .addParam("dbEntitySameIdList", list.stream().map(DbEntitySame::getDbEntitySameId).collect(Collectors.toList())));
+    }
+    private void deleteNotSame(List<DbEntityNotSame> list) {
+        dbEntityNotSameService.delete(new DbEntityNotSame(),
+                new Query().addWhere("db_entity_not_same_id in ${dbEntityNotSameIdList}")
+                        .addParam("dbEntityNotSameIdList", list.stream().map(DbEntityNotSame::getDbEntityNotSameId).collect(Collectors.toList())));
     }
 
     /**
@@ -306,9 +346,13 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntitySame> entityList = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             DbEntitySame entity = new DbEntitySame();
+            // true false
             boolean testBoolean = (i % 2 == 0);
+            // 0 1 2
             int testInt = i % 3;
+            // 0 1 2 3
             String testVarchar = i % 4 + "";
+            // FEMALE MALE
             DbEntitySameTestEnumEnum testEnum = (i % 2 == 0) ? DbEntitySameTestEnumEnum.FEMALE : DbEntitySameTestEnumEnum.MALE;
             entity.setTestBoolean(testBoolean)
                     .setTestInt(testInt)
@@ -319,4 +363,26 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntitySameService.saveBatch(entityList);
         return entityList;
     }
+
+    private List<DbEntityNotSame> save12NotSameThenReturn() {
+        List<DbEntityNotSame> entityList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            DbEntityNotSame entity = new DbEntityNotSame();
+            // true false
+            boolean testBoolean = (i % 2 == 0);
+            // 0 1 2
+            int testInt = i % 3;
+            // 0 1 2 3
+            String testVarchar = i % 4 + "";
+            entity.setTestBoolean(testBoolean)
+                    .setTestInt(testInt)
+                    .setTestVarchar(testVarchar);
+            entityList.add(entity);
+        }
+        dbEntityNotSameService.saveBatch(entityList);
+        return entityList;
+    }
+
+
+
 }

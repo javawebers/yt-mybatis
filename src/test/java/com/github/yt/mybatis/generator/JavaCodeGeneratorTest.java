@@ -10,8 +10,8 @@ public class JavaCodeGeneratorTest {
         JavaCodeGeneratorTest javaCodeGeneratorTest = new JavaCodeGeneratorTest();
         javaCodeGeneratorTest.before();
         javaCodeGeneratorTest.createNew1();
-//        javaCodeGeneratorTest.createNew2();
-//        javaCodeGeneratorTest.createNew3();
+        javaCodeGeneratorTest.createNew2();
+        javaCodeGeneratorTest.createNew3();
     }
 
     JavaCodeGenerator javaCodeGenerator;
@@ -38,22 +38,27 @@ public class JavaCodeGeneratorTest {
                 "数据库属性和bean字段名一致",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
-                BaseEntity.class,
-                JavaCodeGenerator.TemplateEnum.BEAN
-//                ,
-//                JavaCodeGenerator.TemplateEnum.MAPPER,
+                BaseEntity.class
+//                ,JavaCodeGenerator.TemplateEnum.PO
+//                ,JavaCodeGenerator.TemplateEnum.BEAN
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER
+                , JavaCodeGenerator.TemplateEnum.MAPPER_XML
+
 //                JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
+
     public void createNew2() {
         javaCodeGenerator.create("IntId",
                 "int 主键",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
-                BaseEntity.class,
-                JavaCodeGenerator.TemplateEnum.BEAN,
-                JavaCodeGenerator.TemplateEnum.MAPPER,
-                JavaCodeGenerator.TemplateEnum.SERVICE
+                BaseEntity.class
+                , JavaCodeGenerator.TemplateEnum.PO
+                , JavaCodeGenerator.TemplateEnum.BEAN
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
+//                ,JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
 
@@ -62,11 +67,13 @@ public class JavaCodeGeneratorTest {
                 "db_entity_not_same 中文描述",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
-                BusinessBaseEntity.class,
-                JavaCodeGenerator.TemplateEnum.BEAN,
-                JavaCodeGenerator.TemplateEnum.MAPPER,
-//                JavaCodeGenerator.TemplateEnum.MAPPER_XML,
-                JavaCodeGenerator.TemplateEnum.SERVICE
+                BusinessBaseEntity.class
+
+                , JavaCodeGenerator.TemplateEnum.PO
+                , JavaCodeGenerator.TemplateEnum.BEAN
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
+//                ,JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
 

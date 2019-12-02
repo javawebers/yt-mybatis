@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.yt.mybatis.business.dao.DbEntitySameMapper">
+    <!-- Result Map-->
+    <resultMap id="cascadeResultMap" type="com.github.yt.mybatis.business.entity.DbEntitySame">
+        <result property="dbEntitySameId" column="dbEntitySameId"/>
+        <result property="testVarchar" column="testVarchar"/>
+        <result property="testInt" column="testInt"/>
+        <result property="testBoolean" column="testBoolean"/>
+        <result property="testEnum" column="testEnum"/>
+        <result property="testEnum2" column="testEnum2"/>
+        <result property="founderId" column="founderId"/>
+        <result property="founderName" column="founderName"/>
+        <result property="createTime" column="createTime"/>
+        <result property="modifierId" column="modifierId"/>
+        <result property="modifierName" column="modifierName"/>
+        <result property="modifyTime" column="modifyTime"/>
+        <result property="deleteFlag" column="deleteFlag"/>
+        <association property="dbEntityNotSame" javaType="com.github.yt.mybatis.business.entity.DbEntityNotSame">
+            <result property="testVarchar" column="test_varchar"/>
+            <result property="dbEntityNotSameId" column="db_entity_not_same_id"/>
+        </association>
+    </resultMap>
+
+</mapper>   
