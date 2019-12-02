@@ -1,12 +1,11 @@
 package com.github.yt.mybatis.mapper;
 
 import com.github.yt.commons.exception.BaseAccidentException;
-import com.github.yt.commons.query.Query;
-import com.github.yt.commons.util.YtArrayUtils;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.query.ParamUtils;
+import com.github.yt.mybatis.query.Query;
 import com.github.yt.mybatis.query.SqlUtils;
 import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.EntityUtils;

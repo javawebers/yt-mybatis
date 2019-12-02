@@ -1,14 +1,9 @@
 package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
-import com.github.yt.commons.query.Page;
-import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
-import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.mapper.BaseMapper;
-import com.github.yt.mybatis.query.PageUtils;
-import com.github.yt.mybatis.query.ParamUtils;
-import com.github.yt.mybatis.util.BaseEntityUtils;
+import com.github.yt.mybatis.query.*;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 
@@ -76,13 +71,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int updateByCondition(T entityCondition, Query query) {
+    public int updateByCondition(T entityCondition, MybatisQuery query) {
         return getMapper().updateByCondition(ParamUtils.getParamMap(entityCondition, query));
     }
 
 
     @Override
-    public int logicDelete(T entityCondition, Query query) {
+    public int logicDelete(T entityCondition, MybatisQuery query) {
         return getMapper().logicDelete(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -102,7 +97,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int delete(T entityCondition, Query query) {
+    public int delete(T entityCondition, MybatisQuery query) {
         return getMapper().delete(ParamUtils.getParamMap(entityCondition, query));
 
     }
@@ -121,7 +116,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public T find(T entityCondition, Query query) {
+    public T find(T entityCondition, MybatisQuery query) {
         if (query.takeLimitFrom() == null) {
             query.limit(0, 2);
         }
@@ -134,7 +129,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public List<T> findList(T entityCondition, Query query) {
+    public List<T> findList(T entityCondition, MybatisQuery query) {
         return getMapper().findList(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -144,12 +139,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int count(T entityCondition, Query query) {
+    public int count(T entityCondition, MybatisQuery query) {
         return getMapper().count(ParamUtils.getParamMap(entityCondition, query));
     }
 
     @Override
-    public Page<T> findPage(T entityCondition, Query query) {
+    public Page<T> findPage(T entityCondition, MybatisQuery query) {
         // 设置页数页码
         ParamUtils.setPageInfo(query);
         Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query);

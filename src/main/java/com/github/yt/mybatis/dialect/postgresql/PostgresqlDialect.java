@@ -1,7 +1,7 @@
 package com.github.yt.mybatis.dialect.postgresql;
 
-import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.dialect.BaseDialect;
+import com.github.yt.mybatis.query.MybatisQuery;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class PostgresqlDialect extends BaseDialect {
 
     @Override
-    public String limitSql(Query query) {
+    public String limitSql(MybatisQuery query) {
         return " limit " + query.takeLimitSize() + " offset " + query.takeLimitFrom() + " ";
     }
 

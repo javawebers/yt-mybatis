@@ -1,8 +1,5 @@
 package com.github.yt.mybatis.query;
 
-
-import com.github.yt.commons.query.Query;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,18 +11,17 @@ public class ParamUtils {
     public static final String NOT_IN_CONDITION = "_notInCondition_";
 
 
-    public static Query setPageInfo(Query query) {
-
+    public static <T> T setPageInfo(MybatisQuery query) {
         if (query.takePageNo() == null) {
             query.makePageNo(1);
         }
         if (query.takePageSize() == null) {
             query.makePageSize(20);
         }
-        return query;
+        return (T)query;
     }
 
-    public static <T> Map<String, Object> getParamMap(T entityCondition, Query query) {
+    public static <T> Map<String, Object> getParamMap(T entityCondition, MybatisQuery query) {
         Map<String, Object> param = new HashMap<>();
         // query对象传递
         param.put(QUERY_OBJECT, query);
@@ -35,14 +31,14 @@ public class ParamUtils {
         if (query != null) {
             // addParam中的参数
             query.takeParam().forEach((paramName, paramValue) -> {
-                param.put(paramName, paramValue);
+                param.put((String) paramName, paramValue);
             });
             // in
             Map<String, Object[]> inParamMap = new HashMap<>();
             query.takeInParamList().forEach(inCondition -> {
-                String column = inCondition.takeParam().replaceAll("\\.", "__");
-                for (int i = 0; i<inCondition.takeValues().size(); i++) {
-                    inParamMap.put(column, inCondition.takeValues().toArray());
+                String column = ((QueryInCondition) inCondition).takeParam().replaceAll("\\.", "__");
+                for (int i = 0; i < ((QueryInCondition) inCondition).takeValues().size(); i++) {
+                    inParamMap.put(column, ((QueryInCondition) inCondition).takeValues().toArray());
                 }
                 param.put(ParamUtils.IN_CONDITION, inParamMap);
             });

@@ -1,9 +1,9 @@
 package com.github.yt.mybatis.service;
 
-import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
+import com.github.yt.mybatis.query.Query;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

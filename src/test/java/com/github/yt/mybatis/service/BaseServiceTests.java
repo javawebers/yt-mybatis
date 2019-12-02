@@ -1,6 +1,5 @@
 package com.github.yt.mybatis.service;
 
-import com.github.yt.commons.query.Query;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
@@ -9,6 +8,8 @@ import com.github.yt.mybatis.business.entity.IntId;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.business.service.IntIdService;
+import com.github.yt.mybatis.query.Query;
+import com.github.yt.mybatis.query.QueryJoinType;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
@@ -281,12 +282,14 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     public void findList_inJoin() {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
-                new Query().addJoin(Query.JoinType.JOIN, "DbEntitySame t2 on t.dbEntitySameId = t2.dbEntitySameId and t2.testVarchar in ${testVarcharList}")
+                new Query().addJoin(QueryJoinType.JOIN, "DbEntitySame t2 on t.dbEntitySameId = t2.dbEntitySameId and t2.testVarchar in ${testVarcharList}")
                         .addParam("testVarcharList", Arrays.asList("0", "1")));
         Assert.assertEquals(dbList.size(), 6);
         // 清理数据
         deleteSame(list);
     }
+
+
 
     private void deleteSame(List<DbEntitySame> list) {
         dbEntitySameService.delete(new DbEntitySame(),

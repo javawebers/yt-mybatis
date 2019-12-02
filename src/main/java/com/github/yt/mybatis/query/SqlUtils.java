@@ -1,7 +1,5 @@
 package com.github.yt.mybatis.query;
 
-
-import com.github.yt.commons.query.Query;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.dialect.DialectFactory;
 import com.github.yt.mybatis.util.EntityUtils;
@@ -30,7 +28,7 @@ public class SqlUtils {
         return columnSet;
     }
 
-    public static String getUpdateSet(Query query){
+    public static String getUpdateSet(Query query) {
         String set;
         set = YtStringUtils.join(query.takeUpdateColumnList().toArray(), ", ");
         return " set " + set + " ";
@@ -105,11 +103,12 @@ public class SqlUtils {
     /**
      * 将sql中的 in 参数替换
      * #{_inCondition_.t__userId[0]}, #{_inCondition_.t__userId[1]}
-     * @param sql sql 语句
+     *
+     * @param sql   sql 语句
      * @param query query对象
      * @return 新的语句
      */
-    public static StringBuffer replaceInParam(StringBuffer sql, Query query){
+    public static StringBuffer replaceInParam(StringBuffer sql, Query query) {
         if (query == null) {
             return sql;
         }
@@ -159,11 +158,12 @@ public class SqlUtils {
 
     /**
      * 替换字符串中${values} 变量为指定字符串
+     *
      * @param template 要替换的字符串
-     * @param params 替换参数
+     * @param params   替换参数
      * @return 替换后的字符串
      */
-    public static String format(String template, Map<String, Object> params){
+    public static String format(String template, Map<String, Object> params) {
         StringBuffer sb = new StringBuffer();
         String s = "\\$\\{\\s*\\w+\\s*\\}";
         Matcher m = Pattern.compile(s).matcher(template);
