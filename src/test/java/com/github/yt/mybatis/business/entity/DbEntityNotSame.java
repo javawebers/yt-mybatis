@@ -2,6 +2,8 @@ package com.github.yt.mybatis.business.entity;
 
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Transient;
+
 import com.github.yt.mybatis.business.entity.BusinessBaseEntity;
 import com.github.yt.mybatis.business.po.DbEntityNotSamePO;
 
@@ -12,5 +14,15 @@ import com.github.yt.mybatis.business.po.DbEntityNotSamePO;
 public class DbEntityNotSame extends DbEntityNotSamePO<DbEntityNotSame> {
 
     // 扩展字段，一对一对象等。字段上加 @Transient 注解
+    @Transient
+    private Integer countNum;
 
+    public Integer getCountNum() {
+        return countNum;
+    }
+
+    public DbEntityNotSame setCountNum(Integer countNum) {
+        this.countNum = countNum;
+        return this;
+    }
 }

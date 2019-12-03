@@ -307,6 +307,16 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void findList_notSameExtendField() {
+        List<DbEntityNotSame> list = save12NotSameThenReturn();
+        List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
+                new Query().addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
+        Assert.assertEquals(dbList.size(), 4);
+        // 清理数据
+        deleteNotSame(list);
+    }
+
+    @Test
     public void find_excludeField() {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
@@ -317,6 +327,20 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         Assert.assertNotNull(dbEntity.getTestBoolean());
         // 清理数据
         deleteSame(list);
+    }
+
+    @Test
+    public void find_notSameExcludeField() {
+        List<DbEntityNotSame> list = save12NotSameThenReturn();
+        List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
+                new Query()
+                        .addExcludeSelectColumn("t.test_varchar, test_int"));
+        DbEntityNotSame dbEntity = dbList.get(0);
+        Assert.assertNull(dbEntity.getTestVarchar());
+        Assert.assertNull(dbEntity.getTestInt());
+        Assert.assertNotNull(dbEntity.getTestBoolean());
+        // 清理数据
+        deleteNotSame(list);
     }
 
     @Test
@@ -335,6 +359,21 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void find_notSameExtendAndExcludeField() {
+        List<DbEntityNotSame> list = save12NotSameThenReturn();
+        List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
+                new Query()
+                        .addExcludeSelectColumn("test_int")
+                        .addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
+        DbEntityNotSame dbEntity = dbList.get(0);
+        Assert.assertNull(dbEntity.getTestInt());
+        Assert.assertNotNull(dbEntity.getTestBoolean());
+        Assert.assertNotNull(dbEntity.getCountNum());
+        // 清理数据
+        deleteNotSame(list);
+    }
+
+    @Test
     public void find_excludeAllField() {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
@@ -348,6 +387,22 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         Assert.assertNull(dbEntity.getTestBoolean());
         // 清理数据
         deleteSame(list);
+    }
+
+    @Test
+    public void find_notSameExcludeAllField() {
+        List<DbEntityNotSame> list = save12NotSameThenReturn();
+        List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
+                new Query()
+                        .excludeAllSelectColumn()
+                        .addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
+        Assert.assertEquals(dbList.size(), 4);
+        DbEntityNotSame dbEntity = dbList.get(0);
+        Assert.assertNotNull(dbEntity.getTestVarchar());
+        Assert.assertNotNull(dbEntity.getCountNum());
+        Assert.assertNull(dbEntity.getTestBoolean());
+        // 清理数据
+        deleteNotSame(list);
     }
 
     @Test
@@ -368,28 +423,6 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         // 清理数据
         deleteSame(list);
     }
-
-
-//    /**
-//     * entity 类中扩展类
-//     * 需要修改mapper，不建议这么使用
-//     */
-//    @Test
-//    public void findList_extendClass() {
-//        List<DbEntitySame> list = save12SameThenReturn();
-//        List<DbEntityNotSame> notSameList = save12NotSameThenReturn();
-//        DbEntitySame entitySame = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(list.get(1).getDbEntitySameId()),
-//                new Query().addJoin(Query.JoinType.JOIN, "db_entity_not_same t2 on t.testVarchar = t2.test_varchar")
-//                        .addSelectColumn("t.dbEntitySameId, t.testVarchar, t2.test_varchar, t2.db_entity_not_same_id")
-//                        .addWhere("t2.test_int = 1"));
-//        Assert.assertNotNull(entitySame);
-//        Assert.assertNotNull(entitySame.getDbEntityNotSame());
-//        Assert.assertEquals(entitySame.getDbEntityNotSame().getTestVarchar(), "1");
-//
-//        // 清理数据
-//        deleteSame(list);
-//        deleteNotSame(notSameList);
-//    }
 
     private void deleteSame(List<DbEntitySame> list) {
         dbEntitySameService.delete(new DbEntitySame(),
