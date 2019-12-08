@@ -3,12 +3,15 @@ package ${modulePackage}.${packageDao};
 import ${modulePackage}.${packageEntity}.${className};
 import com.github.yt.mybatis.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
 
 /**
  * ${replaceSuffixClassName} Mapper
  *
  */
 @Mapper
+@Repository
 public interface ${replaceSuffixClassName}Mapper extends BaseMapper<${className}> {
 
 
