@@ -5,7 +5,7 @@ import com.github.yt.mybatis.business.dao.DbEntityNotSameMapper;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DbEntityNotSameServiceImpl extends BaseService<DbEntityNotSame> implements DbEntityNotSameService {
 
-	@Autowired
+    @Resource
     private DbEntityNotSameMapper mapper;
 
 }

@@ -2,16 +2,14 @@ package com.github.yt.mybatis.generator;
 
 import com.github.yt.mybatis.business.entity.BusinessBaseEntity;
 import com.github.yt.mybatis.entity.BaseEntity;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 public class JavaCodeGeneratorTest {
     public static void main(String[] args) {
         JavaCodeGeneratorTest javaCodeGeneratorTest = new JavaCodeGeneratorTest();
         javaCodeGeneratorTest.before();
-        javaCodeGeneratorTest.createNew1();
-        javaCodeGeneratorTest.createNew2();
-        javaCodeGeneratorTest.createNew3();
+        javaCodeGeneratorTest.createSame();
+//        javaCodeGeneratorTest.createIntId();
+        javaCodeGeneratorTest.createNotSame();
     }
 
     JavaCodeGenerator javaCodeGenerator;
@@ -33,7 +31,7 @@ public class JavaCodeGeneratorTest {
 //                "bean", "mapper", "service");
 //    }
 
-    public void createNew1() {
+    public void createSame() {
         javaCodeGenerator.create("DbEntitySame",
                 "数据库属性和bean字段名一致",
                 "com.github.yt.mybatis.business",
@@ -41,39 +39,38 @@ public class JavaCodeGeneratorTest {
                 BaseEntity.class
 //                ,JavaCodeGenerator.TemplateEnum.PO
 //                ,JavaCodeGenerator.TemplateEnum.BEAN
-//                ,JavaCodeGenerator.TemplateEnum.MAPPER
-                , JavaCodeGenerator.TemplateEnum.MAPPER_XML
-
-//                JavaCodeGenerator.TemplateEnum.SERVICE
+                ,JavaCodeGenerator.TemplateEnum.MAPPER
+//                , JavaCodeGenerator.TemplateEnum.MAPPER_XML
+                ,JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
 
-    public void createNew2() {
+    public void createIntId() {
         javaCodeGenerator.create("IntId",
                 "int 主键",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 BaseEntity.class
-                , JavaCodeGenerator.TemplateEnum.PO
-                , JavaCodeGenerator.TemplateEnum.BEAN
-//                ,JavaCodeGenerator.TemplateEnum.MAPPER
+//                , JavaCodeGenerator.TemplateEnum.PO
+//                , JavaCodeGenerator.TemplateEnum.BEAN
+                ,JavaCodeGenerator.TemplateEnum.MAPPER
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
-//                ,JavaCodeGenerator.TemplateEnum.SERVICE
+                ,JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
 
-    public void createNew3() {
+    public void createNotSame() {
         javaCodeGenerator.create("db_entity_not_same",
                 "db_entity_not_same 中文描述",
                 "com.github.yt.mybatis.business",
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 BusinessBaseEntity.class
 
-                , JavaCodeGenerator.TemplateEnum.PO
-                , JavaCodeGenerator.TemplateEnum.BEAN
-//                ,JavaCodeGenerator.TemplateEnum.MAPPER
+//                , JavaCodeGenerator.TemplateEnum.PO
+//                , JavaCodeGenerator.TemplateEnum.BEAN
+                ,JavaCodeGenerator.TemplateEnum.MAPPER
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
-//                ,JavaCodeGenerator.TemplateEnum.SERVICE
+                ,JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
 
