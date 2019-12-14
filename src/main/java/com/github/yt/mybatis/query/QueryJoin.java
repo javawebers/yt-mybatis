@@ -1,5 +1,9 @@
 package com.github.yt.mybatis.query;
 
+
+/**
+ * @author sheng
+ */
 public class QueryJoin {
     private QueryJoinType joinType;
     private String tableNameAndOnConditions;

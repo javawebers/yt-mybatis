@@ -113,7 +113,6 @@ public class Query implements MybatisQuery<Query> {
         return this;
     }
 
-    ////// take 参数
     @Override
     public Map<String, Object> takeParam() {
         return param;
@@ -166,7 +165,6 @@ public class Query implements MybatisQuery<Query> {
     }
 
 
-    ///////////////////////////////
     @Override
     public Query makePageNo(Integer pageNo) {
         this.pageNo = pageNo;

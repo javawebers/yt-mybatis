@@ -3,6 +3,9 @@ package com.github.yt.mybatis;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author sheng
+ */
 @Configuration
 public class YtMybatisConfig {
     public static String dialect;

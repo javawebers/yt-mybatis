@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * mybatis 查询条件
+ * @author sheng
  */
 public interface MybatisQuery<T extends MybatisQuery> extends PageQuery<T> {
 
@@ -106,31 +107,83 @@ public interface MybatisQuery<T extends MybatisQuery> extends PageQuery<T> {
      */
     T addJoin(QueryJoinType joinType, String tableNameAndOnConditions);
 
-    ////// take 参数
+
+    /**
+     * 获取参数
+     * @return
+     */
     Map<String, Object> takeParam();
 
+    /**
+     * 是否更新基础字段
+     * @return
+     */
     boolean takeUpdateBaseColumn();
 
+    /**
+     * in 查询参数集合
+     * @return
+     */
     List<QueryInCondition> takeInParamList();
 
+    /**
+     * 更新字段集合
+     * @return
+     */
     List<String> takeUpdateColumnList();
 
+    /**
+     * 扩展字段集合
+     * @return
+     */
     List<String> takeExtendSelectColumnList();
 
+    /**
+     * 排除字段集合
+     * @return
+     */
     List<String> takeExcludeSelectColumnList();
 
+    /**
+     * 是否排除所有字段
+     * @return
+     */
     boolean takeExcludeAllSelectColumn();
 
+    /**
+     * 获取查询条件集合
+     * @return
+     */
     List<String> takeWhereList();
 
+    /**
+     * 获取 order by 集合
+     * @return
+     */
     List<String> takeOrderByList();
 
+    /**
+     * 获取 group by
+     * @return
+     */
     String takeGroupBy();
 
+    /**
+     * 获取 join 集合
+     * @return
+     */
     List<QueryJoin> takeJoinList();
 
+    /**
+     * 获取 limit 开始
+     * @return
+     */
     Integer takeLimitFrom();
 
+    /**
+     * 获取 limit 条数
+     * @return
+     */
     Integer takeLimitSize();
 
 }

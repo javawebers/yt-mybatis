@@ -1,37 +1,30 @@
 package com.github.yt.mybatis.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author sheng
+ */
 @Table
 public class BaseEntity<T extends BaseEntity<T>> implements Serializable {
 
     private static final long serialVersionUID = 6468926052770326495L;
 
-    // 创建时间
     @YtBaseEntityColumn(YtColumnType.CREATE_TIME)
     private Date createTime;
-    // 修改时间
     @YtBaseEntityColumn(YtColumnType.MODIFY_TIME)
     private Date modifyTime;
-    // 创建人ID
     @YtBaseEntityColumn(YtColumnType.FOUNDER_ID)
     private String founderId;
-    // 创建人姓名
     @YtBaseEntityColumn(YtColumnType.FOUNDER_NAME)
     private String founderName;
-    // 修改人ID
     @YtBaseEntityColumn(YtColumnType.MODIFIER_ID)
     private String modifierId;
-    // 修改人姓名
     @YtBaseEntityColumn(YtColumnType.MODIFIER_NAME)
     private String modifierName;
-    // 删除标示
     @Column(nullable = false)
     @YtBaseEntityColumn(YtColumnType.DELETE_FLAG)
     private Boolean deleteFlag;

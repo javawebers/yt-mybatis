@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Properties;
 
 
+/**
+ * @author sheng
+ */
 public class PropertyConfigurer extends PropertyPlaceholderConfigurer {
     private static Map<String, String> propertiesMap = new HashMap<>();
 

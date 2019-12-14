@@ -8,6 +8,9 @@ import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import java.lang.reflect.Field;
 
 
+/**
+ * @author sheng
+ */
 public class BeanUtils {
 
     /**

@@ -4,6 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
+/**
+ * @author sheng
+ */
 public class ChainMap<K, V> extends LinkedHashMap<K, V> {
 
     private static final long serialVersionUID = -8256232046919043447L;

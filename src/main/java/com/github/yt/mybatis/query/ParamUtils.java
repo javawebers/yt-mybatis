@@ -3,6 +3,9 @@ package com.github.yt.mybatis.query;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author sheng
+ */
 public class ParamUtils {
 
     public static final String QUERY_OBJECT = "_queryObject_";

@@ -3,7 +3,6 @@ package com.github.yt.mybatis.util;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-//import org.springframework.web.context.support.AbstractRefreshableWebApplicationContext;
 
 import java.util.Map;
 

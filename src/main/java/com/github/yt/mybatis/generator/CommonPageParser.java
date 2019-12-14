@@ -12,6 +12,9 @@ import java.io.OutputStreamWriter;
 import java.util.Properties;
 
 
+/**
+ * @author sheng
+ */
 public class CommonPageParser {
 
     private static VelocityEngine ve;

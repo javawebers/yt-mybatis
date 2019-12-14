@@ -165,7 +165,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      *
      * @return
      */
-    private static String generateUUIDIdValue() {
+    private static String generateUuidIdValue() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
@@ -179,7 +179,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
         List<Field> fieldList = EntityUtils.getTableFieldList(entityClass);
         int i = 0;
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = new HashMap<>(entityCollection.size());
         for (T entity : entityCollection) {
             for (Field field : fieldList) {
                 param.put(EntityUtils.getFieldColumnName(field) + "__" + i + "__", EntityUtils.getValue(entity, field));
@@ -210,7 +210,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         }
 
         int i = 0;
-        String generateIdValue = generateUUIDIdValue();
+        String generateIdValue = generateUuidIdValue();
         for (T entity : entityCollection) {
             String idValue = (String) EntityUtils.getValue(entity, idField);
             if (idValue == null) {

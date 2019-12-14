@@ -183,18 +183,18 @@ public class JPAUtils {
     }
 
     public static String getSelectSql(Class<?> entityClass, String aliasName) {
-        String selectSql = "";
+        StringBuilder selectSql = new StringBuilder();
         for (Field field : JPAUtils.getAllFields(entityClass)) {
             field.setAccessible(true);
             String fieldName = JPAUtils.getSearchAnnotationColumnName(field, aliasName);
             if (YtStringUtils.isNotEmpty(fieldName)) {
-                selectSql = selectSql + "," + fieldName + "";
+                selectSql.append(",").append(fieldName);
             }
         }
-        selectSql = selectSql.replaceFirst(",", "");
-        if (YtStringUtils.isEmpty(selectSql)) {
+        selectSql = new StringBuilder(selectSql.toString().replaceFirst(",", ""));
+        if (YtStringUtils.isEmpty(selectSql.toString())) {
             return aliasName + "*";
         }
-        return selectSql;
+        return selectSql.toString();
     }
 }

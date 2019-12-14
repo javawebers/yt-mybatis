@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * 代码生成类
+ * @author sheng
+ */
 public class JavaCodeGenerator {
 
     private String username;
@@ -22,13 +26,13 @@ public class JavaCodeGenerator {
      * 最后一位包名，默认如下
      */
     private String packageEntity = "entity";
-    private String packagePO = "po";
+    private String packagePo = "po";
     private String packageDao = "dao";
     private String packageService = "service";
     private String packageController = "controller";
 
-    public JavaCodeGenerator setPackagePO(String packagePO) {
-        this.packagePO = packagePO;
+    public JavaCodeGenerator setPackagePo(String packagePo) {
+        this.packagePo = packagePo;
         return this;
     }
 
@@ -60,7 +64,6 @@ public class JavaCodeGenerator {
     }
 
 
-
     private static List<String> CLASS_NAME_SUFFIX_LIST = new ArrayList<>();
 
     static {
@@ -83,11 +86,30 @@ public class JavaCodeGenerator {
      * 模板枚举
      */
     public enum TemplateEnum {
+        /**
+         * po，对应数据库实体
+         */
         PO,
+
+        /**
+         * 继承自po，可在其中扩展字段，mapper，service，controller使用此类
+         */
         BEAN,
+        /**
+         * mybatis mapper
+         */
         MAPPER,
+        /**
+         * mybatis mapper xml
+         */
         MAPPER_XML,
+        /**
+         * service
+         */
         SERVICE,
+        /**
+         * controller
+         */
         CONTROLLER,
         HTML,
         ;
@@ -97,7 +119,13 @@ public class JavaCodeGenerator {
      * 生成文件位置
      */
     public enum CodePath {
+        /**
+         * 源码 main 目录
+         */
         SRC_MAIN("src" + File.separator + "main"),
+        /**
+         * 源码 test 目录
+         */
         SRC_TEST("src" + File.separator + "test");
         String path;
 
@@ -139,8 +167,9 @@ public class JavaCodeGenerator {
      * @param baseEntityClass 指定继承的 BaseEntity
      * @param templates       生成哪些模板
      */
-    public void create(String tableName, String tableDesc, String modulePackage, CodePath codePath,
-                       Class<?> baseEntityClass, TemplateEnum... templates) {
+    public void create(String tableName, String tableDesc, String modulePackage,
+                       CodePath codePath, Class<?> baseEntityClass,
+                       TemplateEnum... templates) {
         if (YtStringUtils.isBlank(tableName)) {
             return;
         }
@@ -173,7 +202,7 @@ public class JavaCodeGenerator {
 
         // java,xml文件名称
         String entityPath = File.separator + packageEntity + File.separator + className + ".java";
-        String poPath = File.separator + packagePO + File.separator + poClassName + ".java";
+        String poPath = File.separator + packagePo + File.separator + poClassName + ".java";
         String mapperPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.java";
         String mapperXmlPath = File.separator + packageDao + File.separator + replaceSuffixClassName + "Mapper.xml";
         String servicePath = File.separator + packageService + File.separator + replaceSuffixClassName + "Service.java";
@@ -202,7 +231,7 @@ public class JavaCodeGenerator {
         context.put("replaceSuffixLowerName", replaceSuffixLowerName);
 
         context.put("packageEntity", packageEntity);
-        context.put("packagePO", packagePO);
+        context.put("packagePO", packagePo);
         context.put("packageDao", packageDao);
         context.put("packageService", packageService);
         context.put("packageController", packageController);
@@ -220,8 +249,8 @@ public class JavaCodeGenerator {
         try {
             columnDataList = createBean.getColumnDataList(tableName, baseEntityClass);
             String fieldList = createBean.getBeanFieldList(columnDataList);
-            context.put("columnDataList", columnDataList); // 生成bean
-            context.put("fieldList", fieldList); // 生成bean
+            context.put("columnDataList", columnDataList);
+            context.put("fieldList", fieldList);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -238,33 +267,33 @@ public class JavaCodeGenerator {
                     // 生成枚举
                     for (ColumnData columnData : columnDataList) {
                         if ("enum".equals(columnData.getDataType())) {
-                            context.put("columnComment", columnData.getColumnComment()); // 生成enum
-                            context.put("enumClassName", columnData.getEnumClassName()); // 生成enum
-                            String enumPath = File.separator + packagePO + File.separator + columnData.getEnumClassName() + ".java";
-                            context.put("enumColumnDataList", columnData.getEnumColumnDataList()); // 生成bean
-                            CommonPageParser.writerPage(context, "Enum.java.vm", rootPath + javaPath + modulePakPath, enumPath); //
+                            context.put("columnComment", columnData.getColumnComment());
+                            context.put("enumClassName", columnData.getEnumClassName());
+                            String enumPath = File.separator + packagePo + File.separator + columnData.getEnumClassName() + ".java";
+                            context.put("enumColumnDataList", columnData.getEnumColumnDataList());
+                            CommonPageParser.writerPage(context, "Enum.java.vm", rootPath + javaPath + modulePakPath, enumPath);
                         }
                     }
-                    CommonPageParser.writerPage(context, "PO.java.vm", rootPath + javaPath + modulePakPath, poPath); //
+                    CommonPageParser.writerPage(context, "PO.java.vm", rootPath + javaPath + modulePakPath, poPath);
                     break;
                 case BEAN:
-                    CommonPageParser.writerPage(context, "Bean.java.vm", rootPath + javaPath + modulePakPath, entityPath); //
+                    CommonPageParser.writerPage(context, "Bean.java.vm", rootPath + javaPath + modulePakPath, entityPath);
                     break;
                 case MAPPER:
-                    CommonPageParser.writerPage(context, "Mapper.java.vm", rootPath + javaPath + modulePakPath, mapperPath); // 生成MybatisMapper接口
+                    CommonPageParser.writerPage(context, "Mapper.java.vm", rootPath + javaPath + modulePakPath, mapperPath);
                     break;
                 case MAPPER_XML:
-                    CommonPageParser.writerPage(context, "Mapper.xml.vm", rootPath + resourcePath + modulePakPath, mapperXmlPath); //
+                    CommonPageParser.writerPage(context, "Mapper.xml.vm", rootPath + resourcePath + modulePakPath, mapperXmlPath);
                     break;
                 case SERVICE:
-                    CommonPageParser.writerPage(context, "Service.java.vm", rootPath + javaPath + modulePakPath, servicePath);// 生成Service
-                    CommonPageParser.writerPage(context, "ServiceImpl.java.vm", rootPath + javaPath + modulePakPath, serviceImplPath);// 生成Service
+                    CommonPageParser.writerPage(context, "Service.java.vm", rootPath + javaPath + modulePakPath, servicePath);
+                    CommonPageParser.writerPage(context, "ServiceImpl.java.vm", rootPath + javaPath + modulePakPath, serviceImplPath);
                     break;
                 case CONTROLLER:
-                    CommonPageParser.writerPage(context, "Controller.java.vm", rootPath + javaPath + modulePakPath, controllerPath);// 生成Controller
+                    CommonPageParser.writerPage(context, "Controller.java.vm", rootPath + javaPath + modulePakPath, controllerPath);
                     break;
                 case HTML:
-                    CommonPageParser.writerPage(context, "Html.html.vm", rootPath + webappPath + YtStringUtils.substringAfterLast(modulePackage, "."), htmlPath);//
+                    CommonPageParser.writerPage(context, "Html.html.vm", rootPath + webappPath + YtStringUtils.substringAfterLast(modulePackage, "."), htmlPath);
                     break;
                 default:
                     break;

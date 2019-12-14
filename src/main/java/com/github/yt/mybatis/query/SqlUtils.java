@@ -10,6 +10,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author sheng
+ */
 public class SqlUtils {
 
     private static List<String> getSelectColumnList(Class<?> entityClass, Set<String> excludeColumnSet, final String aliasName) {

@@ -46,7 +46,7 @@ public class EntityUtils {
     public static Object getValue(Object source, String fieldName) {
         try {
             Field field = getField(source.getClass(), fieldName);
-            field.setAccessible(true);  //设置私有属性范围
+            field.setAccessible(true);
             return field.get(source);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -115,7 +115,7 @@ public class EntityUtils {
      * @return 所有的 table 字段
      */
     public static List<Field> getTableFieldList(Class<?> entityClass) {
-        Field[] fields = entityClass.getDeclaredFields();//获得属性
+        Field[] fields = entityClass.getDeclaredFields();
         return getTableFieldList(entityClass.getSuperclass(), new ArrayList<>(Arrays.asList(fields)));
     }
 
@@ -148,7 +148,7 @@ public class EntityUtils {
      */
     public static Field getIdField(Class<?> entityClass) {
         for (Class<?> c = entityClass; c != Object.class; c = c.getSuperclass()) {
-            Field[] fields = c.getDeclaredFields();//获得属性
+            Field[] fields = c.getDeclaredFields();
             for (Field field : fields) {
                 if (null != field.getAnnotation(Id.class)) {
                     return field;
@@ -205,12 +205,15 @@ public class EntityUtils {
      * @return map
      */
     public static <T> Map<String, T> getIdEntityMap(Collection<T> entityCollection) {
-        Map<String, T> result = new HashMap<>();
+        Map<String, T> result;
         if (entityCollection != null && !entityCollection.isEmpty()) {
+            result = new HashMap<>(entityCollection.size());
             for (T entity : entityCollection) {
                 Field idField = getIdField(entity.getClass());
                 result.put((String) getValue(entity, idField), entity);
             }
+        } else{
+            result = new HashMap<>();
         }
         return result;
     }
@@ -224,12 +227,15 @@ public class EntityUtils {
      * @return map
      */
     public static <T> Map<Object, T> propertyEntityMap(String propertyName, Collection<T> entityCollection) {
-        Map<Object, T> result = new HashMap<>();
+        Map<Object, T> result;
         if (entityCollection != null && !entityCollection.isEmpty()) {
+            result = new HashMap<>(entityCollection.size());
             for (T entity : entityCollection) {
                 Field propertyField = getField(entity.getClass(), propertyName);
                 result.put(getValue(entity, propertyField), entity);
             }
+        } else {
+            result = new HashMap<>();
         }
         return result;
     }
@@ -243,8 +249,9 @@ public class EntityUtils {
      * @return map
      */
     public static <T> Map<Object, Collection<T>> propertyCollectionMap(String propertyName, Collection<T> entityCollection) {
-        Map<Object, Collection<T>> result = new HashMap<>();
+        Map<Object, Collection<T>> result;
         if (entityCollection != null && !entityCollection.isEmpty()) {
+            result = new HashMap<>(entityCollection.size());
             for (T entity : entityCollection) {
                 Field propertyField = null;
                 try {
@@ -258,6 +265,8 @@ public class EntityUtils {
                 }
                 result.get(propertyValue).add(entity);
             }
+        } else {
+            result = new HashMap<>();
         }
         return result;
     }

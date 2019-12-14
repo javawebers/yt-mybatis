@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 
 /**
  * 开启mybatis无xml crud功能
+ * @author sheng
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

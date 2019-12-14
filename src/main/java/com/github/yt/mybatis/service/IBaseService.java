@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * 服务接口的基类
- *
+ * @author sheng
  * @param <T>此服务接口服务的数据模型，即model
  */
 public interface IBaseService<T> {
@@ -78,6 +78,11 @@ public interface IBaseService<T> {
      */
     int logicDelete(T entityCondition, MybatisQuery query);
 
+    /**
+     * 逻辑删除
+     * @param entityCondition 删除条件
+     * @return
+     */
     int logicDelete(T entityCondition);
 
 
@@ -99,6 +104,11 @@ public interface IBaseService<T> {
      */
     int delete(T entityCondition, MybatisQuery query);
 
+    /**
+     * 删除
+     * @param entityCondition 删除条件
+     * @return
+     */
     int delete(T entityCondition);
 
     /**

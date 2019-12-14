@@ -365,9 +365,9 @@ public class BaseMapperProvider {
             }
             if (modifyTimeField != null) {
                 modifyTime = new Date();
-                String modifyTimeFColumn = EntityUtils.getFieldColumnName(modifyTimeField);
+                String modifyTimeColumn = EntityUtils.getFieldColumnName(modifyTimeField);
                 paramMap.put("_modifyTime_", modifyTime);
-                query.addUpdate("t." + modifyTimeFColumn + " = #{_modifyTime_}");
+                query.addUpdate("t." + modifyTimeColumn + " = #{_modifyTime_}");
             }
         }
     }

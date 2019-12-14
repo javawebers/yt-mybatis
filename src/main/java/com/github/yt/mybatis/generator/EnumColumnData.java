@@ -1,7 +1,8 @@
 package com.github.yt.mybatis.generator;
 
-import java.util.List;
-
+/**
+ * @author sheng
+ */
 public class EnumColumnData {
     private String name;
     private String desc;

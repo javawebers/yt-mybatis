@@ -7,6 +7,11 @@ import com.github.yt.mybatis.query.MybatisQuery;
  */
 public abstract class BaseDialect {
 
+    /**
+     * 分页拼接
+     * @param query
+     * @return
+     */
     public abstract String limitSql(MybatisQuery query);
 
 }

@@ -2,6 +2,10 @@ package com.github.yt.mybatis.query;
 
 import java.util.Collection;
 
+
+/**
+ * @author sheng
+ */
 public class QueryInCondition {
     private String param;
     private Collection values;
