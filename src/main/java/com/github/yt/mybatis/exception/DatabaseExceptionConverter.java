@@ -5,6 +5,7 @@ import com.github.yt.commons.exception.BaseExceptionConverter;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,9 @@ public class DatabaseExceptionConverter implements BaseExceptionConverter {
         } else if (e instanceof BadSqlGrammarException) {
             // 数据库异常，脚本语法异常(字段不存在等)
             return new BaseAccidentException(YtMybatisExceptionEnum.CODE_23, e);
+        } else if (e instanceof EmptyResultDataAccessException) {
+            // 数据库异常，记录数不正确(findOne getOne 等)
+            return new BaseAccidentException(YtMybatisExceptionEnum.CODE_24, e);
         }
         return e;
     }

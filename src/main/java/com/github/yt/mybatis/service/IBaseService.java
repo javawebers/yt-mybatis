@@ -6,6 +6,7 @@ import com.github.yt.mybatis.query.MybatisQuery;
 import com.github.yt.mybatis.query.Page;
 import com.github.yt.mybatis.query.MybatisQuery;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -118,24 +119,40 @@ public interface IBaseService<T> {
      * @param id    业务实体ID
      * @return 业务实体
      */
-    T get(Class<T> clazz, Serializable id);
+    T get(Class<T> clazz, @NotNull Serializable id);
 
     /**
-     * 按条件查询一条记录
-     *
-     * @param entity 业务实体类或业务查询实体类
+     * 根据ID获取实体，获取一条记录，不存在抛出异常
+     * @param clazz 实体类型
+     * @param id    业务实体ID
      * @return 业务实体
      */
-    T find(T entity);
+    T getOne(Class<T> clazz, Serializable id);
 
     /**
      * 按条件查询一条记录
      *
-     * @param entity 业务实体类或业务查询实体类
+     * @param entityCondition 业务实体类或业务查询实体类
+     * @return 业务实体
+     */
+    T find(T entityCondition);
+
+    /**
+     * 按条件查询一条记录，获取一条记录，不存在抛出异常
+     *
+     * @param entityCondition 业务实体类或业务查询实体类
+     * @return 业务实体
+     */
+    T findOne(T entityCondition);
+
+    /**
+     * 按条件查询一条记录
+     *
+     * @param entityCondition 业务实体类或业务查询实体类
      * @param query  查询辅助类
      * @return 业务实体
      */
-    T find(T entity, MybatisQuery query);
+    T find(T entityCondition, MybatisQuery query);
 
     /**
      * 按条件查询记录集合
@@ -174,9 +191,9 @@ public interface IBaseService<T> {
     /**
      * 获取数据
      *
-     * @param entity 查询业务实体
+     * @param entityCondition 查询业务实体
      * @param query  查询辅助类
      * @return 根据查询条件查询的查询结果集
      */
-    Page<T> findPage(T entity, MybatisQuery query);
+    Page<T> findPage(T entityCondition, MybatisQuery query);
 }

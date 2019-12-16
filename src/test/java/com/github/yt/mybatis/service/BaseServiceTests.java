@@ -13,6 +13,7 @@ import com.github.yt.mybatis.query.Page;
 import com.github.yt.mybatis.query.Query;
 import com.github.yt.mybatis.query.QueryJoinType;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -39,6 +40,117 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntitySameService.delete(new DbEntitySame());
         dbEntityNotSameService.delete(new DbEntityNotSame());
         intIdService.delete(new IntId());
+    }
+
+    /**
+     * get id 为空
+     */
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void get_sameNullId() {
+        // null id
+        dbEntitySameService.get(DbEntitySame.class, null);
+    }
+
+    /**
+     * get id 不为空，记录不存在
+     */
+    @Test
+    public void get_sameNotExist() {
+        DbEntitySame entity = dbEntitySameService.get(DbEntitySame.class, "xxxx_null");
+        Assert.assertNull(entity);
+    }
+
+    /**
+     * get id 不为空，记录存在
+     */
+    @Test
+    public void get_sameExist() {
+        DbEntitySame entity = saveSameThenReturn();
+        DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
+        Assert.assertNotNull(dbEntity);
+    }
+
+    /**
+     * getOne id 为空
+     */
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void getOne_sameNullId() {
+        // null id
+        dbEntitySameService.getOne(DbEntitySame.class, null);
+    }
+
+    /**
+     * getOne id 不为空，记录不存在
+     */
+    @Test(expectedExceptions = EmptyResultDataAccessException.class)
+    public void getOne_sameNotExist() {
+        dbEntitySameService.getOne(DbEntitySame.class, "xxxx_null");
+    }
+
+    /**
+     * getOne id 不为空，记录存在
+     */
+    @Test
+    public void getOne_sameExist() {
+        DbEntitySame entity = saveSameThenReturn();
+        DbEntitySame dbEntity = dbEntitySameService.getOne(DbEntitySame.class, entity.getDbEntitySameId());
+        Assert.assertNotNull(dbEntity);
+    }
+
+
+    /**
+     * get id 为空
+     */
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void get_notSameNullId() {
+        // null id
+        dbEntityNotSameService.get(DbEntityNotSame.class, null);
+    }
+
+    /**
+     * get id 不为空，记录不存在
+     */
+    @Test
+    public void get_notSameNotExist() {
+        DbEntityNotSame entity = dbEntityNotSameService.get(DbEntityNotSame.class, "xxxx_null");
+        Assert.assertNull(entity);
+    }
+
+    /**
+     * get id 不为空，记录存在
+     */
+    @Test
+    public void get_notSameExist() {
+        DbEntityNotSame entity = saveNotSameThenReturn();
+        DbEntityNotSame dbEntity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        Assert.assertNotNull(dbEntity);
+    }
+
+    /**
+     * getOne id 为空
+     */
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void getOne_notSameNullId() {
+        // null id
+        dbEntityNotSameService.getOne(DbEntityNotSame.class, null);
+    }
+
+    /**
+     * getOne id 不为空，记录不存在
+     */
+    @Test(expectedExceptions = EmptyResultDataAccessException.class)
+    public void getOne_notSameNotExist() {
+        dbEntityNotSameService.getOne(DbEntityNotSame.class, "xxxx_null");
+    }
+
+    /**
+     * getOne id 不为空，记录存在
+     */
+    @Test
+    public void getOne_notSameExist() {
+        DbEntityNotSame entity = saveNotSameThenReturn();
+        DbEntityNotSame dbEntity = dbEntityNotSameService.getOne(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        Assert.assertNotNull(dbEntity);
     }
 
 
@@ -434,6 +546,20 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntityNotSameService.delete(new DbEntityNotSame(),
                 new Query().addWhere("db_entity_not_same_id in ${dbEntityNotSameIdList}")
                         .addParam("dbEntityNotSameIdList", list.stream().map(DbEntityNotSame::getDbEntityNotSameId).collect(Collectors.toList())));
+    }
+
+    private DbEntitySame saveSameThenReturn() {
+        DbEntitySame entity = new DbEntitySame();
+        entity.setTestBoolean(true).setTestInt(22222).setTestVarchar("22xxxx").setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
+        dbEntitySameService.save(entity);
+        return entity;
+    }
+
+    private DbEntityNotSame saveNotSameThenReturn() {
+        DbEntityNotSame entity = new DbEntityNotSame();
+        entity.setTestBoolean(true).setTestInt(22222).setTestVarchar("22xxxx");
+        dbEntityNotSameService.save(entity);
+        return entity;
     }
 
     /**

@@ -1,12 +1,17 @@
 package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
+import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -19,6 +24,7 @@ import java.util.*;
  */
 public abstract class BaseService<T> implements IBaseService<T> {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(BaseService.class);
+    private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
 
     private BaseMapper mapper;
 
@@ -104,15 +110,31 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public T get(Class<T> entityClass, Serializable id) {
-        if (id == null) {
-            return null;
-        }
+        org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         return getMapper().get(entityClass, id);
+    }
+
+    @Override
+    public T getOne(Class<T> clazz, @NotNull Serializable id) {
+        T entity = get(clazz, id);
+        if (entity == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        return entity;
     }
 
     @Override
     public T find(T entityCondition) {
         return find(entityCondition, new Query());
+    }
+
+    @Override
+    public T findOne(T entityCondition) {
+        T entity = find(entityCondition);
+        if (entity == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        return entity;
     }
 
     @Override
