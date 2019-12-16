@@ -66,11 +66,11 @@ public class JavaCodeGeneratorTest {
                 JavaCodeGenerator.CodePath.SRC_TEST,
                 BusinessBaseEntity.class
 
-//                , JavaCodeGenerator.TemplateEnum.PO
+                , JavaCodeGenerator.TemplateEnum.PO
 //                , JavaCodeGenerator.TemplateEnum.BEAN
-                ,JavaCodeGenerator.TemplateEnum.MAPPER
+//                ,JavaCodeGenerator.TemplateEnum.MAPPER
 //                ,JavaCodeGenerator.TemplateEnum.MAPPER_XML
-                ,JavaCodeGenerator.TemplateEnum.SERVICE
+//                ,JavaCodeGenerator.TemplateEnum.SERVICE
         );
     }
 

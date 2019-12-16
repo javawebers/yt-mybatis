@@ -157,14 +157,14 @@ public class CreateBean {
                 str.append("\r\n    @javax.persistence.Id");
             }
             if (!columnName.equals(fieldName)) {
-                str.append("\r\n    ").append("@Column(name=\"").append(columnName).append("\")");
+                str.append("\r\n    ").append("@Column(name = \"").append(columnName).append("\")");
             }
             str.append("\r\n    ").append("private ").append(type + " ").append(fieldName).append(";");
             String method = maxChar + fieldName.substring(1, fieldName.length());
-            getset.append("\r\n    \r\n    ").append("public ").append(type + " ").append("get" + method + "() {\r\n    ");
+            getset.append("\r\n\r\n    ").append("public ").append(type + " ").append("get" + method + "() {\r\n    ");
             getset.append("    return this.").append(fieldName).append(";\r\n    }");
-            getset.append("\r\n    \r\n    ").append("public T set" + method + "(" + type + " " + fieldName + ") {\r\n    ");
-            getset.append("    this.").append(fieldName).append(" = ").append(fieldName).append(";\r\n        return (T)this;\r\n    }");
+            getset.append("\r\n\r\n    ").append("public T set" + method + "(" + type + " " + fieldName + ") {\r\n    ");
+            getset.append("    this.").append(fieldName).append(" = ").append(fieldName).append(";\r\n        return (T) this;\r\n    }");
         }
         argv = str.toString();
         method = getset.toString();
