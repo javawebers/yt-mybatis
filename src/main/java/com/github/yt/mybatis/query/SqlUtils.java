@@ -1,19 +1,134 @@
 package com.github.yt.mybatis.query;
 
 import com.github.yt.commons.util.YtStringUtils;
-import com.github.yt.mybatis.dialect.DialectFactory;
 import com.github.yt.mybatis.util.EntityUtils;
+import org.apache.commons.lang.NullArgumentException;
+import org.apache.ibatis.jdbc.SQL;
 
-import javax.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author sheng
+ * @author liujiasheng
  */
 public class SqlUtils {
+    public static void select(SQL sql, Class entityClass, MybatisQuery query) {
+        List<String> columnList;
+        if (query != null) {
+            // 添加所有扩展字段
+            columnList = new ArrayList<String>(query.takeExtendSelectColumnList());
+            // 是否排除所有 t 中的字段
+            if (!query.takeExcludeAllSelectColumn()) {
+                columnList.addAll(getEntitySelectColumn(entityClass, query.takeExcludeSelectColumnList()));
+            }
+        } else {
+            columnList = getEntitySelectColumn(entityClass, null);
+        }
+        for (String column: columnList) {
+            sql.SELECT(column);
+        }
+    }
+    public static void from(SQL sql, Class entityClass, MybatisQuery query) {
+        sql.FROM(EntityUtils.getTableName(entityClass) + " t ");
+    }
+
+    public static void join(SQL sql, MybatisQuery query) {
+        if (query == null) {
+            return;
+        }
+        query.takeJoinList().forEach(join -> {
+            QueryJoin queryJoin = (QueryJoin) join;
+            switch (queryJoin.takeJoinType()) {
+                case JOIN:
+                    sql.JOIN(queryJoin.takeTableNameAndOnConditions());
+                    break;
+                case LEFT_JOIN:
+                    sql.LEFT_OUTER_JOIN(queryJoin.takeTableNameAndOnConditions());
+                    break;
+                case RIGHT_JOIN:
+                    sql.RIGHT_OUTER_JOIN(queryJoin.takeTableNameAndOnConditions());
+                    break;
+                default:
+                    throw new NullArgumentException("连接类型不能为空");
+            }
+        });
+    }
+
+    public static void set(SQL sql, MybatisQuery query) {
+        if (query.takeUpdateColumnList() != null) {
+            for (Object set : query.takeUpdateColumnList()) {
+                sql.SET((String) set);
+            }
+        }
+    }
+    public static void where(SQL sql, Object entityCondition, MybatisQuery query, String alias) {
+        if (entityCondition != null) {
+            List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
+            for (Field field : fieldList) {
+                Object value = EntityUtils.getValue(entityCondition, field);
+                String columnName = EntityUtils.getFieldColumnName(field);
+                if (value != null) {
+                    StringBuilder where = new StringBuilder();
+                    if (alias != null) {
+                        where.append(alias);
+                    }
+                    sql.WHERE(where.append(columnName)
+                            .append(" = #{").append(ParamUtils.ENTITY_CONDITION)
+                            .append(".").append(field.getName()).append("}").toString());
+                }
+            }
+        }
+        if (query != null) {
+            // query.whereList
+            // 拼接where查询条件
+            if (query.takeWhereList() != null && !query.takeWhereList().isEmpty()) {
+                for (Object where: query.takeWhereList()) {
+                    sql.WHERE((String) where);
+                }
+            }
+        }
+    }
+
+    public static void groupBy(SQL sql, MybatisQuery query) {
+        if (query != null && YtStringUtils.isNotBlank(query.takeGroupBy())) {
+            sql.GROUP_BY(query.takeGroupBy());
+        }
+    }
+
+    public static void orderBy(SQL sql, MybatisQuery query) {
+        if (query != null && query.takeOrderByList() != null && !query.takeOrderByList().isEmpty()) {
+            for (Object orderBy: query.takeOrderByList()) {
+                sql.ORDER_BY((String) orderBy);
+            }
+        }
+    }
+
+    public static void limitOffset(SQL sql, MybatisQuery query) {
+        if (query != null && query.takeLimitSize() != null) {
+            sql.LIMIT(query.takeLimitSize());
+        }
+        if (query != null && query.takeLimitFrom() != null) {
+            sql.OFFSET(query.takeLimitFrom());
+        }
+    }
+
+
+    private static List<String> getEntitySelectColumn(Class entityClass, List<String> excludeSelectColumnList) {
+        Set<String> excludeColumnSet = new HashSet<>();
+        if (excludeSelectColumnList != null && excludeSelectColumnList.size() > 0) {
+            excludeSelectColumnList.forEach(excludeSelectColumn -> {
+                String[] excludeColumns = excludeSelectColumn.split(",");
+                for (String excludeColumn : excludeColumns) {
+                    excludeColumnSet.add(excludeColumn.trim());
+                }
+            });
+        }
+        List<String> columnList = getSelectColumnList(entityClass, excludeColumnSet, "t");
+        return columnList;
+    }
+
 
     private static List<String> getSelectColumnList(Class<?> entityClass, Set<String> excludeColumnSet, final String aliasName) {
         List<String> columnList = new ArrayList<>();
@@ -34,101 +149,6 @@ public class SqlUtils {
         return columnList;
     }
 
-    public static String getUpdateSet(MybatisQuery query) {
-        String set;
-        set = YtStringUtils.join(query.takeUpdateColumnList().toArray(), ", ");
-        return " set " + set + " ";
-    }
-
-    /**
-     * 获取 select ... from ... 子句
-     * <p>
-     * takeExtendSelectColumnList 扩展的查询字段
-     * takeExcludeSelectColumnList 排除的查询字段
-     * takeExcludeAllSelectColumn 排除所有的查询字段
-     *
-     * @param entityClass entityClass
-     * @param query       query
-     * @return select
-     */
-    public static String getSelectAndFrom(Class entityClass, MybatisQuery query) {
-        List<String> columnList;
-        if (query != null) {
-            // 添加所有扩展字段
-            columnList = new ArrayList<String>(query.takeExtendSelectColumnList());
-            // 是否排除所有 t 中的字段
-            if (!query.takeExcludeAllSelectColumn()) {
-                columnList.addAll(getEntitySelectColumn(entityClass, query.takeExcludeSelectColumnList()));
-            }
-        } else {
-            columnList = getEntitySelectColumn(entityClass, null);
-        }
-
-        return "select " + YtStringUtils.join(columnList.toArray(), ", ")
-                + " from " + EntityUtils.getTableName(entityClass) + " t ";
-    }
-
-    private static List<String> getEntitySelectColumn(Class entityClass, List<String> excludeSelectColumnList) {
-        Set<String> excludeColumnSet = new HashSet<>();
-        if (excludeSelectColumnList != null && excludeSelectColumnList.size() > 0) {
-            excludeSelectColumnList.forEach(excludeSelectColumn -> {
-                String[] excludeColumns = excludeSelectColumn.split(",");
-                for (String excludeColumn : excludeColumns) {
-                    excludeColumnSet.add(excludeColumn.trim());
-                }
-            });
-        }
-        List<String> columnList = getSelectColumnList(entityClass, excludeColumnSet, "t");
-        return columnList;
-    }
-
-    public static String getSelectCountAndFrom(Class entityClass) {
-        return "select count(*) from " + EntityUtils.getTableName(entityClass) + " t ";
-    }
-
-
-    public static String getJoinAndOnCondition(MybatisQuery query) {
-        if (query == null) {
-            return "";
-        }
-        StringBuffer resultBuffer = new StringBuffer();
-        query.takeJoinList().forEach(join -> {
-            QueryJoin queryJoin = (QueryJoin) join;
-
-            resultBuffer.append(queryJoin.takeJoinType().getValue() + queryJoin.takeTableNameAndOnConditions() + " ");
-        });
-        return resultBuffer.toString();
-    }
-
-    public static String getWhere(Object entityCondition, MybatisQuery query) {
-        return getWhere(entityCondition, query, " t.");
-    }
-
-    public static String getWhere(Object entityCondition, MybatisQuery query, String alias) {
-        StringBuffer resultBuffer = new StringBuffer(" where 1=1 ");
-        if (entityCondition != null) {
-            StringBuilder where = new StringBuilder();
-            List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
-            for (Field field : fieldList) {
-                Object value = EntityUtils.getValue(entityCondition, field);
-                String columnName = EntityUtils.getFieldColumnName(field);
-                if (value != null) {
-                    where.append(" and ").append(alias).append(columnName).append(" = #{").append(ParamUtils.ENTITY_CONDITION).append(".").append(field.getName()).append("}");
-                }
-            }
-            resultBuffer.append(where);
-        }
-        if (query != null) {
-            // query.whereList
-            // 拼接where查询条件
-            if (query.takeWhereList() != null && !query.takeWhereList().isEmpty()) {
-                String where = YtStringUtils.join(query.takeWhereList().toArray(), ") and (");
-                resultBuffer.append(" and (").append(where).append(")");
-            }
-        }
-        return resultBuffer.toString();
-    }
-
     /**
      * 将sql中的 in 参数替换
      * #{_inCondition_.t__userId[0]}, #{_inCondition_.t__userId[1]}
@@ -137,12 +157,12 @@ public class SqlUtils {
      * @param query query对象
      * @return 新的语句
      */
-    public static StringBuffer replaceInParam(StringBuffer sql, MybatisQuery query) {
+    public static String replaceInParam(SQL sql, MybatisQuery query) {
         if (query == null) {
-            return sql;
+            return sql.toString();
         }
         if (query.takeInParamList().size() == 0) {
-            return sql;
+            return sql.toString();
         }
         // query.inParamList
         // 替换查询条件中的in参数
@@ -163,27 +183,7 @@ public class SqlUtils {
             }
             inParamListMap.put(column, inSql);
         });
-        return new StringBuffer(format(sql.toString(), inParamListMap));
-    }
-
-    public static String getOrderBy(MybatisQuery query) {
-        if (query != null && query.takeOrderByList() != null && !query.takeOrderByList().isEmpty()) {
-            return " ORDER BY " + YtStringUtils.join(query.takeOrderByList().toArray(), ", ") + " ";
-        } else {
-            return "";
-        }
-    }
-
-    public static String getGroupBy(MybatisQuery query) {
-        if (query != null && YtStringUtils.isNotBlank(query.takeGroupBy())) {
-            return " GROUP BY " + query.takeGroupBy() + " ";
-        } else {
-            return "";
-        }
-    }
-
-    public static String getLimit(MybatisQuery query) {
-        return DialectFactory.create().limitSql(query);
+        return format(sql.toString(), inParamListMap);
     }
 
     /**

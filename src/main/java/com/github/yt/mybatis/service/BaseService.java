@@ -1,15 +1,12 @@
 package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
-import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

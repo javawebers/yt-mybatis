@@ -322,7 +322,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void delete_same() {
+    public void deleteById_same() {
         DbEntitySame entity = new DbEntitySame();
         entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22").setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
         dbEntitySameService.save(entity);
@@ -334,12 +334,35 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void delete_notSame() {
+    public void deleteById_notSame() {
         DbEntityNotSame entity = new DbEntityNotSame();
         entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22");
         dbEntityNotSameService.save(entity);
         // id 不为空
         int num = dbEntityNotSameService.delete(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        Assert.assertEquals(num, 1);
+        DbEntityNotSame dbEntitySame = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
+        Assert.assertNull(dbEntitySame);
+    }
+
+    @Test
+    public void delete_same() {
+        DbEntitySame entity = new DbEntitySame();
+        entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22").setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
+        dbEntitySameService.save(entity);
+        int num = dbEntitySameService.delete(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertEquals(num, 1);
+        DbEntitySame dbEntitySame = dbEntitySameService.find(new DbEntitySame().setDbEntitySameId(entity.getDbEntitySameId()));
+        Assert.assertNull(dbEntitySame);
+    }
+
+    @Test
+    public void delete_notSame() {
+        DbEntityNotSame entity = new DbEntityNotSame();
+        entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22");
+        dbEntityNotSameService.save(entity);
+        // id 不为空
+        int num = dbEntityNotSameService.delete(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
         Assert.assertEquals(num, 1);
         DbEntityNotSame dbEntitySame = dbEntityNotSameService.find(new DbEntityNotSame().setDbEntityNotSameId(entity.getDbEntityNotSameId()));
         Assert.assertNull(dbEntitySame);
