@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class YtMybatisConfig {
-    public static String dialect;
     public static String resultClass;
 
     // 分页
@@ -17,11 +16,6 @@ public class YtMybatisConfig {
     public static String pageTotalCountName;
     public static String pageDataName;
 
-
-    @Value("${yt.dialect:com.github.yt.mybatis.dialect.mysql.MysqlDialect}")
-    public void setDialect(String dialect) {
-        YtMybatisConfig.dialect = dialect;
-    }
 
     @Value("${yt.result.class:com.github.yt.web.result.SimpleResultConfig}")
     public void setResultClass(String resultClass) {

@@ -4,7 +4,6 @@ import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.entity.YtColumnType;
-import com.github.yt.mybatis.query.OldSqlUtils;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.Query;
 import com.github.yt.mybatis.query.SqlUtils;
