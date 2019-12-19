@@ -184,14 +184,19 @@ public class BaseMapperProvider {
         setCreatorInfo(entityCollection);
 
         String tableName = null;
+        List<Field> tableFieldList = null;
         Set<String> fieldColumnNameSet = new HashSet<>();
         List<String> fieldNameList = new ArrayList<>();
         List<String> columnNameList = new ArrayList<>();
+        List<List<String>> valuesList = new ArrayList<>();
+
+        // 收集所有有值的字段，没有值的字段不拼接 sql
         for (T entity : entityCollection) {
             if (YtStringUtils.isBlank(tableName)) {
                 tableName = EntityUtils.getTableName(entity.getClass());
+                tableFieldList = EntityUtils.getTableFieldList(entity.getClass());
             }
-            for (Field field : EntityUtils.getTableFieldList(entity.getClass())) {
+            for (Field field : tableFieldList) {
                 if (!fieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
                     if (EntityUtils.getValue(entity, field) != null) {
                         fieldColumnNameSet.add(EntityUtils.getFieldColumnName(field));
@@ -201,38 +206,25 @@ public class BaseMapperProvider {
                 }
             }
         }
-        StringBuffer valueParams = new StringBuffer();
         for (int i = 0; i < entityCollection.size(); i++) {
-            valueParams.append("(");
-            for (int j = 0; j < fieldNameList.size(); j++) {
-                String fieldColumnName = fieldNameList.get(j);
-                valueParams.append("#{collection[").append(i).append("].").append(fieldColumnName).append("}");
-                if (j != fieldNameList.size() - 1) {
-                    valueParams.append(", ");
-                }
+            List<String> values = new ArrayList<>();
+            for (String fieldColumnName : fieldNameList) {
+                values.add("#{collection[" + i + "]." + fieldColumnName + "}");
             }
-            valueParams.append(")");
-            if (i != entityCollection.size() - 1) {
-                valueParams.append(", ");
-            }
+            valuesList.add(values);
         }
 
-//        SQL sql = new SQL();
-//        sql.INSERT_INTO(tableName);
-//        for (String column :columnNameList
-//             ) {
-//
-//        }
-//        sql.INTO_COLUMNS();
-//        sql.INTO_VALUES();
-
-        StringBuffer sql = new StringBuffer();
-        // insert into
-        sql.append("insert into `").append(tableName).append("` ");
-        // fields
-        sql.append(" (").append(YtStringUtils.join(columnNameList.toArray(), ", ")).append(") ");
-        // values
-        sql.append(" values ").append(valueParams);
+        SQL sql = new SQL();
+        sql.INSERT_INTO(tableName);
+        for (String column : columnNameList) {
+            sql.INTO_COLUMNS(column);
+        }
+        for (List<String> values : valuesList) {
+            for (String value:values) {
+                sql.INTO_VALUES(value);
+            }
+            sql.ADD_ROW();
+        }
         return sql.toString();
     }
 
@@ -283,7 +275,6 @@ public class BaseMapperProvider {
     }
 
     /**
-     *
      * @param selectedFieldColumnNames
      * @param entity
      * @param <T>
