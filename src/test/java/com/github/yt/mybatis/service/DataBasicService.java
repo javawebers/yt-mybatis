@@ -1,5 +1,6 @@
 package com.github.yt.mybatis.service;
 
+import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
 import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
@@ -53,14 +54,14 @@ public class DataBasicService {
 
     public List<DbEntitySame> findSameList(List<DbEntitySame> list) {
         List<String> idList = list.stream().map(DbEntitySame::getDbEntitySameId).collect(Collectors.toList());
-        List<String> fieldList = new ArrayList<>();
-        fieldList.add("`dbEntitySameId`");
-        fieldList.addAll(idList);
+        List<String> idSqlList = new ArrayList<>();
+        for (String id:idList) {
+            idSqlList.add("'" + id +"'");
+        }
         List<DbEntitySame> result = dbEntitySameService.findList(new DbEntitySame(),
                 new Query().addWhere("dbEntitySameId in ${dbEntitySameIdList}")
                         .addParam("dbEntitySameIdList", idList)
-                        .addParam("fieldList", fieldList)
-                        .addOrderBy("FIELD ${fieldList}"));
+                        .addOrderBy("FIELD(`dbEntitySameId`, "+  YtStringUtils.join(idSqlList.toArray(), ", ")  +") "));
         Assert.assertEquals(result.size(), list.size());
         return result;
     }
@@ -88,10 +89,14 @@ public class DataBasicService {
     }
     public List<DbEntityNotSame> findNotSameList(List<DbEntityNotSame> list) {
         List<String> idList = list.stream().map(DbEntityNotSame::getDbEntityNotSameId).collect(Collectors.toList());
+        List<String> idSqlList = new ArrayList<>();
+        for (String id:idList) {
+            idSqlList.add("'" + id +"'");
+        }
         List<DbEntityNotSame> result = dbEntityNotSameService.findList(new DbEntityNotSame(),
                 new Query().addWhere("db_entity_not_same_id in ${dbEntityNotSameIdList}")
                         .addParam("dbEntityNotSameIdList", idList)
-                        .addOrderBy("FIELD(`db_entity_not_same_id`, " + StringUtils.join(idList, ", ") + ")"));
+                        .addOrderBy("FIELD(`db_entity_not_same_id`, "+  YtStringUtils.join(idSqlList.toArray(), ", ")  +") "));
         Assert.assertEquals(list.size(), result.size());
         return result;
     }
@@ -123,7 +128,7 @@ public class DataBasicService {
         return findSameList(entityList);
     }
 
-    public List<DbEntityNotSame> save12NotSameThenReturn() {
+    public List<DbEntityNotSame> save12NotSame() {
         List<DbEntityNotSame> entityList = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             DbEntityNotSame entity = new DbEntityNotSame();

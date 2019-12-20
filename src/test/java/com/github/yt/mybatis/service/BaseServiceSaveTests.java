@@ -48,6 +48,23 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void saveSameSetCreatorInfo() {
+        DbEntitySame entity = new DbEntitySame();
+        entity.setFounderId("testId");
+        entity.setFounderName("testName");
+        dbEntitySameService.save(entity);
+        DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
+        Assert.assertNull(dbEntity.getTestBoolean());
+        Assert.assertNull(dbEntity.getTestInt());
+        Assert.assertNull(dbEntity.getTestVarchar());
+        Assert.assertNull(dbEntity.getTestEnum());
+        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean) false);
+        Assert.assertEquals(dbEntity.getFounderId(), "testId");
+        Assert.assertEquals(dbEntity.getFounderName(), "testName");
+        dataBasicService.deleteSame(entity);
+    }
+
+    @Test
     public void saveSameNotSetUpdaterInfo() {
         DbEntitySame entity = dataBasicService.saveOneSame();
         Assert.assertNull(entity.getModifyTime());
@@ -119,6 +136,20 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         Assert.assertNotNull(entity.getCreateTime());
         Assert.assertNotNull(entity.getFounderId());
+        dataBasicService.deleteNotSame(entity);
+    }
+
+    @Test
+    public void saveNotSameSetCreatorInfo() {
+        DbEntityNotSame entity = new DbEntityNotSame();
+        entity.setFounderId("testId");
+        dbEntityNotSameService.save(entity);
+        DbEntityNotSame dbEntity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        Assert.assertNull(dbEntity.getTestBoolean());
+        Assert.assertNull(dbEntity.getTestInt());
+        Assert.assertNull(dbEntity.getTestVarchar());
+        Assert.assertEquals(dbEntity.getDeleteFlag(), (Boolean) false);
+        Assert.assertEquals(dbEntity.getFounderId(), "testId");
         dataBasicService.deleteNotSame(entity);
     }
 
