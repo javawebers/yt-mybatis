@@ -34,21 +34,21 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchSameIdNotNull() {
+    public void sameIdNotNull() {
         List<DbEntitySame> list = dataBasicService.save12Same();
         list.forEach(entity -> Assert.assertNotNull(entity.getDbEntitySameId()));
         dataBasicService.deleteSame(list);
     }
 
     @Test
-    public void saveBatchSameDeleteFlagNotNull() {
+    public void sameDeleteFlagNotNull() {
         List<DbEntitySame> list = dataBasicService.save12Same();
         list.forEach(entity -> Assert.assertEquals((Boolean) false, entity.getDeleteFlag()));
         dataBasicService.deleteSame(list);
     }
 
     @Test
-    public void saveBatchSameAutoSetCreatorInfo() {
+    public void sameAutoSetCreatorInfo() {
         List<DbEntitySame> list = dataBasicService.save12Same();
         list.forEach(entity -> {
             Assert.assertNotNull(entity.getCreateTime());
@@ -59,7 +59,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchSameSetCreatorInfo() {
+    public void sameSetCreatorInfo() {
         List<DbEntitySame> list = new ArrayList<>();
         DbEntitySame entity1 = new DbEntitySame();
         DbEntitySame entity2 = new DbEntitySame();
@@ -88,7 +88,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchSameNotSetUpdaterInfo() {
+    public void sameNotSetUpdaterInfo() {
         List<DbEntitySame> list = dataBasicService.save12Same();
         list.forEach(entity -> {
             Assert.assertNull(entity.getModifyTime());
@@ -99,7 +99,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchSameSavedValueSurefire() {
+    public void sameSavedValueSurefire() {
         List<DbEntitySame> list = new ArrayList<>();
 
         DbEntitySame entity1 = new DbEntitySame();
@@ -133,7 +133,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchSameSavedNullValue() {
+    public void sameSavedNullValue() {
         List<DbEntitySame> list = new ArrayList<>();
         DbEntitySame entity1 = new DbEntitySame();
         DbEntitySame entity2 = new DbEntitySame();
@@ -160,7 +160,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchSameExistId() {
+    public void sameExistId() {
         String sameExistId = "batchSameExistId_001";
         List<DbEntitySame> list = new ArrayList<>();
         DbEntitySame entity1 = new DbEntitySame().setDbEntitySameId(sameExistId);
@@ -176,21 +176,21 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     //
 
     @Test
-    public void saveBatchNotSameIdNotNull() {
+    public void notSameIdNotNull() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         list.forEach(entity -> Assert.assertNotNull(entity.getDbEntityNotSameId()));
         dataBasicService.deleteNotSame(list);
     }
 
     @Test
-    public void saveBatchNotSameDeleteFlagNotNull() {
+    public void notSameDeleteFlagNotNull() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         list.forEach(entity -> Assert.assertEquals((Boolean) false, entity.getDeleteFlag()));
         dataBasicService.deleteNotSame(list);
     }
 
     @Test
-    public void saveBatchNotSameAutoSetCreatorInfo() {
+    public void notSameAutoSetCreatorInfo() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         list.forEach(entity -> {
             Assert.assertNotNull(entity.getCreateTime());
@@ -200,7 +200,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchNotSameSetCreatorInfo() {
+    public void notSameSetCreatorInfo() {
         List<DbEntityNotSame> list = new ArrayList<>();
         DbEntityNotSame entity1 = new DbEntityNotSame();
         DbEntityNotSame entity2 = new DbEntityNotSame();
@@ -225,7 +225,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchNotSameNotSetUpdaterInfo() {
+    public void notSameNotSetUpdaterInfo() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         list.forEach(entity -> {
             Assert.assertNull(entity.getModifyTime());
@@ -235,7 +235,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchNotSameSavedValueSurefire() {
+    public void notSameSavedValueSurefire() {
         List<DbEntityNotSame> list = new ArrayList<>();
 
         DbEntityNotSame entity1 = new DbEntityNotSame();
@@ -265,7 +265,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchNotSameSavedNullValue() {
+    public void notSameSavedNullValue() {
         List<DbEntityNotSame> list = new ArrayList<>();
         DbEntityNotSame entity1 = new DbEntityNotSame();
         DbEntityNotSame entity2 = new DbEntityNotSame();
@@ -290,7 +290,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     }
 
     @Test
-    public void saveBatchNotSameExistId() {
+    public void notSameExistId() {
         String sameExistId = "batchNotSameExistId_001";
         List<DbEntityNotSame> list = new ArrayList<>();
         DbEntityNotSame entity1 = new DbEntityNotSame().setDbEntityNotSameId(sameExistId);

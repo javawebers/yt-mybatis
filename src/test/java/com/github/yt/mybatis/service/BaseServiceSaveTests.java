@@ -7,6 +7,7 @@ import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -25,21 +26,27 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     private DbEntityNotSameService dbEntityNotSameService;
 
     @Test
-    public void saveSameIdNotNull() {
+    public void sameIdNotNull() {
         DbEntitySame entity = dataBasicService.saveOneSame();
         Assert.assertNotNull(entity.getDbEntitySameId());
         dataBasicService.deleteSame(entity);
     }
 
+    @Test(expectedExceptions = DuplicateKeyException.class)
+    public void sameIdAlreadyExist() {
+        DbEntitySame entity = dataBasicService.saveOneSame();
+        dbEntitySameService.save(entity);
+    }
+
     @Test
-    public void saveSameDeleteFlagNotNull() {
+    public void sameDeleteFlagNotNull() {
         DbEntitySame entity = dataBasicService.saveOneSame();
         Assert.assertEquals((Boolean) false, entity.getDeleteFlag());
         dataBasicService.deleteSame(entity);
     }
 
     @Test
-    public void saveSameAutoSetCreatorInfo() {
+    public void sameAutoSetCreatorInfo() {
         DbEntitySame entity = dataBasicService.saveOneSame();
         Assert.assertNotNull(entity.getCreateTime());
         Assert.assertNotNull(entity.getFounderId());
@@ -48,7 +55,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveSameSetCreatorInfo() {
+    public void sameSetCreatorInfo() {
         DbEntitySame entity = new DbEntitySame();
         entity.setFounderId("testId");
         entity.setFounderName("testName");
@@ -65,7 +72,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveSameNotSetUpdaterInfo() {
+    public void sameNotSetUpdaterInfo() {
         DbEntitySame entity = dataBasicService.saveOneSame();
         Assert.assertNull(entity.getModifyTime());
         Assert.assertNull(entity.getModifierId());
@@ -77,7 +84,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
      * 保存后再取出保证值是正确的
      */
     @Test
-    public void saveSameSavedValueSurefire() {
+    public void sameSavedValueSurefire() {
         DbEntitySame entity = new DbEntitySame();
         entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22")
                 .setTestEnum(DbEntitySameTestEnumEnum.FEMALE).setDeleteFlag(true);
@@ -93,7 +100,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveSameSavedNullValue() {
+    public void sameSavedNullValue() {
         DbEntitySame entity = new DbEntitySame();
         dbEntitySameService.save(entity);
 
@@ -106,7 +113,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveSameExistId() {
+    public void sameExistId() {
         String sameExistId = "sameExistId_001";
         DbEntitySame entity = new DbEntitySame().setDbEntitySameId(sameExistId);
         dbEntitySameService.save(entity);
@@ -118,21 +125,27 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     // 下面 not same
 
     @Test
-    public void saveNotSameIdNotNull() {
+    public void notSameIdNotNull() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         Assert.assertNotNull(entity.getDbEntityNotSameId());
         dataBasicService.deleteNotSame(entity);
     }
 
+    @Test(expectedExceptions = DuplicateKeyException.class)
+    public void notSameIdAlreadyExist() {
+        DbEntityNotSame entity = dataBasicService.saveOneNotSame();
+        dbEntityNotSameService.save(entity);
+    }
+
     @Test
-    public void saveNotSameDeleteFlagNotNull() {
+    public void notSameDeleteFlagNotNull() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         Assert.assertEquals((Boolean) false, entity.getDeleteFlag());
         dataBasicService.deleteNotSame(entity);
     }
 
     @Test
-    public void saveNotSameAutoSetCreatorInfo() {
+    public void notSameAutoSetCreatorInfo() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         Assert.assertNotNull(entity.getCreateTime());
         Assert.assertNotNull(entity.getFounderId());
@@ -140,7 +153,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveNotSameSetCreatorInfo() {
+    public void notSameSetCreatorInfo() {
         DbEntityNotSame entity = new DbEntityNotSame();
         entity.setFounderId("testId");
         dbEntityNotSameService.save(entity);
@@ -154,7 +167,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveNotSameNotSetUpdaterInfo() {
+    public void notSameNotSetUpdaterInfo() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         Assert.assertNull(entity.getModifyTime());
         Assert.assertNull(entity.getModifierId());
@@ -162,7 +175,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveNotSameSavedValueSurefire() {
+    public void notSameSavedValueSurefire() {
         DbEntityNotSame entity = new DbEntityNotSame();
         entity.setTestBoolean(true).setTestInt(22).setTestVarchar("22").setDeleteFlag(true);
         dbEntityNotSameService.save(entity);
@@ -176,7 +189,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveNotSameSavedNullValue() {
+    public void notSameSavedNullValue() {
         DbEntityNotSame entity = new DbEntityNotSame();
         dbEntityNotSameService.save(entity);
 
@@ -188,7 +201,7 @@ public class BaseServiceSaveTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void saveNotSameExistId() {
+    public void notSameExistId() {
         String sameExistId = "notSameExistId_001";
         DbEntityNotSame entity = new DbEntityNotSame().setDbEntityNotSameId(sameExistId);
         dbEntityNotSameService.save(entity);
