@@ -8,6 +8,8 @@ import com.github.yt.mybatis.business.service.DbEntitySameService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
@@ -22,6 +24,12 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
     DbEntitySameService dbEntitySameService;
     @Resource
     DbEntityNotSameService dbEntityNotSameService;
+
+    @AfterMethod
+    public void after() {
+        dbEntitySameService.delete(new DbEntitySame());
+        dbEntityNotSameService.delete(new DbEntityNotSame());
+    }
 
 
     /**

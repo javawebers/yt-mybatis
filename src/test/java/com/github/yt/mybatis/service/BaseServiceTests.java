@@ -17,6 +17,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
@@ -35,7 +36,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     @Resource
     IntIdService intIdService;
 
-    @AfterClass
+    @AfterMethod
     public void after() {
         dbEntitySameService.delete(new DbEntitySame());
         dbEntityNotSameService.delete(new DbEntityNotSame());
