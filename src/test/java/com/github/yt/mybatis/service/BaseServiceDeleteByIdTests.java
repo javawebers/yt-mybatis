@@ -7,7 +7,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import javax.annotation.Resource;
 
 //@SpringBootTest(classes = {YtMybatisDemoApplication.class})
-public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
+public class BaseServiceDeleteByIdTests extends AbstractTestNGSpringContextTests {
 
     @Resource
     private DataBasicService dataBasicService;
