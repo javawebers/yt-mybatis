@@ -146,10 +146,19 @@ public interface IBaseService<T> {
     T findOne(T entityCondition);
 
     /**
+     * 按条件查询一条记录，获取一条记录，不存在抛出异常
+     *
+     * @param entityCondition 业务实体类或业务查询实体类
+     * @param query           查询辅助类
+     * @return 业务实体
+     */
+    T findOne(T entityCondition, MybatisQuery query);
+
+    /**
      * 按条件查询一条记录
      *
      * @param entityCondition 业务实体类或业务查询实体类
-     * @param query  查询辅助类
+     * @param query           查询辅助类
      * @return 业务实体
      */
     T find(T entityCondition, MybatisQuery query);

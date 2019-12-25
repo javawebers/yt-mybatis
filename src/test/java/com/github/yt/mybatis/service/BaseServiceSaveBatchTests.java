@@ -38,14 +38,12 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     public void sameIdNotNull() {
         List<DbEntitySame> list = dataBasicService.save12Same();
         list.forEach(entity -> Assert.assertNotNull(entity.getDbEntitySameId()));
-        dataBasicService.deleteSame(list);
     }
 
     @Test
     public void sameDeleteFlagNotNull() {
         List<DbEntitySame> list = dataBasicService.save12Same();
         list.forEach(entity -> Assert.assertEquals((Boolean) false, entity.getDeleteFlag()));
-        dataBasicService.deleteSame(list);
     }
 
     @Test
@@ -56,7 +54,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
             Assert.assertNotNull(entity.getFounderId());
             Assert.assertNotNull(entity.getFounderName());
         });
-        dataBasicService.deleteSame(list);
     }
 
     @Test
@@ -85,7 +82,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbList.get(1).getFounderId(), "testId");
         Assert.assertEquals(dbList.get(1).getFounderName(), "testName");
 
-        dataBasicService.deleteSame(list);
     }
 
     @Test
@@ -96,7 +92,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
             Assert.assertNull(entity.getModifierId());
             Assert.assertNull(entity.getModifierName());
         });
-        dataBasicService.deleteSame(list);
     }
 
     @Test
@@ -130,7 +125,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbList.get(1).getTestEnum(), DbEntitySameTestEnumEnum.MALE);
         Assert.assertEquals(dbList.get(1).getDeleteFlag(), (Boolean) false);
 
-        dataBasicService.deleteSame(list);
     }
 
     @Test
@@ -157,7 +151,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         Assert.assertNull(dbList.get(1).getTestEnum());
         Assert.assertEquals(dbList.get(1).getDeleteFlag(), (Boolean) false);
 
-        dataBasicService.deleteSame(list);
     }
 
     @Test
@@ -180,14 +173,12 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
     public void notSameIdNotNull() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         list.forEach(entity -> Assert.assertNotNull(entity.getDbEntityNotSameId()));
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
     public void notSameDeleteFlagNotNull() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         list.forEach(entity -> Assert.assertEquals((Boolean) false, entity.getDeleteFlag()));
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
@@ -197,7 +188,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
             Assert.assertNotNull(entity.getCreateTime());
             Assert.assertNotNull(entity.getFounderId());
         });
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
@@ -222,7 +212,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbList.get(1).getDeleteFlag(), (Boolean) false);
         Assert.assertEquals(dbList.get(1).getFounderId(), "testId");
 
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
@@ -232,7 +221,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
             Assert.assertNull(entity.getModifyTime());
             Assert.assertNull(entity.getModifierId());
         });
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
@@ -261,8 +249,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbList.get(1).getTestInt(), (Integer) 2);
         Assert.assertEquals(dbList.get(1).getTestVarchar(), "2");
         Assert.assertEquals(dbList.get(1).getDeleteFlag(), (Boolean) false);
-
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
@@ -286,8 +272,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbList.get(1).getTestInt(), (Integer) 2);
         Assert.assertEquals(dbList.get(1).getTestVarchar(), "2");
         Assert.assertEquals(dbList.get(1).getDeleteFlag(), (Boolean) false);
-
-        dataBasicService.deleteNotSame(list);
     }
 
     @Test
@@ -302,8 +286,6 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
         List<DbEntityNotSame> dbList = dataBasicService.findNotSameList(list);
         Assert.assertEquals(dbList.get(0).getDbEntityNotSameId(), sameExistId);
         Assert.assertNotNull(dbList.get(1).getDbEntityNotSameId());
-
-        dataBasicService.deleteNotSame(list);
     }
 
 

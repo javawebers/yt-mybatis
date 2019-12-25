@@ -135,6 +135,15 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
+    public T findOne(T entityCondition, MybatisQuery query) {
+        T entity = find(entityCondition, query);
+        if (entity == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        return entity;
+    }
+
+    @Override
     public T find(T entityCondition, MybatisQuery query) {
         if (query.takeLimitFrom() == null) {
             query.limit(0, 2);

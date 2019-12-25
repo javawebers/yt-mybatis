@@ -58,7 +58,6 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
         DbEntitySame entity = dataBasicService.saveOneSame();
         DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
         Assert.assertNotNull(dbEntity);
-        dataBasicService.deleteSame(dbEntity);
     }
 
     /**
@@ -87,7 +86,6 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         DbEntityNotSame dbEntity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
         Assert.assertNotNull(dbEntity);
-        dataBasicService.deleteNotSame(dbEntity);
     }
 
 
