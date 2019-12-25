@@ -13,6 +13,8 @@ public enum YtMybatisExceptionEnum {
     CODE_24("系统异常", "数据库异常，记录数不正确(findOne getOne 等)"),
 
     // error
+    CODE_76("删除的记录数过多"),
+    CODE_77("逻辑删除的记录数过多"),
     CODE_78("删除标志位字段不存在"),
     CODE_79("实例化resultConfig对象异常，{0}"),
     CODE_80("不是根据id比较，不可调用map差异"),

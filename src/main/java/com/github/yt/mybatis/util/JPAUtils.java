@@ -12,7 +12,9 @@ import javax.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.*;
 
-
+/**
+ * @author sheng
+ */
 public class JPAUtils {
 
     private static Logger logger = LoggerFactory.getLogger(JPAUtils.class);

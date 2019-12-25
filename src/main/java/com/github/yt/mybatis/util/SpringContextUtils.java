@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author  SpringContextUtils
+ * @author liujiasheng
  */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
@@ -21,11 +21,6 @@ public class SpringContextUtils implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) {
         SpringContextUtils.applicationContext = applicationContext;
     }
-
-    // TODO
-//    public static void refresh() {
-//        ((AbstractRefreshableWebApplicationContext) applicationContext).refresh();
-//    }
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;

@@ -4,6 +4,7 @@ import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
 import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
+import com.github.yt.mybatis.business.service.DataBasicService;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.query.Query;
@@ -35,21 +36,21 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void sameExist() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
+        dataBasicService.save12Same();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame().setTestEnum(DbEntitySameTestEnumEnum.FEMALE));
         Assert.assertEquals(6, dbList.size());
     }
 
     @Test
     public void sameNotExist() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
+        dataBasicService.save12Same();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame().setDbEntitySameId("xxx"));
         Assert.assertEquals(0, dbList.size());
     }
 
     @Test
     public void sameMoreCondition() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
+        dataBasicService.save12Same();
         List<DbEntitySame> dbList = dbEntitySameService.findList(
                 new DbEntitySame()
                         .setTestEnum(DbEntitySameTestEnumEnum.FEMALE).setTestBoolean(true));
@@ -58,7 +59,7 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void sameQueryExist() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
+        dataBasicService.save12Same();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
                 new Query().addWhere("testEnum = #{testEnum}")
                         .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE));
@@ -67,7 +68,7 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void sameQueryNotExist() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
+        dataBasicService.save12Same();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
                 new Query().addWhere("testEnum = #{testEnum}")
                         .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
@@ -79,7 +80,7 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void notSameExist() {
-        List<DbEntityNotSame> list = dataBasicService.save12NotSame();
+        dataBasicService.save12NotSame();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(
                 new DbEntityNotSame().setTestBoolean(true));
         Assert.assertEquals(6, dbList.size());
@@ -87,14 +88,14 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void notSameNotExist() {
-        List<DbEntityNotSame> list = dataBasicService.save12NotSame();
+        dataBasicService.save12NotSame();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame().setDbEntityNotSameId("xxx"));
         Assert.assertEquals(0, dbList.size());
     }
 
     @Test
     public void notSameMoreCondition() {
-        List<DbEntityNotSame> list = dataBasicService.save12NotSame();
+        dataBasicService.save12NotSame();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(
                 new DbEntityNotSame().setTestBoolean(true).setTestInt(0));
         Assert.assertEquals(2, dbList.size());
@@ -102,7 +103,7 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void notSameQueryExist() {
-        List<DbEntityNotSame> list = dataBasicService.save12NotSame();
+        dataBasicService.save12NotSame();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
                 new Query().addWhere("test_boolean = #{testBoolean}")
                         .addParam("testBoolean", true));
@@ -111,7 +112,7 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void notSameQueryNotExist() {
-        List<DbEntityNotSame> list = dataBasicService.save12NotSame();
+        dataBasicService.save12NotSame();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
                 new Query().addWhere("test_int = #{testInt}")
                         .addParam("testInt", 0)

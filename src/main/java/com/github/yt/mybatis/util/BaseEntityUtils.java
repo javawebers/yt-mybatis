@@ -4,8 +4,6 @@ import com.github.yt.mybatis.entity.BaseEntityValue;
 import com.github.yt.mybatis.entity.DefaultBaseEntityValue;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 

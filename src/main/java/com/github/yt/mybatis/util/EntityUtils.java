@@ -155,7 +155,7 @@ public class EntityUtils {
                 }
             }
         }
-        return null;
+        throw new RuntimeException("id 字段不存在，" + entityClass);
     }
 
     /**

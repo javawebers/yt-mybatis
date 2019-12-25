@@ -5,6 +5,7 @@ import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
 import com.github.yt.mybatis.util.EntityUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -20,10 +21,10 @@ import java.util.*;
  * @author liujiasheng
  */
 public abstract class BaseService<T> implements IBaseService<T> {
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(BaseService.class);
+    private static Logger logger = LoggerFactory.getLogger(BaseService.class);
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
 
-    private BaseMapper mapper;
+    private BaseMapper<?> mapper;
 
     @Override
     public <M extends BaseMapper<T>> M getMapper() {
@@ -50,10 +51,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     /**
      * 所有的保存都走这里
-     *
-     * @param entityCollection
-     * @param batch
-     * @return
      */
     private int saveBatch(Collection<T> entityCollection, boolean batch) {
         if (entityCollection == null || entityCollection.size() == 0) {
@@ -74,13 +71,40 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int updateByCondition(T entityCondition, MybatisQuery query) {
+    public int updateByCondition(T entityCondition, MybatisQuery<?> query) {
         return getMapper().updateByCondition(ParamUtils.getParamMap(entityCondition, query));
     }
 
+    @Override
+    public int logicDeleteOne(Class<T> entityClass, Serializable id) {
+        int num = logicDelete(entityClass, id);
+        if (num != 1) {
+            throw new EmptyResultDataAccessException("逻辑删除的数据不为1条，删除了:" + num, 1);
+        }
+        return num;
+    }
 
     @Override
-    public int logicDelete(T entityCondition, MybatisQuery query) {
+    public int logicDelete(Class<T> entityClass, Serializable id) {
+        org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+        Field idField = EntityUtils.getIdField(entityClass);
+        T entityCondition;
+        try {
+            entityCondition = entityClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        String idFieldColumnName = EntityUtils.getFieldColumnName(idField);
+        Query query = new Query();
+        query.addWhere("t." + idFieldColumnName + " = #{id}");
+        query.addParam("id", id);
+        int num = this.logicDelete(entityCondition, query);
+        Assert.le(num, 1, YtMybatisExceptionEnum.CODE_77);
+        return num;
+    }
+
+    @Override
+    public int logicDelete(T entityCondition, MybatisQuery<?> query) {
         return getMapper().logicDelete(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -90,8 +114,31 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
+    public int deleteOne(Class<T> entityClass, Serializable id) {
+        int num = delete(entityClass, id);
+        if (num != 1) {
+            throw new EmptyResultDataAccessException("删除的数据不为1条，删除了:" + num, 1);
+        }
+        return num;
+    }
+
+    @Override
     public int delete(Class<T> entityClass, Serializable id) {
-        return getMapper().deleteById(entityClass, id);
+        org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+        Field idField = EntityUtils.getIdField(entityClass);
+        T entityCondition;
+        try {
+            entityCondition = entityClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        String idFieldColumnName = EntityUtils.getFieldColumnName(idField);
+        Query query = new Query();
+        query.addWhere(idFieldColumnName + " = #{id}");
+        query.addParam("id", id);
+        int num = this.delete(entityCondition, query);
+        Assert.le(num, 1, YtMybatisExceptionEnum.CODE_76);
+        return num;
     }
 
     @Override
@@ -100,9 +147,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int delete(T entityCondition, MybatisQuery query) {
+    public int delete(T entityCondition, MybatisQuery<?> query) {
         return getMapper().delete(ParamUtils.getParamMap(entityCondition, query));
-
     }
 
     @Override
@@ -135,7 +181,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public T findOne(T entityCondition, MybatisQuery query) {
+    public T findOne(T entityCondition, MybatisQuery<?> query) {
         T entity = find(entityCondition, query);
         if (entity == null) {
             throw new EmptyResultDataAccessException(1);
@@ -144,7 +190,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public T find(T entityCondition, MybatisQuery query) {
+    public T find(T entityCondition, MybatisQuery<?> query) {
         if (query.takeLimitFrom() == null) {
             query.limit(0, 2);
         }
@@ -157,7 +203,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public List<T> findList(T entityCondition, MybatisQuery query) {
+    public List<T> findList(T entityCondition, MybatisQuery<?> query) {
         return getMapper().findList(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -167,12 +213,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int count(T entityCondition, MybatisQuery query) {
+    public int count(T entityCondition, MybatisQuery<?> query) {
         return getMapper().count(ParamUtils.getParamMap(entityCondition, query));
     }
 
     @Override
-    public Page<T> findPage(T entityCondition, MybatisQuery query) {
+    public Page<T> findPage(T entityCondition, MybatisQuery<?> query) {
         // 设置页数页码
         ParamUtils.setPageInfo(query);
         Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query);
@@ -190,8 +236,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     /**
      * 生成一个 uuid 作为主键，去除其中的"-"
-     *
-     * @return
      */
     private static String generateUuidIdValue() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -199,9 +243,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     /**
      * 生成 param 用于拼接 sql
-     *
-     * @param entityCollection 实体集合
-     * @return param
      */
     private Map<String, Object> getMybatisParamForSave(Collection<T> entityCollection) {
         Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
@@ -228,12 +269,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
     private void setEntityId(Collection<T> entityCollection, boolean batch) {
         // 设置id字段的值
         Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
-        Field idField = EntityUtils.getIdField(entityClass);
-        if (idField != null) {
-            if (idField.getType() != String.class) {
-                return;
-            }
-        } else {
+        Field idField;
+        try {
+            idField = EntityUtils.getIdField(entityClass);
+        } catch (Exception e) {
+            return;
+        }
+        if (idField.getType() != String.class) {
             return;
         }
 

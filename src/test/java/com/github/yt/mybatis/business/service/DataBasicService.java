@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.service;
+package com.github.yt.mybatis.business.service;
 
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;

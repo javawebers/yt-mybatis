@@ -17,10 +17,13 @@ import javax.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.*;
 
+/**
+ * @author liujiasheng
+ */
 public class BaseMapperProvider {
 
-    public String get(Map paramMap) {
-        Class entityClass = (Class) paramMap.get("entityClass");
+    public String get(Map<String, Object> paramMap) {
+        Class<?> entityClass = (Class<?>) paramMap.get("entityClass");
         Field idField = EntityUtils.getIdField(entityClass);
 
         Query query = new Query();
@@ -32,7 +35,7 @@ public class BaseMapperProvider {
         return sql.toString();
     }
 
-    public String findList(Map paramMap) {
+    public String findList(Map<String, Object> paramMap) {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         SQL sql = new SQL();
@@ -47,7 +50,7 @@ public class BaseMapperProvider {
     }
 
 
-    public String count(Map paramMap) {
+    public String count(Map<String, Object> paramMap) {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         SQL sql = new SQL();
@@ -59,8 +62,7 @@ public class BaseMapperProvider {
         return SqlUtils.replaceInParam(sql, query);
     }
 
-
-    public String logicDelete(Map paramMap) {
+    public String logicDelete(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
 
@@ -70,6 +72,7 @@ public class BaseMapperProvider {
         }
         String deleteFlagColumn = EntityUtils.getFieldColumnName(deleteFlagField);
         query.addUpdate("t." + deleteFlagColumn + " = true");
+        query.addWhere("t." + deleteFlagColumn + " = false");
         setUpdateBaseColumn(paramMap);
 
         SQL sql = new SQL();
@@ -83,16 +86,7 @@ public class BaseMapperProvider {
         return SqlUtils.replaceInParam(sql, query);
     }
 
-    public String deleteById(Map paramMap) {
-        Class entityClass = (Class) paramMap.get("entityClass");
-        Field idField = EntityUtils.getIdField(entityClass);
-        SQL sql = new SQL();
-        sql.DELETE_FROM(EntityUtils.getTableName(entityClass));
-        sql.WHERE(EntityUtils.getFieldColumnName(idField) + " = #{id}");
-        return sql.toString();
-    }
-
-    public String delete(Map paramMap) {
+    public String delete(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
 
@@ -102,7 +96,7 @@ public class BaseMapperProvider {
         return SqlUtils.replaceInParam(sql, query);
     }
 
-    public String updateByCondition(Map paramMap) {
+    public String updateByCondition(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         setUpdateBaseColumn(paramMap);
@@ -121,11 +115,7 @@ public class BaseMapperProvider {
     /**
      * 生成更新语句
      *
-     * @param entity
-     * @param isUpdateNullField
      * @param selectedFieldColumnNames 为空更新所有字段，不为空则更新指定字段。
-     * @param <T>
-     * @return
      */
     private <T> String update(T entity, boolean isUpdateNullField, String... selectedFieldColumnNames) {
         // 判断是否更新指定字段
@@ -133,7 +123,6 @@ public class BaseMapperProvider {
 
         // 设置修改人信息
         setModifier(entity);
-
 
         Field idField = EntityUtils.getIdField(entity.getClass());
         Table tableAnnotation = entity.getClass().getAnnotation(Table.class);
@@ -166,19 +155,19 @@ public class BaseMapperProvider {
         return sql.toString();
     }
 
-    public <T> String update(Map paramMap) {
+    public <T> String update(Map<String, Object> paramMap) {
         T entity = (T) paramMap.get("entity");
         String[] fieldColumnNames = (String[]) paramMap.get("fieldColumnNames");
         return update(entity, true, fieldColumnNames);
     }
 
-    public <T> String updateNotNull(Map paramMap) {
+    public <T> String updateNotNull(Map<String, Object> paramMap) {
         T entity = (T) paramMap.get("entity");
         String[] fieldColumnNames = (String[]) paramMap.get("fieldColumnNames");
         return update(entity, false, fieldColumnNames);
     }
 
-    public <T> String saveBatch(Map map) {
+    public <T> String saveBatch(Map<String, Object> map) {
         Collection<T> entityCollection = (Collection<T>) map.get("collection");
         setCreatorInfo(entityCollection);
 
@@ -273,12 +262,6 @@ public class BaseMapperProvider {
         }
     }
 
-    /**
-     * @param selectedFieldColumnNames
-     * @param entity
-     * @param <T>
-     * @return
-     */
     private <T> Set<String> getSelectedFieldColumnNameSet(String[] selectedFieldColumnNames, T entity) {
         Set<String> selectedFieldColumnNameSet = null;
         if (selectedFieldColumnNames != null && selectedFieldColumnNames.length > 0) {
@@ -331,7 +314,7 @@ public class BaseMapperProvider {
         }
     }
 
-    private void setUpdateBaseColumn(Map paramMap) {
+    private void setUpdateBaseColumn(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
 
@@ -339,25 +322,19 @@ public class BaseMapperProvider {
             Field modifierIdField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_ID);
             Field modifierNameField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_NAME);
             Field modifyTimeField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFY_TIME);
-            Object modifierId = null;
-            String modifierName = null;
-            Date modifyTime = null;
             if (modifierIdField != null) {
-                modifierId = BaseEntityUtils.getModifierId();
                 String modifierIdColumn = EntityUtils.getFieldColumnName(modifierIdField);
-                paramMap.put("_modifierId_", modifierId);
+                paramMap.put("_modifierId_", BaseEntityUtils.getModifierId());
                 query.addUpdate("t." + modifierIdColumn + " = #{_modifierId_}");
             }
             if (modifierNameField != null) {
-                modifierName = BaseEntityUtils.getModifierName();
                 String modifierNameColumn = EntityUtils.getFieldColumnName(modifierNameField);
-                paramMap.put("_modifierName_", modifierName);
+                paramMap.put("_modifierName_", BaseEntityUtils.getModifierName());
                 query.addUpdate("t." + modifierNameColumn + " = #{_modifierName_}");
             }
             if (modifyTimeField != null) {
-                modifyTime = new Date();
                 String modifyTimeColumn = EntityUtils.getFieldColumnName(modifyTimeField);
-                paramMap.put("_modifyTime_", modifyTime);
+                paramMap.put("_modifyTime_", new Date());
                 query.addUpdate("t." + modifyTimeColumn + " = #{_modifyTime_}");
             }
         }

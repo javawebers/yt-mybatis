@@ -3,10 +3,14 @@ package com.github.yt.mybatis.service;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
+import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
+import com.github.yt.mybatis.business.service.DataBasicService;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
+import com.github.yt.mybatis.query.Query;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
@@ -29,9 +33,92 @@ public class BaseServiceLogicDeleteTests extends AbstractTestNGSpringContextTest
         dbEntityNotSameService.delete(new DbEntityNotSame());
     }
 
-    @Test
-    public void save() {
 
+    @Test
+    public void sameExist() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.logicDelete(new DbEntitySame().setTestEnum(DbEntitySameTestEnumEnum.FEMALE));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
+    public void sameNotExist() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.logicDelete(new DbEntitySame().setDbEntitySameId("xxx"));
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void sameMoreCondition() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.logicDelete(
+                new DbEntitySame()
+                        .setTestEnum(DbEntitySameTestEnumEnum.FEMALE).setTestBoolean(true));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
+    public void sameQueryExist() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.logicDelete(new DbEntitySame(),
+                new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
+    public void sameQueryNotExist() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.logicDelete(new DbEntitySame(),
+                new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
+                        .addWhere("testBoolean = #{testBoolean}")
+                        .addParam("testBoolean", false));
+        Assert.assertEquals(0, count);
+    }
+
+
+    @Test
+    public void notSameExist() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.logicDelete(
+                new DbEntityNotSame().setTestBoolean(true));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
+    public void notSameNotExist() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.logicDelete(new DbEntityNotSame().setDbEntityNotSameId("xxx"));
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void notSameMoreCondition() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.logicDelete(
+                new DbEntityNotSame().setTestBoolean(true).setTestInt(0));
+        Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void notSameQueryExist() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.logicDelete(new DbEntityNotSame(),
+                new Query().addWhere("test_boolean = #{testBoolean}")
+                        .addParam("testBoolean", true));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
+    public void notSameQueryNotExist() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.logicDelete(new DbEntityNotSame(),
+                new Query().addWhere("test_int = #{testInt}")
+                        .addParam("testInt", 0)
+                        .addWhere("test_boolean = #{testBoolean}")
+                        .addParam("testBoolean", true));
+        Assert.assertEquals(2, count);
     }
 
 }

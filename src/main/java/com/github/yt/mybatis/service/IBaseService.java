@@ -2,7 +2,6 @@ package com.github.yt.mybatis.service;
 
 
 import com.github.yt.mybatis.mapper.BaseMapper;
-import com.github.yt.mybatis.query.MybatisQuery;
 import com.github.yt.mybatis.query.Page;
 import com.github.yt.mybatis.query.MybatisQuery;
 
@@ -68,7 +67,25 @@ public interface IBaseService<T> {
      * @param query           扩展条件
      * @return 更新条数
      */
-    int updateByCondition(T entityCondition, MybatisQuery query);
+    int updateByCondition(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 逻辑删除，不存在抛出异常
+     *
+     * @param entityClass clazz
+     * @param id          业务实体ID
+     * @return 删除记录数
+     */
+    int logicDeleteOne(Class<T> entityClass, Serializable id);
+
+    /**
+     * 逻辑删除
+     *
+     * @param entityClass clazz
+     * @param id          业务实体ID
+     * @return 删除记录数
+     */
+    int logicDelete(Class<T> entityClass, Serializable id);
 
     /**
      * 逻辑删除实体
@@ -77,24 +94,33 @@ public interface IBaseService<T> {
      * @param query           删除辅助类
      * @return 删除的条数
      */
-    int logicDelete(T entityCondition, MybatisQuery query);
+    int logicDelete(T entityCondition, MybatisQuery<?> query);
 
     /**
      * 逻辑删除
+     *
      * @param entityCondition 删除条件
-     * @return
+     * @return 删除记录数
      */
     int logicDelete(T entityCondition);
 
+    /**
+     * 删除实体，不存在抛出异常
+     *
+     * @param entityClass clazz
+     * @param id          业务实体ID
+     * @return 删除的条数
+     */
+    int deleteOne(Class<T> entityClass, Serializable id);
 
     /**
      * 删除实体
      *
-     * @param clazz clazz
-     * @param id    业务实体ID
+     * @param entityClass clazz
+     * @param id          业务实体ID
      * @return 删除的条数
      */
-    int delete(Class<T> clazz, Serializable id);
+    int delete(Class<T> entityClass, Serializable id);
 
     /**
      * 删除实体
@@ -103,12 +129,13 @@ public interface IBaseService<T> {
      * @param query           删除辅助类
      * @return 删除的条数
      */
-    int delete(T entityCondition, MybatisQuery query);
+    int delete(T entityCondition, MybatisQuery<?> query);
 
     /**
      * 删除
+     *
      * @param entityCondition 删除条件
-     * @return
+     * @return 删除记录数
      */
     int delete(T entityCondition);
 
@@ -152,7 +179,7 @@ public interface IBaseService<T> {
      * @param query           查询辅助类
      * @return 业务实体
      */
-    T findOne(T entityCondition, MybatisQuery query);
+    T findOne(T entityCondition, MybatisQuery<?> query);
 
     /**
      * 按条件查询一条记录
@@ -161,7 +188,7 @@ public interface IBaseService<T> {
      * @param query           查询辅助类
      * @return 业务实体
      */
-    T find(T entityCondition, MybatisQuery query);
+    T find(T entityCondition, MybatisQuery<?> query);
 
     /**
      * 按条件查询记录集合
@@ -178,7 +205,7 @@ public interface IBaseService<T> {
      * @param query           查询辅助类
      * @return 业务实体集合
      */
-    List<T> findList(T entityCondition, MybatisQuery query);
+    List<T> findList(T entityCondition, MybatisQuery<?> query);
 
     /**
      * 查询数量
@@ -195,14 +222,14 @@ public interface IBaseService<T> {
      * @param query           查询辅助类
      * @return 数量
      */
-    int count(T entityCondition, MybatisQuery query);
+    int count(T entityCondition, MybatisQuery<?> query);
 
     /**
      * 获取数据
      *
      * @param entityCondition 查询业务实体
-     * @param query  查询辅助类
+     * @param query           查询辅助类
      * @return 根据查询条件查询的查询结果集
      */
-    Page<T> findPage(T entityCondition, MybatisQuery query);
+    Page<T> findPage(T entityCondition, MybatisQuery<?> query);
 }

@@ -7,6 +7,7 @@ import com.github.yt.mybatis.business.service.DataBasicService;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -15,7 +16,7 @@ import org.testng.annotations.Test;
 import javax.annotation.Resource;
 
 @SpringBootTest(classes = {YtMybatisDemoApplication.class})
-public class BaseServiceDeleteByIdTests extends AbstractTestNGSpringContextTests {
+public class BaseServiceLogicDeleteOneTests extends AbstractTestNGSpringContextTests {
 
     @Resource
     private DataBasicService dataBasicService;
@@ -31,46 +32,45 @@ public class BaseServiceDeleteByIdTests extends AbstractTestNGSpringContextTests
         dbEntityNotSameService.delete(new DbEntityNotSame());
     }
 
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNullId() {
-        dbEntitySameService.delete(DbEntitySame.class, null);
+        dbEntitySameService.logicDeleteOne(DbEntitySame.class, null);
     }
 
-    @Test
+    @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void sameNotExist() {
-        int num = dbEntitySameService.delete(DbEntitySame.class, "sameNotExist_xxx");
-        Assert.assertEquals(0, num);
+        dbEntitySameService.logicDeleteOne(DbEntitySame.class, "sameNotExist_xxx");
     }
 
     @Test
     public void sameExist() {
         DbEntitySame entity = dataBasicService.saveOneSame();
-        int num = dbEntitySameService.delete(DbEntitySame.class, entity.getDbEntitySameId());
+        int num = dbEntitySameService.logicDeleteOne(DbEntitySame.class, entity.getDbEntitySameId());
         Assert.assertEquals(1, num);
         DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
-        Assert.assertNull(dbEntity);
+        Assert.assertNotNull(dbEntity);
+        Assert.assertEquals((Boolean) true, dbEntity.getDeleteFlag());
     }
 
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNullId() {
-        dbEntityNotSameService.delete(DbEntityNotSame.class, null);
+        dbEntityNotSameService.logicDeleteOne(DbEntityNotSame.class, null);
     }
 
-    @Test
+    @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void notSameNotExist() {
-        int num = dbEntityNotSameService.delete(DbEntityNotSame.class, "sameNotExist_xxx");
-        Assert.assertEquals(0, num);
+        dbEntityNotSameService.logicDeleteOne(DbEntityNotSame.class, "sameNotExist_xxx");
     }
 
     @Test
     public void notSameExist() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
-        int num = dbEntityNotSameService.delete(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        int num = dbEntityNotSameService.logicDeleteOne(DbEntityNotSame.class, entity.getDbEntityNotSameId());
         Assert.assertEquals(1, num);
         DbEntityNotSame dbEntity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
-        Assert.assertNull(dbEntity);
+        Assert.assertNotNull(dbEntity);
+        Assert.assertEquals((Boolean) true, dbEntity.getDeleteFlag());
     }
-
-
 }

@@ -4,6 +4,7 @@ import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
 import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
+import com.github.yt.mybatis.business.service.DataBasicService;
 import com.github.yt.mybatis.business.service.DbEntityNotSameService;
 import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.query.Query;
@@ -16,7 +17,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @SpringBootTest(classes = {YtMybatisDemoApplication.class})
 public class BaseServiceFindOneTests extends AbstractTestNGSpringContextTests {
@@ -46,13 +46,13 @@ public class BaseServiceFindOneTests extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void sameNotExist() {
-        DbEntitySame dbEntity = dbEntitySameService.findOne(
+        dbEntitySameService.findOne(
                 new DbEntitySame().setDbEntitySameId("sameNotExist_xxx"));
     }
 
     @Test(expectedExceptions = MyBatisSystemException.class)
     public void sameMultiResult() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
+        dataBasicService.save12Same();
         dbEntitySameService.findOne(new DbEntitySame().setTestEnum(DbEntitySameTestEnumEnum.FEMALE));
     }
 
@@ -77,7 +77,7 @@ public class BaseServiceFindOneTests extends AbstractTestNGSpringContextTests {
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void sameQueryNotExist() {
         DbEntitySame entity = dataBasicService.saveOneSame();
-        DbEntitySame dbEntity = dbEntitySameService.findOne(new DbEntitySame().setTestVarchar(entity.getTestVarchar()),
+        dbEntitySameService.findOne(new DbEntitySame().setTestVarchar(entity.getTestVarchar()),
                 new Query().addWhere("testVarchar = #{testVarchar}")
                         .addParam("testVarchar", entity.getTestVarchar() + "_sss")
                         .addWhere("testEnum = #{testEnum}")
@@ -95,13 +95,13 @@ public class BaseServiceFindOneTests extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void notSameNotExist() {
-        DbEntityNotSame dbEntity = dbEntityNotSameService.findOne(
+        dbEntityNotSameService.findOne(
                 new DbEntityNotSame().setDbEntityNotSameId("notSameNotExist_xxx"));
     }
 
     @Test(expectedExceptions = MyBatisSystemException.class)
     public void notSameMultiResult() {
-        List<DbEntityNotSame> list = dataBasicService.save12NotSame();
+        dataBasicService.save12NotSame();
         dbEntityNotSameService.findOne(new DbEntityNotSame().setTestBoolean(true));
     }
 
@@ -124,7 +124,7 @@ public class BaseServiceFindOneTests extends AbstractTestNGSpringContextTests {
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void notSameQueryNotExist() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
-        DbEntityNotSame dbEntity = dbEntityNotSameService.findOne(new DbEntityNotSame().setTestVarchar(entity.getTestVarchar()),
+        dbEntityNotSameService.findOne(new DbEntityNotSame().setTestVarchar(entity.getTestVarchar()),
                 new Query().addWhere("test_varchar = #{testVarchar}")
                         .addParam("testVarchar", entity.getTestVarchar() + "_sss"));
     }
