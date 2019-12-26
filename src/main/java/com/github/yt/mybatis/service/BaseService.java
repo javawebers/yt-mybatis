@@ -23,6 +23,7 @@ import java.util.*;
 public abstract class BaseService<T> implements IBaseService<T> {
     private static Logger logger = LoggerFactory.getLogger(BaseService.class);
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
+    private static final String ENTITY_MUST_NOT_BE_NULL = "The given entity must not be null!";
 
     private BaseMapper<?> mapper;
 
@@ -62,11 +63,15 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int update(T entity, String... fieldColumnNames) {
+        org.springframework.util.Assert.notNull(entity, ENTITY_MUST_NOT_BE_NULL);
+        org.springframework.util.Assert.notNull(EntityUtils.getIdValue(entity), ID_MUST_NOT_BE_NULL);
         return getMapper().update(entity, fieldColumnNames);
     }
 
     @Override
     public int updateForSelective(T entity, String... fieldColumnNames) {
+        org.springframework.util.Assert.notNull(entity, ENTITY_MUST_NOT_BE_NULL);
+        org.springframework.util.Assert.notNull(EntityUtils.getIdValue(entity), ID_MUST_NOT_BE_NULL);
         return getMapper().updateNotNull(entity, fieldColumnNames);
     }
 
