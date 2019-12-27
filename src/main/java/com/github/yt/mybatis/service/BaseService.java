@@ -2,8 +2,10 @@ package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
+import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
+import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +60,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
             return 0;
         }
         setEntityId(entityCollection, batch);
+        setCreatorInfo(entityCollection);
+        setDeleteFlag(entityCollection);
         return getMapper().saveBatch(entityCollection);
     }
+
 
     @Override
     public int update(T entity, String... fieldColumnNames) {
@@ -300,6 +305,71 @@ public abstract class BaseService<T> implements IBaseService<T> {
                     throw new RuntimeException(e);
                 }
                 i++;
+            }
+        }
+    }
+
+
+    /**
+     * 设置创建人信息
+     *
+     * @param entityCollection 实体类集合
+     */
+    private void setCreatorInfo(Collection<T> entityCollection) {
+        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
+        Field founderIdField = EntityUtils.getYtColumnField(entityClass, YtColumnType.FOUNDER_ID);
+        Field founderNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.FOUNDER_NAME);
+        Field createTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.CREATE_TIME);
+
+        Object founderId = null;
+        String founderName = null;
+        Date createTime = null;
+        if (founderIdField != null) {
+            founderId = BaseEntityUtils.getFounderId();
+        }
+        if (founderNameField != null) {
+            founderName = BaseEntityUtils.getFounderName();
+        }
+        if (createTimeField != null) {
+            createTime = new Date();
+        }
+
+        for (T entity : entityCollection) {
+            if (founderIdField != null && founderId != null) {
+                Object trueFounderId = EntityUtils.getValue(entity, founderIdField);
+                if (trueFounderId == null) {
+                    EntityUtils.setValue(entity, founderIdField, founderId);
+                }
+            }
+            if (founderNameField != null && founderName != null) {
+                Object trueFounderName = EntityUtils.getValue(entity, founderNameField);
+                if (trueFounderName == null) {
+                    EntityUtils.setValue(entity, founderNameField, founderName);
+                }
+            }
+            if (createTimeField != null) {
+                Object trueCreateTime = EntityUtils.getValue(entity, createTimeField);
+                if (trueCreateTime == null) {
+                    EntityUtils.setValue(entity, createTimeField, createTime);
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置 deleteFlag 默认 false
+     *
+     * @param entityCollection 实体类集合
+     */
+    private void setDeleteFlag(Collection<T> entityCollection) {
+        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
+        Field deleteFlagField = EntityUtils.getYtColumnField(entityClass, YtColumnType.DELETE_FLAG);
+        for (T entity : entityCollection) {
+            if (deleteFlagField != null) {
+                Object deleteFalg = EntityUtils.getValue(entity, deleteFlagField);
+                if (deleteFalg == null) {
+                    EntityUtils.setValue(entity, deleteFlagField, false);
+                }
             }
         }
     }
