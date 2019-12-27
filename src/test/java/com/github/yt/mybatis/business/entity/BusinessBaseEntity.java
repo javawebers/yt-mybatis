@@ -1,7 +1,5 @@
 package com.github.yt.mybatis.business.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.yt.mybatis.entity.YtBaseEntityColumn;
 import com.github.yt.mybatis.entity.YtColumnType;
 
@@ -36,14 +34,10 @@ public class BusinessBaseEntity<T extends BusinessBaseEntity<T>> implements Seri
     @YtBaseEntityColumn(YtColumnType.DELETE_FLAG)
     private Boolean deleteFlag;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @JSONField(format= "yyyy-MM-dd HH:mm:ss")
     public Date getCreateTime() {
         return createTime;
     }
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @JSONField(format= "yyyy-MM-dd HH:mm:ss")
     public Date getModifyTime() {
         return modifyTime;
     }
