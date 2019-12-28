@@ -4,6 +4,7 @@ import com.github.yt.commons.exception.Assert;
 import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.dialect.DialectHandler;
+import com.github.yt.mybatis.entity.BaseEntity;
 import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
@@ -218,10 +219,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        Query query = new Query();
-        query.addWhere(DialectHandler.getDialect().getColumnName(idField) + " = #{id}");
-        query.addParam("id", id);
-        return getMapper().find(ParamUtils.getParamMap(entityCondition, query));
+        EntityUtils.setValue(entityCondition, idField, id);
+        return find(entityCondition);
     }
 
     @Override
