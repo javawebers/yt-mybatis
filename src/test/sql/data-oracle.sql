@@ -40,6 +40,6 @@ CREATE TABLE IntId (
     modifierId varchar2(255) DEFAULT NULL,
     modifierName varchar2(255) DEFAULT NULL,
     modifyTime date DEFAULT NULL,
-    deleteFlag number(1) NOT NULL default false,
+    deleteFlag number(1) NOT NULL,
     PRIMARY KEY (intId)
 );

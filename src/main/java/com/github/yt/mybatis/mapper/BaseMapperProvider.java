@@ -1,6 +1,5 @@
 package com.github.yt.mybatis.mapper;
 
-import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.Query;
@@ -18,51 +17,7 @@ public class BaseMapperProvider {
 
     public <T> String saveBatch(Map<String, Collection<T>> map) {
         Collection<T> entityCollection = map.get("collection");
-
-        String tableName = null;
-        List<Field> tableFieldList = null;
-        Set<String> fieldColumnNameSet = new HashSet<>();
-        List<String> fieldNameList = new ArrayList<>();
-        List<String> columnNameList = new ArrayList<>();
-        List<List<String>> valuesList = new ArrayList<>();
-
-        // 收集所有有值的字段，没有值的字段不拼接 sql
-        for (T entity : entityCollection) {
-            if (YtStringUtils.isBlank(tableName)) {
-                tableName = EntityUtils.getTableName(entity.getClass());
-                tableFieldList = EntityUtils.getTableFieldList(entity.getClass());
-            }
-            for (Field field : tableFieldList) {
-                if (!fieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
-                    if (EntityUtils.getValue(entity, field) != null) {
-                        fieldColumnNameSet.add(EntityUtils.getFieldColumnName(field));
-                        fieldNameList.add(field.getName());
-                        columnNameList.add(DialectHandler.getDialect().getColumnName(field));
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < entityCollection.size(); i++) {
-            List<String> values = new ArrayList<>();
-            for (String fieldColumnName : fieldNameList) {
-                values.add("#{collection[" + i + "]." + fieldColumnName + "}");
-            }
-            valuesList.add(values);
-        }
-
-        // mysql
-        SQL sql = new SQL();
-        sql.INSERT_INTO(tableName);
-        for (String column : columnNameList) {
-            sql.INTO_COLUMNS(column);
-        }
-        for (List<String> values : valuesList) {
-            for (String value : values) {
-                sql.INTO_VALUES(value);
-            }
-            sql.ADD_ROW();
-        }
-        return sql.toString();
+        return DialectHandler.getDialect().getInsertSql(entityCollection);
     }
 
     public String delete(Map<String, Object> paramMap) {

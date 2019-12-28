@@ -3,6 +3,8 @@ package com.github.yt.mybatis.dialect;
 import com.github.yt.mybatis.util.EntityUtils;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 方言
@@ -48,4 +50,6 @@ public interface Dialect {
      * @return "t.user_id"
      */
     String getColumnNameWithTableAlas(Field field);
+
+    String getInsertSql(Collection<?> entityCollection);
 }

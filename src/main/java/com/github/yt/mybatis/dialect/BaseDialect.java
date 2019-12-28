@@ -1,8 +1,10 @@
 package com.github.yt.mybatis.dialect;
 
 import com.github.yt.mybatis.util.EntityUtils;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 基础实现
@@ -19,8 +21,6 @@ public abstract class BaseDialect implements Dialect {
 
     protected final String POINT = ".";
 
-    protected final String AS = "as";
-
     @Override
     public String getTableName(Class<?> entityClass) {
         return EntityUtils.getTableName(entityClass);
@@ -28,7 +28,7 @@ public abstract class BaseDialect implements Dialect {
 
     @Override
     public String getTableNameWithAlas(Class<?> entityClass) {
-        return getTableName(entityClass) + " " + AS + " " + getTableAlas();
+        return getTableName(entityClass) + " " + getTableAlas();
     }
 
     @Override
@@ -47,5 +47,48 @@ public abstract class BaseDialect implements Dialect {
         return getTableAlas() + POINT + getColumnName(field);
     }
 
+    @Override
+    public String getInsertSql(Collection<?> entityCollection) {
 
+        Class<?> entityClass = EntityUtils.getEntityClass(entityCollection);
+        List<Field> tableFieldList = EntityUtils.getTableFieldList(entityClass);
+        Set<String> fieldColumnNameSet = new HashSet<>();
+        List<String> fieldNameList = new ArrayList<>();
+        List<String> columnNameList = new ArrayList<>();
+        List<List<String>> valueNamesList = new ArrayList<>();
+
+        // 收集所有有值的字段，没有值的字段不拼接 sql
+        for (Object entity : entityCollection) {
+            for (Field field : tableFieldList) {
+                if (!fieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
+                    if (EntityUtils.getValue(entity, field) != null) {
+                        fieldColumnNameSet.add(EntityUtils.getFieldColumnName(field));
+                        fieldNameList.add(field.getName());
+                        columnNameList.add(DialectHandler.getDialect().getColumnName(field));
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < entityCollection.size(); i++) {
+            List<String> values = new ArrayList<>();
+            for (String fieldColumnName : fieldNameList) {
+                values.add("#{collection[" + i + "]." + fieldColumnName + "}");
+            }
+            valueNamesList.add(values);
+        }
+
+        // mysql
+        SQL sql = new SQL();
+        sql.INSERT_INTO(getTableName(entityClass));
+        for (String column : columnNameList) {
+            sql.INTO_COLUMNS(column);
+        }
+        for (List<String> values : valueNamesList) {
+            for (String value : values) {
+                sql.INTO_VALUES(value);
+            }
+            sql.ADD_ROW();
+        }
+        return sql.toString();
+    }
 }
