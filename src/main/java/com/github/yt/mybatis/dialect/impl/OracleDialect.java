@@ -58,7 +58,7 @@ public class OracleDialect extends BaseDialect {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("SELECT * FROM (SELECT t_limit_offset_end_.*, ROWNUM AS t_end_row_no_ FROM (");
             stringBuilder.append(sql);
-            stringBuilder.append(") t_limit_offset_end_ WHERE ROWNUM <= ").append(limitFrom + limitSize).append(") t_limit_offset_begin_ WHERE t_limit_offset_begin_.t_end_row_no_ >= ").append(limitFrom);
+            stringBuilder.append(") t_limit_offset_end_ WHERE ROWNUM <= ").append(limitFrom + limitSize).append(") t_limit_offset_begin_ WHERE t_limit_offset_begin_.t_end_row_no_ > ").append(limitFrom);
             return stringBuilder.toString();
         } else {
             return sql;

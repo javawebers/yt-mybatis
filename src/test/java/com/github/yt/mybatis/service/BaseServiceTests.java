@@ -174,7 +174,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
                 new Query()
                         .excludeAllSelectColumn()
-                        .addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
+                        .addExtendSelectColumn("test_varchar as testVarchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
         Assert.assertEquals(dbList.size(), 4);
         DbEntityNotSame dbEntity = dbList.get(0);
         Assert.assertNotNull(dbEntity.getTestVarchar());
