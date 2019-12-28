@@ -473,9 +473,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
         if (deleteFlagField == null) {
             throw new BaseAccidentException(YtMybatisExceptionEnum.CODE_78);
         }
-        String deleteFlagColumn = EntityUtils.getFieldColumnName(deleteFlagField);
-        query.addUpdate("t." + deleteFlagColumn + " = true");
-        query.addWhere("t." + deleteFlagColumn + " = false");
+        String deleteFlagColumn = DialectHandler.getDialect().getColumnNameWithTableAlas(deleteFlagField);
+        query.addUpdate(deleteFlagColumn + " = #{deleteFlagUpdate}");
+        query.addWhere(deleteFlagColumn + " = #{deleteFlagWhere}");
+        query.addParam("deleteFlagUpdate", true);
+        query.addParam("deleteFlagWhere", false);
     }
 
 
