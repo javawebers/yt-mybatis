@@ -33,7 +33,7 @@ public interface BaseMapper<T> {
     int delete(Map<String, Object> paramMap);
 
     @SelectProvider(type = BaseMapperProvider.class, method = "get")
-    T get(@Param("entityClass") Class<T> entityClass, @Param("id") final Serializable id);
+    T get(Map<String, Object> paramMap);
 
     @SelectProvider(type = BaseMapperProvider.class, method = "findList")
     T find(Map<String, Object> param);

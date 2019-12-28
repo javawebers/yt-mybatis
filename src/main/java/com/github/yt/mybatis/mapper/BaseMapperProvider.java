@@ -23,16 +23,15 @@ import java.util.*;
  */
 public class BaseMapperProvider {
 
-    public String get(Map<String, Object> paramMap) {
-        Class<?> entityClass = (Class<?>) paramMap.get("entityClass");
-        Field idField = EntityUtils.getIdField(entityClass);
 
-        Query query = new Query();
-        query.addWhere("t." + EntityUtils.getFieldColumnName(idField) + " = #{id}");
+    public String get(Map<String, Object> paramMap) {
+        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
+        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         SQL sql = new SQL();
-        SqlUtils.select(sql, entityClass, query);
-        SqlUtils.from(sql, entityClass, query);
-        SqlUtils.where(sql, null, query, "t.");
+
+        SqlUtils.select(sql, entityCondition.getClass(), query);
+        SqlUtils.from(sql, entityCondition.getClass(), query);
+        SqlUtils.where(sql, entityCondition, query, "t.");
         return sql.toString();
     }
 

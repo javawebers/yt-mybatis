@@ -105,9 +105,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        String idFieldColumnName = EntityUtils.getFieldColumnName(idField);
         Query query = new Query();
-
         query.addWhere(DialectHandler.getDialect().getColumnNameWithTableAlas(idField) + " = #{id}");
         query.addParam("id", id);
         int num = this.logicDelete(entityCondition, query);
@@ -165,7 +163,17 @@ public abstract class BaseService<T> implements IBaseService<T> {
     @Override
     public T get(Class<T> entityClass, Serializable id) {
         org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        return getMapper().get(entityClass, id);
+        Field idField = EntityUtils.getIdField(entityClass);
+        T entityCondition;
+        try {
+            entityCondition = entityClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        Query query = new Query();
+        query.addWhere(DialectHandler.getDialect().getColumnName(idField) + " = #{id}");
+        query.addParam("id", id);
+        return getMapper().get(ParamUtils.getParamMap(entityCondition, query));
     }
 
     @Override
@@ -250,24 +258,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
      */
     private static String generateUuidIdValue() {
         return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    /**
-     * 生成 param 用于拼接 sql
-     */
-    private Map<String, Object> getMybatisParamForSave(Collection<T> entityCollection) {
-        Class<T> entityClass = EntityUtils.getEntityClass(entityCollection);
-        List<Field> fieldList = EntityUtils.getTableFieldList(entityClass);
-        int i = 0;
-        Map<String, Object> param = new HashMap<>(entityCollection.size());
-        for (T entity : entityCollection) {
-            for (Field field : fieldList) {
-                param.put(EntityUtils.getFieldColumnName(field) + "__" + i + "__", EntityUtils.getValue(entity, field));
-            }
-            i++;
-        }
-        param.put("entityCollection", entityCollection);
-        return param;
     }
 
     /**
@@ -367,8 +357,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Field deleteFlagField = EntityUtils.getYtColumnField(entityClass, YtColumnType.DELETE_FLAG);
         for (T entity : entityCollection) {
             if (deleteFlagField != null) {
-                Object deleteFalg = EntityUtils.getValue(entity, deleteFlagField);
-                if (deleteFalg == null) {
+                Object deleteFlag = EntityUtils.getValue(entity, deleteFlagField);
+                if (deleteFlag == null) {
                     EntityUtils.setValue(entity, deleteFlagField, false);
                 }
             }
