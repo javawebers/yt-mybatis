@@ -3,6 +3,7 @@ package com.github.yt.mybatis.mapper;
 import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
+import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.Query;
@@ -188,8 +189,7 @@ public class BaseMapperProvider {
                     if (EntityUtils.getValue(entity, field) != null) {
                         fieldColumnNameSet.add(EntityUtils.getFieldColumnName(field));
                         fieldNameList.add(field.getName());
-                        columnNameList.add("`" + EntityUtils.getFieldColumnName(field) + "`");
-//                        columnNameList.add(EntityUtils.getFieldColumnName(field));
+                        columnNameList.add(DialectHandler.getDialect().getColumnName(field));
                     }
                 }
             }

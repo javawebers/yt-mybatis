@@ -2,6 +2,7 @@ package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
+import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
@@ -106,7 +107,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
         }
         String idFieldColumnName = EntityUtils.getFieldColumnName(idField);
         Query query = new Query();
-        query.addWhere("t." + idFieldColumnName + " = #{id}");
+
+        query.addWhere(DialectHandler.getDialect().getColumnNameWithTableAlas(idField) + " = #{id}");
         query.addParam("id", id);
         int num = this.logicDelete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_77);
@@ -142,9 +144,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        String idFieldColumnName = EntityUtils.getFieldColumnName(idField);
         Query query = new Query();
-        query.addWhere(idFieldColumnName + " = #{id}");
+        query.addWhere(DialectHandler.getDialect().getColumnName(idField) + " = #{id}");
         query.addParam("id", id);
         int num = this.delete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_76);

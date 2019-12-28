@@ -1,5 +1,6 @@
 package com.github.yt.mybatis;
 
+import com.github.yt.mybatis.dialect.DialectEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,13 @@ public class YtMybatisConfig {
     public static String pageTotalCountName;
     public static String pageDataName;
 
+    public static DialectEnum dialectEnum;
+
+
+    @Value("${yt.dialect:MYSQL}")
+    public void setDialectEnum(DialectEnum dialectEnum) {
+        YtMybatisConfig.dialectEnum = dialectEnum;
+    }
 
     @Value("${yt.result.class:com.github.yt.web.result.SimpleResultConfig}")
     public void setResultClass(String resultClass) {
