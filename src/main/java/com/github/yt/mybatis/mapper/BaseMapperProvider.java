@@ -27,8 +27,8 @@ public class BaseMapperProvider {
     public String get(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
-        SQL sql = new SQL();
 
+        SQL sql = new SQL();
         SqlUtils.select(sql, entityCondition.getClass(), query);
         SqlUtils.from(sql, entityCondition.getClass(), query);
         SqlUtils.where(sql, entityCondition, query, "t.");
@@ -38,6 +38,7 @@ public class BaseMapperProvider {
     public String findList(Map<String, Object> paramMap) {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
+
         SQL sql = new SQL();
         SqlUtils.select(sql, entityCondition.getClass(), query);
         SqlUtils.from(sql, entityCondition.getClass(), query);
@@ -53,6 +54,7 @@ public class BaseMapperProvider {
     public String count(Map<String, Object> paramMap) {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
+
         SQL sql = new SQL();
         sql.SELECT("count(*)");
         SqlUtils.from(sql, entityCondition.getClass(), query);
@@ -65,15 +67,6 @@ public class BaseMapperProvider {
     public String logicDelete(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
-
-        Field deleteFlagField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.DELETE_FLAG);
-        if (deleteFlagField == null) {
-            throw new BaseAccidentException(YtMybatisExceptionEnum.CODE_78);
-        }
-        String deleteFlagColumn = EntityUtils.getFieldColumnName(deleteFlagField);
-        query.addUpdate("t." + deleteFlagColumn + " = true");
-        query.addWhere("t." + deleteFlagColumn + " = false");
-        setUpdateBaseColumn(paramMap);
 
         SQL sql = new SQL();
         // update
@@ -99,7 +92,7 @@ public class BaseMapperProvider {
     public String updateByCondition(Map<String, Object> paramMap) {
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
-        setUpdateBaseColumn(paramMap);
+
         SQL sql = new SQL();
         // update
         sql.UPDATE(EntityUtils.getTableName(entityCondition.getClass()) + " t");

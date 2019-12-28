@@ -1,6 +1,7 @@
 package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
+import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.entity.YtColumnType;
@@ -83,6 +84,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int updateByCondition(T entityCondition, MybatisQuery<?> query) {
+        setUpdateBaseColumn(entityCondition, query);
         return getMapper().updateByCondition(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -115,8 +117,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int logicDelete(T entityCondition, MybatisQuery<?> query) {
+
+        setUpdateDeleteFlag(entityCondition, query);
+        setUpdateBaseColumn(entityCondition, query);
+
         return getMapper().logicDelete(ParamUtils.getParamMap(entityCondition, query));
     }
+
 
     @Override
     public int logicDelete(T entityCondition) {
@@ -363,5 +370,38 @@ public abstract class BaseService<T> implements IBaseService<T> {
                 }
             }
         }
+    }
+
+    private void setUpdateBaseColumn(Object entityCondition, MybatisQuery<?> query) {
+        if (query.takeUpdateBaseColumn()) {
+            Field modifierIdField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_ID);
+            Field modifierNameField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_NAME);
+            Field modifyTimeField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFY_TIME);
+            if (modifierIdField != null) {
+                String modifierIdColumn = EntityUtils.getFieldColumnName(modifierIdField);
+                query.addParam("_modifierId_", BaseEntityUtils.getModifierId());
+                query.addUpdate("t." + modifierIdColumn + " = #{_modifierId_}");
+            }
+            if (modifierNameField != null) {
+                String modifierNameColumn = EntityUtils.getFieldColumnName(modifierNameField);
+                query.addParam("_modifierName_", BaseEntityUtils.getModifierName());
+                query.addUpdate("t." + modifierNameColumn + " = #{_modifierName_}");
+            }
+            if (modifyTimeField != null) {
+                String modifyTimeColumn = EntityUtils.getFieldColumnName(modifyTimeField);
+                query.addParam("_modifyTime_", new Date());
+                query.addUpdate("t." + modifyTimeColumn + " = #{_modifyTime_}");
+            }
+        }
+    }
+
+    private void setUpdateDeleteFlag(T entityCondition, MybatisQuery<?> query) {
+        Field deleteFlagField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.DELETE_FLAG);
+        if (deleteFlagField == null) {
+            throw new BaseAccidentException(YtMybatisExceptionEnum.CODE_78);
+        }
+        String deleteFlagColumn = EntityUtils.getFieldColumnName(deleteFlagField);
+        query.addUpdate("t." + deleteFlagColumn + " = true");
+        query.addWhere("t." + deleteFlagColumn + " = false");
     }
 }
