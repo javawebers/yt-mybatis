@@ -2,8 +2,8 @@ package com.github.yt.mybatis.service;
 
 
 import com.github.yt.mybatis.mapper.BaseMapper;
-import com.github.yt.mybatis.query.Page;
 import com.github.yt.mybatis.query.MybatisQuery;
+import com.github.yt.mybatis.query.Page;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,8 +12,9 @@ import java.util.List;
 
 /**
  * 服务接口的基类
- * @author sheng
+ *
  * @param <T>此服务接口服务的数据模型，即model
+ * @author sheng
  */
 public interface IBaseService<T> {
 
@@ -150,6 +151,7 @@ public interface IBaseService<T> {
 
     /**
      * 根据ID获取实体，获取一条记录，不存在抛出异常
+     *
      * @param clazz 实体类型
      * @param id    业务实体ID
      * @return 业务实体
