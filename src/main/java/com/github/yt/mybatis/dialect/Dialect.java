@@ -52,4 +52,6 @@ public interface Dialect {
     String getColumnNameWithTableAlas(Field field);
 
     String getInsertSql(Collection<?> entityCollection);
+
+    String limitOffset(String sql, Integer limitFrom, Integer limitSize);
 }

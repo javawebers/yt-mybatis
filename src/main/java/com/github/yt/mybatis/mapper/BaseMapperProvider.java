@@ -52,8 +52,9 @@ public class BaseMapperProvider {
         SqlUtils.where(sql, entityCondition, query, true);
         SqlUtils.groupBy(sql, query);
         SqlUtils.orderBy(sql, query);
-        SqlUtils.limitOffset(sql, query);
-        return SqlUtils.replaceInParam(sql, query);
+//        SqlUtils.limitOffset(sql, query);
+        String sqlResult = SqlUtils.replaceInParam(sql, query);
+        return SqlUtils.limitOffset(sqlResult, query);
     }
 
     public String count(Map<String, Object> paramMap) {

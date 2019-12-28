@@ -91,4 +91,13 @@ public abstract class BaseDialect implements Dialect {
         }
         return sql.toString();
     }
+
+    @Override
+    public String limitOffset(String sql, Integer limitFrom, Integer limitSize) {
+        if (limitFrom != null && limitSize != null) {
+            return sql + " LIMIT " + limitSize + " OFFSET " + limitFrom;
+        } else {
+            return sql;
+        }
+    }
 }

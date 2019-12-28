@@ -27,10 +27,11 @@ public class SqlUtils {
         } else {
             columnList = getEntitySelectColumn(entityClass, null);
         }
-        for (String column: columnList) {
+        for (String column : columnList) {
             sql.SELECT(column);
         }
     }
+
     public static void from(SQL sql, Class entityClass) {
         sql.FROM(DialectHandler.getDialect().getTableNameWithAlas(entityClass));
     }
@@ -66,7 +67,6 @@ public class SqlUtils {
     }
 
 
-
     public static void where(SQL sql, Object entityCondition, MybatisQuery query, boolean withAlias) {
         if (entityCondition != null) {
             List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
@@ -90,7 +90,7 @@ public class SqlUtils {
             // query.whereList
             // 拼接where查询条件
             if (query.takeWhereList() != null && !query.takeWhereList().isEmpty()) {
-                for (Object where: query.takeWhereList()) {
+                for (Object where : query.takeWhereList()) {
                     sql.WHERE((String) where);
                 }
             }
@@ -105,18 +105,27 @@ public class SqlUtils {
 
     public static void orderBy(SQL sql, MybatisQuery query) {
         if (query != null && query.takeOrderByList() != null && !query.takeOrderByList().isEmpty()) {
-            for (Object orderBy: query.takeOrderByList()) {
+            for (Object orderBy : query.takeOrderByList()) {
                 sql.ORDER_BY((String) orderBy);
             }
         }
     }
 
+    @Deprecated
     public static void limitOffset(SQL sql, MybatisQuery query) {
+        if (query != null && query.takeLimitFrom() != null) {
+            sql.OFFSET(query.takeLimitFrom());
+        }
         if (query != null && query.takeLimitSize() != null) {
             sql.LIMIT(query.takeLimitSize());
         }
-        if (query != null && query.takeLimitFrom() != null) {
-            sql.OFFSET(query.takeLimitFrom());
+    }
+
+    public static String limitOffset(String sql, MybatisQuery query) {
+        if (query != null) {
+            return DialectHandler.getDialect().limitOffset(sql, query.takeLimitFrom(), query.takeLimitSize());
+        } else {
+            return sql;
         }
     }
 
