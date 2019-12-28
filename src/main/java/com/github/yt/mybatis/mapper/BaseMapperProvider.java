@@ -69,8 +69,8 @@ public class BaseMapperProvider {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
 
         SQL sql = new SQL();
-        sql.DELETE_FROM(EntityUtils.getTableName(entityCondition.getClass()));
-        SqlUtils.where(sql, entityCondition, query, null);
+        sql.DELETE_FROM(DialectHandler.getDialect().getTableName(entityCondition.getClass()));
+        SqlUtils.where(sql, entityCondition, query, false);
         return SqlUtils.replaceInParam(sql, query);
     }
 
@@ -79,9 +79,9 @@ public class BaseMapperProvider {
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
 
         SQL sql = new SQL();
-        sql.UPDATE(EntityUtils.getTableName(entityCondition.getClass()) + " t");
+        sql.UPDATE(DialectHandler.getDialect().getTableNameWithAlas(entityCondition.getClass()));
         SqlUtils.set(sql, query);
-        SqlUtils.where(sql, entityCondition, query, "t.");
+        SqlUtils.where(sql, entityCondition, query, true);
         return SqlUtils.replaceInParam(sql, query);
     }
 
@@ -91,9 +91,9 @@ public class BaseMapperProvider {
 
         SQL sql = new SQL();
         SqlUtils.select(sql, entityCondition.getClass(), query);
-        SqlUtils.from(sql, entityCondition.getClass(), query);
+        SqlUtils.from(sql, entityCondition.getClass());
         SqlUtils.join(sql, query);
-        SqlUtils.where(sql, entityCondition, query, "t.");
+        SqlUtils.where(sql, entityCondition, query, true);
         SqlUtils.groupBy(sql, query);
         SqlUtils.orderBy(sql, query);
         SqlUtils.limitOffset(sql, query);
@@ -106,9 +106,9 @@ public class BaseMapperProvider {
 
         SQL sql = new SQL();
         sql.SELECT("count(*)");
-        SqlUtils.from(sql, entityCondition.getClass(), query);
+        SqlUtils.from(sql, entityCondition.getClass());
         SqlUtils.join(sql, query);
-        SqlUtils.where(sql, entityCondition, query, "t.");
+        SqlUtils.where(sql, entityCondition, query, true);
         SqlUtils.groupBy(sql, query);
         return SqlUtils.replaceInParam(sql, query);
     }

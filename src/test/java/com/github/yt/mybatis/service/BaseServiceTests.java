@@ -99,7 +99,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     public void find_excludeField() {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
-                new Query().addExcludeSelectColumn("t.testVarchar, testInt"));
+                new Query().addExcludeSelectColumn("testVarchar, testInt"));
         DbEntitySame dbEntity = dbList.get(0);
         Assert.assertNull(dbEntity.getTestVarchar());
         Assert.assertNull(dbEntity.getTestInt());
@@ -113,7 +113,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntityNotSame> list = save12NotSameThenReturn();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
                 new Query()
-                        .addExcludeSelectColumn("t.test_varchar, test_int"));
+                        .addExcludeSelectColumn("test_varchar, test_int"));
         DbEntityNotSame dbEntity = dbList.get(0);
         Assert.assertNull(dbEntity.getTestVarchar());
         Assert.assertNull(dbEntity.getTestInt());

@@ -1,6 +1,7 @@
 package com.github.yt.mybatis.query;
 
 import com.github.yt.commons.util.YtStringUtils;
+import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.ibatis.jdbc.SQL;
@@ -30,8 +31,8 @@ public class SqlUtils {
             sql.SELECT(column);
         }
     }
-    public static void from(SQL sql, Class entityClass, MybatisQuery query) {
-        sql.FROM(EntityUtils.getTableName(entityClass) + " t ");
+    public static void from(SQL sql, Class entityClass) {
+        sql.FROM(DialectHandler.getDialect().getTableNameWithAlas(entityClass));
     }
 
     public static void join(SQL sql, MybatisQuery query) {
@@ -63,7 +64,10 @@ public class SqlUtils {
             }
         }
     }
-    public static void where(SQL sql, Object entityCondition, MybatisQuery query, String alias) {
+
+
+
+    public static void where(SQL sql, Object entityCondition, MybatisQuery query, boolean withAlias) {
         if (entityCondition != null) {
             List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
             for (Field field : fieldList) {
@@ -71,12 +75,14 @@ public class SqlUtils {
                 String columnName = EntityUtils.getFieldColumnName(field);
                 if (value != null) {
                     StringBuilder where = new StringBuilder();
-                    if (alias != null) {
-                        where.append(alias);
+                    if (withAlias) {
+                        where.append(DialectHandler.getDialect().getColumnNameWithTableAlas(field));
+                    } else {
+                        where.append(DialectHandler.getDialect().getColumnName(field));
                     }
-                    sql.WHERE(where.append(columnName)
-                            .append(" = #{").append(ParamUtils.ENTITY_CONDITION)
-                            .append(".").append(field.getName()).append("}").toString());
+                    where.append(" = #{").append(ParamUtils.ENTITY_CONDITION)
+                            .append(".").append(field.getName()).append("}");
+                    sql.WHERE(where.toString());
                 }
             }
         }
@@ -125,23 +131,22 @@ public class SqlUtils {
                 }
             });
         }
-        List<String> columnList = getSelectColumnList(entityClass, excludeColumnSet, "t");
+        List<String> columnList = getSelectColumnList(entityClass, excludeColumnSet);
         return columnList;
     }
 
 
-    private static List<String> getSelectColumnList(Class<?> entityClass, Set<String> excludeColumnSet, final String aliasName) {
+    private static List<String> getSelectColumnList(Class<?> entityClass, Set<String> excludeColumnSet) {
         List<String> columnList = new ArrayList<>();
         List<Field> fieldList = EntityUtils.getTableFieldList(entityClass);
         fieldList.forEach(field -> {
             field.setAccessible(true);
             String fieldColumnName = EntityUtils.getFieldColumnName(field);
-            String fieldName = field.getName();
-            String fieldAliasName = aliasName + "." + fieldColumnName;
+            String fieldAliasName = DialectHandler.getDialect().getColumnNameWithTableAlas(field);
             // 排除字段
-            if (!excludeColumnSet.contains(fieldColumnName) && !excludeColumnSet.contains(fieldAliasName)) {
-                if (!fieldColumnName.equals(fieldName)) {
-                    fieldAliasName = fieldAliasName + " as " + fieldName;
+            if (!excludeColumnSet.contains(fieldColumnName)) {
+                if (!fieldColumnName.equals(field.getName())) {
+                    fieldAliasName = fieldAliasName + " as " + field.getName();
                 }
                 columnList.add(fieldAliasName);
             }

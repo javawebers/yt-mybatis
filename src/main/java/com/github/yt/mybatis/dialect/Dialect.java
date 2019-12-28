@@ -19,6 +19,20 @@ public interface Dialect {
     String getTableAlas();
 
     /**
+     * 获取表别名
+     *
+     * @return "user"
+     */
+    String getTableName(Class<?> entityClass);
+
+    /**
+     * 获取表别名
+     *
+     * @return "user as t"
+     */
+    String getTableNameWithAlas(Class<?> entityClass);
+
+    /**
      * 获取字段名称
      *
      * @param field field

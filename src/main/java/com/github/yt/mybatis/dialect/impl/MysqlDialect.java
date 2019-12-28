@@ -22,9 +22,15 @@ public class MysqlDialect extends BaseDialect {
      */
     private static final String ESCAPE = "`";
 
+
+    @Override
+    public String getTableName(Class<?> entityClass) {
+        return ESCAPE + super.getTableName(entityClass) + ESCAPE;
+    }
+
     @Override
     public String getTableAlas() {
-        return ESCAPE + TABLE_ALAS + ESCAPE;
+        return ESCAPE + super.getTableAlas() + ESCAPE;
     }
 
     @Override
