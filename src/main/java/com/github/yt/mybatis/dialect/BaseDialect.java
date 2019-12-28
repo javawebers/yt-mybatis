@@ -100,4 +100,9 @@ public abstract class BaseDialect implements Dialect {
             return sql;
         }
     }
+
+    @Override
+    public String getFieldParam(Field field, String paramName) {
+        return "#{" + paramName + "}";
+    }
 }

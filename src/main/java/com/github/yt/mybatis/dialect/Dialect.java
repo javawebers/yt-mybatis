@@ -54,4 +54,6 @@ public interface Dialect {
     String getInsertSql(Collection<?> entityCollection);
 
     String limitOffset(String sql, Integer limitFrom, Integer limitSize);
+
+    String getFieldParam(Field field, String paramName);
 }

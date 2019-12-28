@@ -64,4 +64,9 @@ public class OracleDialect extends BaseDialect {
             return sql;
         }
     }
+
+    @Override
+    public String getFieldParam(Field field, String paramName) {
+        return "#{" + paramName + ", jdbcType=VARCHAR}";
+    }
 }

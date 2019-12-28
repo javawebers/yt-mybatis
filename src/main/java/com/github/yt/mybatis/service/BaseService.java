@@ -116,7 +116,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
                 }
             }
 
-            query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = #{" + field.getName() + "}");
+            query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = " + DialectHandler.getDialect().getFieldParam(field, field.getName()));
             query.addParam("" + field.getName(), EntityUtils.getValue(entity, field));
         }
 
@@ -451,19 +451,22 @@ public abstract class BaseService<T> implements IBaseService<T> {
             Field modifierNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFIER_NAME);
             Field modifyTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFY_TIME);
             if (modifierIdField != null) {
-                String modifierIdColumn = EntityUtils.getFieldColumnName(modifierIdField);
                 query.addParam("_modifierId_", BaseEntityUtils.getModifierId());
-                query.addUpdate("t." + modifierIdColumn + " = #{_modifierId_}");
+                query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierIdField)
+                        + " = "
+                        + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifierId_"));
             }
             if (modifierNameField != null) {
-                String modifierNameColumn = EntityUtils.getFieldColumnName(modifierNameField);
                 query.addParam("_modifierName_", BaseEntityUtils.getModifierName());
-                query.addUpdate("t." + modifierNameColumn + " = #{_modifierName_}");
+                query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierNameField)
+                        + " = "
+                        + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifierName_"));
             }
             if (modifyTimeField != null) {
-                String modifyTimeColumn = EntityUtils.getFieldColumnName(modifyTimeField);
                 query.addParam("_modifyTime_", new Date());
-                query.addUpdate("t." + modifyTimeColumn + " = #{_modifyTime_}");
+                query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifyTimeField)
+                        + " = "
+                        + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifyTime_"));
             }
         }
     }

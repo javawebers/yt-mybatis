@@ -79,7 +79,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     public void findList_extendField() {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
-                new Query().addExtendSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
+                new Query().excludeAllSelectColumn().addExtendSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
         Assert.assertEquals(dbList.size(), 4);
         // 清理数据
         deleteSame(list);
@@ -89,7 +89,7 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     public void findList_notSameExtendField() {
         List<DbEntityNotSame> list = save12NotSameThenReturn();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
-                new Query().addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
+                new Query().excludeAllSelectColumn().addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
         Assert.assertEquals(dbList.size(), 4);
         // 清理数据
         deleteNotSame(list);
@@ -127,11 +127,11 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntitySame> list = save12SameThenReturn();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
                 new Query()
-                        .addExcludeSelectColumn("testInt")
+                        .excludeAllSelectColumn()
                         .addExtendSelectColumn("testVarchar, count(testVarchar) as countNum").addGroupBy("testVarchar"));
         DbEntitySame dbEntity = dbList.get(0);
         Assert.assertNull(dbEntity.getTestInt());
-        Assert.assertNotNull(dbEntity.getTestBoolean());
+        Assert.assertNull(dbEntity.getTestBoolean());
         Assert.assertNotNull(dbEntity.getCountNum());
         // 清理数据
         deleteSame(list);
@@ -142,11 +142,11 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         List<DbEntityNotSame> list = save12NotSameThenReturn();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
                 new Query()
-                        .addExcludeSelectColumn("test_int")
+                        .excludeAllSelectColumn()
                         .addExtendSelectColumn("test_varchar, count(test_varchar) as countNum").addGroupBy("test_varchar"));
         DbEntityNotSame dbEntity = dbList.get(0);
         Assert.assertNull(dbEntity.getTestInt());
-        Assert.assertNotNull(dbEntity.getTestBoolean());
+        Assert.assertNull(dbEntity.getTestBoolean());
         Assert.assertNotNull(dbEntity.getCountNum());
         // 清理数据
         deleteNotSame(list);
