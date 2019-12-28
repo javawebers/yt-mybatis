@@ -9,10 +9,14 @@ import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
 import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.EntityUtils;
+import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -72,19 +76,58 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public int update(T entity, String... fieldColumnNames) {
         org.springframework.util.Assert.notNull(entity, ENTITY_MUST_NOT_BE_NULL);
         org.springframework.util.Assert.notNull(EntityUtils.getIdValue(entity), ID_MUST_NOT_BE_NULL);
-        return getMapper().update(entity, fieldColumnNames);
+        return update(entity, true, fieldColumnNames);
     }
 
     @Override
     public int updateForSelective(T entity, String... fieldColumnNames) {
         org.springframework.util.Assert.notNull(entity, ENTITY_MUST_NOT_BE_NULL);
         org.springframework.util.Assert.notNull(EntityUtils.getIdValue(entity), ID_MUST_NOT_BE_NULL);
-        return getMapper().updateNotNull(entity, fieldColumnNames);
+        return update(entity, false, fieldColumnNames);
+    }
+
+    private int update(T entity, boolean isUpdateNullField, String... selectedFieldColumnNames) {
+        T entityCondition;
+        try {
+            entityCondition = (T) entity.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        // 判断是否更新指定字段
+        Set<String> selectedFieldColumnNameSet = getSelectedFieldColumnNameSet(selectedFieldColumnNames, entity);
+        Query query = new Query();
+        setUpdateBaseColumn(entity.getClass(), query);
+
+        Field idField = EntityUtils.getIdField(entity.getClass());
+        for (Field field : EntityUtils.getTableFieldList(entity.getClass())) {
+            field.setAccessible(true);
+            //处理主键
+            if (null != field.getAnnotation(Id.class) || null != field.getAnnotation(Transient.class)) {
+                continue;
+            }
+            if (!isUpdateNullField) {
+                if (EntityUtils.getValue(entity, field) == null) {
+                    continue;
+                }
+            }
+            if (selectedFieldColumnNameSet != null && selectedFieldColumnNameSet.size() > 0) {
+                if (!selectedFieldColumnNameSet.contains(EntityUtils.getFieldColumnName(field))) {
+                    continue;
+                }
+            }
+            query.addUpdate("`" + EntityUtils.getFieldColumnName(field) + "` = #{entity." + field.getName() + "}");
+            query.addParam("entity." + field.getName(), EntityUtils.getValue(entity, field));
+        }
+
+        query.addWhere(DialectHandler.getDialect().getColumnNameWithTableAlas(idField) + " = #{id}");
+        query.addParam("id", EntityUtils.getValue(entity, idField));
+        return getMapper().updateNew(ParamUtils.getParamMap(entityCondition, query));
     }
 
     @Override
     public int updateByCondition(T entityCondition, MybatisQuery<?> query) {
-        setUpdateBaseColumn(entityCondition, query);
+        setUpdateBaseColumn(entityCondition.getClass(), query);
         return getMapper().updateByCondition(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -119,7 +162,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public int logicDelete(T entityCondition, MybatisQuery<?> query) {
 
         setUpdateDeleteFlag(entityCondition, query);
-        setUpdateBaseColumn(entityCondition, query);
+        setUpdateBaseColumn(entityCondition.getClass(), query);
 
         return getMapper().logicDelete(ParamUtils.getParamMap(entityCondition, query));
     }
@@ -372,11 +415,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
         }
     }
 
-    private void setUpdateBaseColumn(Object entityCondition, MybatisQuery<?> query) {
+    private void setUpdateBaseColumn(Class<?> entityClass, MybatisQuery<?> query) {
         if (query.takeUpdateBaseColumn()) {
-            Field modifierIdField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_ID);
-            Field modifierNameField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFIER_NAME);
-            Field modifyTimeField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.MODIFY_TIME);
+            Field modifierIdField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFIER_ID);
+            Field modifierNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFIER_NAME);
+            Field modifyTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFY_TIME);
             if (modifierIdField != null) {
                 String modifierIdColumn = EntityUtils.getFieldColumnName(modifierIdField);
                 query.addParam("_modifierId_", BaseEntityUtils.getModifierId());
@@ -404,4 +447,26 @@ public abstract class BaseService<T> implements IBaseService<T> {
         query.addUpdate("t." + deleteFlagColumn + " = true");
         query.addWhere("t." + deleteFlagColumn + " = false");
     }
+
+
+    private Set<String> getSelectedFieldColumnNameSet(String[] selectedFieldColumnNames, T entity) {
+        Set<String> selectedFieldColumnNameSet = null;
+        if (selectedFieldColumnNames != null && selectedFieldColumnNames.length > 0) {
+            selectedFieldColumnNameSet = new HashSet<>(Arrays.asList(selectedFieldColumnNames));
+            Field modifierIdField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_ID);
+            Field modifierNameField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_NAME);
+            Field modifyTimeField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFY_TIME);
+            if (modifierIdField != null) {
+                selectedFieldColumnNameSet.add(EntityUtils.getFieldColumnName(modifierIdField));
+            }
+            if (modifierNameField != null) {
+                selectedFieldColumnNameSet.add(EntityUtils.getFieldColumnName(modifierNameField));
+            }
+            if (modifyTimeField != null) {
+                selectedFieldColumnNameSet.add(EntityUtils.getFieldColumnName(modifyTimeField));
+            }
+        }
+        return selectedFieldColumnNameSet;
+    }
+
 }

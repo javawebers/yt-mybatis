@@ -23,6 +23,9 @@ public interface BaseMapper<T> {
     @UpdateProvider(type = BaseMapperProvider.class, method = "updateNotNull")
     int updateNotNull(@Param("entity") T entity, @Param("fieldColumnNames") String... fieldColumnNames);
 
+    @UpdateProvider(type = BaseMapperProvider.class, method = "updateNew")
+    int updateNew(Map<String, Object> paramMap);
+
     @UpdateProvider(type = BaseMapperProvider.class, method = "updateByCondition")
     int updateByCondition(Map<String, Object> paramMap);
 

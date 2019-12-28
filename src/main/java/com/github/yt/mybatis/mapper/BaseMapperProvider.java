@@ -105,6 +105,17 @@ public class BaseMapperProvider {
         return SqlUtils.replaceInParam(sql, query);
     }
 
+    public <T> String updateNew(Map<String, Object> paramMap) {
+        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
+        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+
+        SQL sql = new SQL();
+        sql.UPDATE(EntityUtils.getTableName(entityCondition.getClass()) + " t");
+        SqlUtils.set(sql, query);
+        SqlUtils.where(sql, entityCondition, query, "t.");
+        return sql.toString();
+    }
+
     /**
      * 生成更新语句
      *
@@ -139,6 +150,7 @@ public class BaseMapperProvider {
             }
             fieldParamList.add("`" + EntityUtils.getFieldColumnName(field) + "` = #{entity." + field.getName() + "}");
         }
+
         SQL sql = new SQL();
         sql.UPDATE(tableName);
         for (String fieldParam : fieldParamList) {
