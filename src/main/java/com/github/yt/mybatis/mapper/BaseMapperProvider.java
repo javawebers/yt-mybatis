@@ -50,6 +50,7 @@ public class BaseMapperProvider {
             valuesList.add(values);
         }
 
+        // mysql
         SQL sql = new SQL();
         sql.INSERT_INTO(tableName);
         for (String column : columnNameList) {

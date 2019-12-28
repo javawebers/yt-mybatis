@@ -115,7 +115,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
                     continue;
                 }
             }
-            query.addUpdate("t.`" + EntityUtils.getFieldColumnName(field) + "` = #{" + field.getName() + "}");
+
+            query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = #{" + field.getName() + "}");
             query.addParam("" + field.getName(), EntityUtils.getValue(entity, field));
         }
 

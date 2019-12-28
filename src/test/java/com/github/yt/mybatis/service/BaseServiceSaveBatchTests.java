@@ -155,7 +155,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
 
     @Test
     public void sameExistId() {
-        String sameExistId = "batchSameExistId_001";
+        String sameExistId = "0000000000000000000000_001";
         List<DbEntitySame> list = new ArrayList<>();
         DbEntitySame entity1 = new DbEntitySame().setDbEntitySameId(sameExistId);
         DbEntitySame entity2 = new DbEntitySame();
@@ -276,7 +276,7 @@ public class BaseServiceSaveBatchTests extends AbstractTestNGSpringContextTests 
 
     @Test
     public void notSameExistId() {
-        String sameExistId = "batchNotSameExistId_001";
+        String sameExistId = "00000000000000000000_001";
         List<DbEntityNotSame> list = new ArrayList<>();
         DbEntityNotSame entity1 = new DbEntityNotSame().setDbEntityNotSameId(sameExistId);
         DbEntityNotSame entity2 = new DbEntityNotSame();
