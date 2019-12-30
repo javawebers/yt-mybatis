@@ -112,7 +112,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
             }
 
             query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = " + DialectHandler.getDialect().getFieldParam(field, field.getName()));
-            query.addParam("" + field.getName(), EntityUtils.getValue(entity, field));
+            query.addParam(field.getName(), EntityUtils.getValue(entity, field));
         }
 
         query.addWhere(DialectHandler.getDialect().getColumnNameWithTableAlas(idField) + " = #{_id_}");

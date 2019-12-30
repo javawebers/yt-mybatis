@@ -142,7 +142,7 @@ public class SqlUtils {
             // 排除字段
             if (!excludeColumnSet.contains(fieldColumnName)) {
                 if (!fieldColumnName.equals(field.getName())) {
-                    fieldAliasName = fieldAliasName + " as " + field.getName();
+                    fieldAliasName = fieldAliasName + " as " + DialectHandler.getDialect().getFieldName(field);
                 }
                 columnList.add(fieldAliasName);
             }

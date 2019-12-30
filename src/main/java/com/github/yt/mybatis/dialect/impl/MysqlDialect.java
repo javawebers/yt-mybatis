@@ -37,4 +37,10 @@ public class MysqlDialect extends BaseDialect {
     public String getColumnName(Field field) {
         return ESCAPE + EntityUtils.getFieldColumnName(field) + ESCAPE;
     }
+
+    @Override
+    public String getFieldName(Field field) {
+        return ESCAPE + field.getName() + ESCAPE;
+    }
+
 }

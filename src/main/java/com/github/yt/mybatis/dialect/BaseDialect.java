@@ -41,6 +41,10 @@ public abstract class BaseDialect implements Dialect {
         return EntityUtils.getFieldColumnName(field);
     }
 
+    @Override
+    public String getFieldName(Field field) {
+        return field.getName();
+    }
 
     @Override
     public String getColumnNameWithTableAlas(Field field) {

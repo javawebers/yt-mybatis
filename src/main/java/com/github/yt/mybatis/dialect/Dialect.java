@@ -36,9 +36,17 @@ public interface Dialect {
      * 获取字段名称
      *
      * @param field field
-     * @return "user_id"
+     * @return oracle:"user_id",mysql:"`use_id`"
      */
     String getColumnName(Field field);
+
+    /**
+     * 获取属性名称
+     *
+     * @param field field
+     * @return oracle:"userId",mysql:"`useId`"
+     */
+    String getFieldName(Field field);
 
     /**
      * 获取字段名称带表别名
