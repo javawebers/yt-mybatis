@@ -1,10 +1,7 @@
 package com.github.yt.mybatis.dialect;
 
-import com.github.yt.mybatis.util.EntityUtils;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 方言
@@ -23,13 +20,14 @@ public interface Dialect {
     /**
      * 获取表别名
      *
+     * @param entityClass 实体类
      * @return "user"
      */
     String getTableName(Class<?> entityClass);
 
     /**
      * 获取表别名
-     *
+     * @param entityClass 实体类
      * @return "user as t"
      */
     String getTableNameWithAlas(Class<?> entityClass);
@@ -51,9 +49,30 @@ public interface Dialect {
      */
     String getColumnNameWithTableAlas(Field field);
 
+    /**
+     * 获取 insert sql
+     *
+     * @param entityCollection entityCollection
+     * @return insert sql
+     */
     String getInsertSql(Collection<?> entityCollection);
 
+    /**
+     * 分页支持
+     *
+     * @param sql       sql
+     * @param limitFrom limitFrom
+     * @param limitSize limitSize
+     * @return new sql
+     */
     String limitOffset(String sql, Integer limitFrom, Integer limitSize);
 
+    /**
+     * 获取FieldParam
+     *
+     * @param field     field
+     * @param paramName paramName
+     * @return 获取FieldParam
+     */
     String getFieldParam(Field field, String paramName);
 }

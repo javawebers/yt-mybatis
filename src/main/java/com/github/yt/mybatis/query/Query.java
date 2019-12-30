@@ -43,14 +43,14 @@ public class Query implements MybatisQuery<Query> {
     @Override
     public Query addParam(String paramName, Object paramValue) {
         if (paramValue instanceof Collection) {
-            addInParam(paramName, (Collection) paramValue);
+            addInParam(paramName, (Collection<?>) paramValue);
         } else {
             param.put(paramName, paramValue);
         }
         return this;
     }
 
-    private Query addInParam(String paramName, Collection paramValue) {
+    private Query addInParam(String paramName, Collection<?> paramValue) {
         inParamList.add(new QueryInCondition(paramName, paramValue));
         return this;
     }

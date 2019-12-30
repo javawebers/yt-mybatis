@@ -12,14 +12,22 @@ import org.springframework.context.annotation.Configuration;
 public class YtMybatisConfig {
     public static String resultClass;
 
-    // 分页
+    /**
+     * 分页参数
+     */
     public static String pageNoName;
     public static String pageSizeName;
     public static String pageTotalCountName;
     public static String pageDataName;
 
+    /**
+     * 方言
+     */
     public static DialectEnum dialectEnum;
 
+    /**
+     * BaseEntityValue 实现类
+     */
     public static Class<? extends BaseEntityValue> baseEntityValueClass;
 
     @Value("${yt.entity.baseEntityValue:com.github.yt.mybatis.entity.DefaultBaseEntityValue}")

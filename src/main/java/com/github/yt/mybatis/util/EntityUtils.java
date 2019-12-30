@@ -17,6 +17,8 @@ import java.util.*;
 
 /**
  * 实体类工具类
+ *
+ * @author sheng
  */
 public class EntityUtils {
 
@@ -95,7 +97,7 @@ public class EntityUtils {
      * @param fieldName 字段名
      * @return 字段
      */
-    public static Field getField(Class clazz, String fieldName) {
+    public static Field getField(Class<?> clazz, String fieldName) {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
                 return field;
@@ -213,7 +215,7 @@ public class EntityUtils {
                 result.put((String) getValue(entity, idField), entity);
             }
         } else{
-            result = new HashMap<>();
+            result = new HashMap<>(0);
         }
         return result;
     }
@@ -235,7 +237,7 @@ public class EntityUtils {
                 result.put(getValue(entity, propertyField), entity);
             }
         } else {
-            result = new HashMap<>();
+            result = new HashMap<>(0);
         }
         return result;
     }
@@ -253,7 +255,7 @@ public class EntityUtils {
         if (entityCollection != null && !entityCollection.isEmpty()) {
             result = new HashMap<>(entityCollection.size());
             for (T entity : entityCollection) {
-                Field propertyField = null;
+                Field propertyField;
                 try {
                     propertyField = entity.getClass().getDeclaredField(propertyName);
                 } catch (NoSuchFieldException e) {
@@ -266,7 +268,7 @@ public class EntityUtils {
                 result.get(propertyValue).add(entity);
             }
         } else {
-            result = new HashMap<>();
+            result = new HashMap<>(0);
         }
         return result;
     }
@@ -292,7 +294,7 @@ public class EntityUtils {
         for (Map.Entry<Object, Collection<R>> entry : relationCollectionMap.entrySet()) {
             T main = mainMap.get(entry.getKey());
             if (main != null) {
-                Collection collection = (Collection) collectionField.get(main);
+                Collection<R> collection = (Collection<R>) collectionField.get(main);
                 collection.addAll(entry.getValue());
             }
         }
