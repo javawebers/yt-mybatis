@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * 分页数据
  *
- * @param <T>
  * @author liujiasheng
  */
 public class Page<T> extends LinkedHashMap<String, Object> {
