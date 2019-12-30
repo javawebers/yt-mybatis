@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
  * entity 操作人信息默认实现
  * @author liujiasheng
  */
-@Component
 public class BusinessBaseEntityValue implements BaseEntityValue {
 
     @Override

@@ -8,15 +8,6 @@ package com.github.yt.mybatis.entity;
  */
 public class DefaultBaseEntityValue implements BaseEntityValue {
 
-    private static final DefaultBaseEntityValue INSTANCE = new DefaultBaseEntityValue();
-
-    private DefaultBaseEntityValue() {
-    }
-
-    public static DefaultBaseEntityValue getInstance() {
-        return INSTANCE;
-    }
-
     @Override
     public String getFounderId() {
         return null;

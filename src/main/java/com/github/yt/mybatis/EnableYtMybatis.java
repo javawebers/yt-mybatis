@@ -1,7 +1,6 @@
 package com.github.yt.mybatis;
 
 import com.github.yt.mybatis.exception.DatabaseExceptionConverter;
-import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.SpringContextUtils;
 import org.springframework.context.annotation.Import;
 
@@ -16,7 +15,6 @@ import java.lang.annotation.*;
 @Documented
 @Import({SpringContextUtils.class,
         YtMybatisConfig.class,
-        BaseEntityUtils.class,
         DatabaseExceptionConverter.class,
 })
 public @interface EnableYtMybatis {

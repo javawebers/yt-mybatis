@@ -6,7 +6,7 @@ import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
-import com.github.yt.mybatis.util.BaseEntityUtils;
+import com.github.yt.mybatis.util.BaseEntityHandler;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -359,10 +359,10 @@ public abstract class BaseService<T> implements IBaseService<T> {
         String founderName = null;
         Date createTime = null;
         if (founderIdField != null) {
-            founderId = BaseEntityUtils.getFounderId();
+            founderId = BaseEntityHandler.getBaseEntityValue().getFounderId();
         }
         if (founderNameField != null) {
-            founderName = BaseEntityUtils.getFounderName();
+            founderName = BaseEntityHandler.getBaseEntityValue().getFounderName();
         }
         if (createTimeField != null) {
             createTime = new Date();
@@ -418,14 +418,14 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Field modifierNameField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_NAME);
         Field modifyTimeField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFY_TIME);
         if (modifierIdField != null) {
-            Object modifierId = BaseEntityUtils.getModifierId();
+            Object modifierId = BaseEntityHandler.getBaseEntityValue().getModifierId();
             Object trueModifierId = EntityUtils.getValue(entity, modifierIdField);
             if (trueModifierId == null) {
                 EntityUtils.setValue(entity, modifierIdField, modifierId);
             }
         }
         if (modifierNameField != null) {
-            String modifierName = BaseEntityUtils.getModifierName();
+            String modifierName = BaseEntityHandler.getBaseEntityValue().getModifierName();
             Object trueModifierName = EntityUtils.getValue(entity, modifierNameField);
             if (trueModifierName == null) {
                 EntityUtils.setValue(entity, modifierNameField, modifierName);
@@ -446,13 +446,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
             Field modifierNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFIER_NAME);
             Field modifyTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFY_TIME);
             if (modifierIdField != null) {
-                query.addParam("_modifierId_", BaseEntityUtils.getModifierId());
+                query.addParam("_modifierId_", BaseEntityHandler.getBaseEntityValue().getModifierId());
                 query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierIdField)
                         + " = "
                         + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifierId_"));
             }
             if (modifierNameField != null) {
-                query.addParam("_modifierName_", BaseEntityUtils.getModifierName());
+                query.addParam("_modifierName_", BaseEntityHandler.getBaseEntityValue().getModifierName());
                 query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierNameField)
                         + " = "
                         + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifierName_"));

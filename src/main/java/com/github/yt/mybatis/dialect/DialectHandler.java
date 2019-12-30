@@ -1,11 +1,11 @@
 package com.github.yt.mybatis.dialect;
 
 import com.github.yt.mybatis.YtMybatisConfig;
-import com.github.yt.mybatis.dialect.impl.MysqlDialect;
-import com.github.yt.mybatis.dialect.impl.OracleDialect;
 
 /**
  * 方言处理类
+ *
+ * @author sheng
  */
 public class DialectHandler {
 
