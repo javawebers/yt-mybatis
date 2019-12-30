@@ -15,11 +15,11 @@ import java.util.regex.Pattern;
  * @author liujiasheng
  */
 public class SqlUtils {
-    public static void select(SQL sql, Class entityClass, MybatisQuery query) {
+    public static void select(SQL sql, Class<?> entityClass, MybatisQuery<?> query) {
         List<String> columnList;
         if (query != null) {
             // 添加所有扩展字段
-            columnList = new ArrayList<String>(query.takeExtendSelectColumnList());
+            columnList = new ArrayList<>(query.takeExtendSelectColumnList());
             // 是否排除所有 t 中的字段
             if (!query.takeExcludeAllSelectColumn()) {
                 columnList.addAll(getEntitySelectColumn(entityClass, query.takeExcludeSelectColumnList()));
@@ -32,16 +32,15 @@ public class SqlUtils {
         }
     }
 
-    public static void from(SQL sql, Class entityClass) {
+    public static void from(SQL sql, Class<?> entityClass) {
         sql.FROM(DialectHandler.getDialect().getTableNameWithAlas(entityClass));
     }
 
-    public static void join(SQL sql, MybatisQuery query) {
+    public static void join(SQL sql, MybatisQuery<?> query) {
         if (query == null) {
             return;
         }
-        query.takeJoinList().forEach(join -> {
-            QueryJoin queryJoin = (QueryJoin) join;
+        query.takeJoinList().forEach(queryJoin -> {
             switch (queryJoin.takeJoinType()) {
                 case JOIN:
                     sql.JOIN(queryJoin.takeTableNameAndOnConditions());
@@ -58,7 +57,7 @@ public class SqlUtils {
         });
     }
 
-    public static void set(SQL sql, MybatisQuery query) {
+    public static void set(SQL sql, MybatisQuery<?> query) {
         if (query.takeUpdateColumnList() != null) {
             for (Object set : query.takeUpdateColumnList()) {
                 sql.SET((String) set);
@@ -67,12 +66,11 @@ public class SqlUtils {
     }
 
 
-    public static void where(SQL sql, Object entityCondition, MybatisQuery query, boolean withAlias) {
+    public static void where(SQL sql, Object entityCondition, MybatisQuery<?> query, boolean withAlias) {
         if (entityCondition != null) {
             List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
             for (Field field : fieldList) {
                 Object value = EntityUtils.getValue(entityCondition, field);
-                String columnName = EntityUtils.getFieldColumnName(field);
                 if (value != null) {
                     StringBuilder where = new StringBuilder();
                     if (withAlias) {
@@ -97,13 +95,13 @@ public class SqlUtils {
         }
     }
 
-    public static void groupBy(SQL sql, MybatisQuery query) {
+    public static void groupBy(SQL sql, MybatisQuery<?> query) {
         if (query != null && YtStringUtils.isNotBlank(query.takeGroupBy())) {
             sql.GROUP_BY(query.takeGroupBy());
         }
     }
 
-    public static void orderBy(SQL sql, MybatisQuery query) {
+    public static void orderBy(SQL sql, MybatisQuery<?> query) {
         if (query != null && query.takeOrderByList() != null && !query.takeOrderByList().isEmpty()) {
             for (Object orderBy : query.takeOrderByList()) {
                 sql.ORDER_BY((String) orderBy);
@@ -111,17 +109,7 @@ public class SqlUtils {
         }
     }
 
-    @Deprecated
-    public static void limitOffset(SQL sql, MybatisQuery query) {
-        if (query != null && query.takeLimitFrom() != null) {
-            sql.OFFSET(query.takeLimitFrom());
-        }
-        if (query != null && query.takeLimitSize() != null) {
-            sql.LIMIT(query.takeLimitSize());
-        }
-    }
-
-    public static String limitOffset(String sql, MybatisQuery query) {
+    public static String limitOffset(String sql, MybatisQuery<?> query) {
         if (query != null) {
             return DialectHandler.getDialect().limitOffset(sql, query.takeLimitFrom(), query.takeLimitSize());
         } else {
@@ -130,7 +118,7 @@ public class SqlUtils {
     }
 
 
-    private static List<String> getEntitySelectColumn(Class entityClass, List<String> excludeSelectColumnList) {
+    private static List<String> getEntitySelectColumn(Class<?> entityClass, List<String> excludeSelectColumnList) {
         Set<String> excludeColumnSet = new HashSet<>();
         if (excludeSelectColumnList != null && excludeSelectColumnList.size() > 0) {
             excludeSelectColumnList.forEach(excludeSelectColumn -> {
@@ -140,8 +128,7 @@ public class SqlUtils {
                 }
             });
         }
-        List<String> columnList = getSelectColumnList(entityClass, excludeColumnSet);
-        return columnList;
+        return getSelectColumnList(entityClass, excludeColumnSet);
     }
 
 
@@ -171,7 +158,7 @@ public class SqlUtils {
      * @param query query对象
      * @return 新的语句
      */
-    public static String replaceInParam(SQL sql, MybatisQuery query) {
+    public static String replaceInParam(SQL sql, MybatisQuery<?> query) {
         if (query == null) {
             return sql.toString();
         }
@@ -180,9 +167,8 @@ public class SqlUtils {
         }
         // query.inParamList
         // 替换查询条件中的in参数
-        Map<String, Object> inParamListMap = new HashMap<>();
-        query.takeInParamList().forEach(inCondition -> {
-            QueryInCondition queryInCondition = (QueryInCondition) inCondition;
+        Map<String, Object> inParamListMap = new HashMap<>(16);
+        query.takeInParamList().forEach(queryInCondition -> {
             String inSql;
             String column = queryInCondition.takeParam().replaceAll("\\.", "__");
             if (queryInCondition.takeValues() == null || queryInCondition.takeValues().isEmpty()) {
@@ -209,7 +195,7 @@ public class SqlUtils {
      */
     public static String format(String template, Map<String, Object> params) {
         StringBuffer sb = new StringBuffer();
-        String s = "\\$\\{\\s*\\w+\\s*\\}";
+        String s = "\\$\\{\\s*\\w+\\s*}";
         Matcher m = Pattern.compile(s).matcher(template);
         while (m.find()) {
             String param = m.group();

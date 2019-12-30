@@ -1,20 +1,15 @@
 package com.github.yt.mybatis.business.service;
 
-import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.business.entity.DbEntityNotSame;
 import com.github.yt.mybatis.business.entity.DbEntitySame;
 import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
-import com.github.yt.mybatis.business.service.DbEntityNotSameService;
-import com.github.yt.mybatis.business.service.DbEntitySameService;
 import com.github.yt.mybatis.query.Query;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.testng.Assert;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**

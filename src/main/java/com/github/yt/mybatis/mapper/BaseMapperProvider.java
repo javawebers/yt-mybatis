@@ -4,11 +4,10 @@ import com.github.yt.mybatis.dialect.DialectHandler;
 import com.github.yt.mybatis.query.ParamUtils;
 import com.github.yt.mybatis.query.Query;
 import com.github.yt.mybatis.query.SqlUtils;
-import com.github.yt.mybatis.util.EntityUtils;
 import org.apache.ibatis.jdbc.SQL;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author liujiasheng
@@ -21,8 +20,8 @@ public class BaseMapperProvider {
     }
 
     public String delete(Map<String, Object> paramMap) {
-        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
 
         SQL sql = new SQL();
         sql.DELETE_FROM(DialectHandler.getDialect().getTableName(entityCondition.getClass()));
@@ -31,8 +30,8 @@ public class BaseMapperProvider {
     }
 
     public <T> String update(Map<String, Object> paramMap) {
-        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
         Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
 
         SQL sql = new SQL();
         sql.UPDATE(DialectHandler.getDialect().getTableNameWithAlas(entityCondition.getClass()));
@@ -52,9 +51,8 @@ public class BaseMapperProvider {
         SqlUtils.where(sql, entityCondition, query, true);
         SqlUtils.groupBy(sql, query);
         SqlUtils.orderBy(sql, query);
-//        SqlUtils.limitOffset(sql, query);
-        String sqlResult = SqlUtils.replaceInParam(sql, query);
-        return SqlUtils.limitOffset(sqlResult, query);
+        String sqlTemp = SqlUtils.replaceInParam(sql, query);
+        return SqlUtils.limitOffset(sqlTemp, query);
     }
 
     public String count(Map<String, Object> paramMap) {

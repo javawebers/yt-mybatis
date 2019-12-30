@@ -1,17 +1,13 @@
 package com.github.yt.mybatis.service;
 
 import com.github.yt.commons.exception.Assert;
-import com.github.yt.commons.exception.BaseAccidentException;
 import com.github.yt.mybatis.YtMybatisExceptionEnum;
 import com.github.yt.mybatis.dialect.DialectHandler;
-import com.github.yt.mybatis.entity.BaseEntity;
 import com.github.yt.mybatis.entity.YtColumnType;
 import com.github.yt.mybatis.mapper.BaseMapper;
 import com.github.yt.mybatis.query.*;
 import com.github.yt.mybatis.util.BaseEntityUtils;
 import com.github.yt.mybatis.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.persistence.Id;
@@ -28,7 +24,6 @@ import java.util.*;
  * @author liujiasheng
  */
 public abstract class BaseService<T> implements IBaseService<T> {
-    private static Logger logger = LoggerFactory.getLogger(BaseService.class);
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
     private static final String ENTITY_MUST_NOT_BE_NULL = "The given entity must not be null!";
 
@@ -418,7 +413,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      *
      * @param entity 实体类
      */
-    private <T> void setModifier(T entity) {
+    private void setModifier(T entity) {
         Field modifierIdField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_ID);
         Field modifierNameField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFIER_NAME);
         Field modifyTimeField = EntityUtils.getYtColumnField(entity.getClass(), YtColumnType.MODIFY_TIME);
@@ -473,9 +468,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     private void setUpdateDeleteFlag(T entityCondition, MybatisQuery<?> query) {
         Field deleteFlagField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.DELETE_FLAG);
-        if (deleteFlagField == null) {
-            throw new BaseAccidentException(YtMybatisExceptionEnum.CODE_78);
-        }
+        org.springframework.util.Assert.notNull(deleteFlagField, "逻辑删除字段不存在");
+
         String deleteFlagColumn = DialectHandler.getDialect().getColumnNameWithTableAlas(deleteFlagField);
         query.addUpdate(deleteFlagColumn + " = #{deleteFlagUpdate}");
         query.addWhere(deleteFlagColumn + " = #{deleteFlagWhere}");
