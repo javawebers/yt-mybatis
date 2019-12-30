@@ -42,36 +42,6 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
     }
 
 
-
-    /**
-     * in 条件查询
-     */
-    @Test
-    public void findList_in() {
-        List<DbEntitySame> list = save12SameThenReturn();
-        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
-                new Query()
-                        .addWhere("testVarchar in ${testVarcharList}")
-                        .addParam("testVarcharList", Arrays.asList("0", "1")));
-        Assert.assertEquals(dbList.size(), 6);
-        // 清理数据
-        deleteSame(list);
-    }
-
-    /**
-     * in 条件查询， in不在where中，在join中
-     */
-    @Test
-    public void findList_inJoin() {
-        List<DbEntitySame> list = save12SameThenReturn();
-        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
-                new Query().addJoin(QueryJoinType.JOIN, "DbEntitySame t2 on t.dbEntitySameId = t2.dbEntitySameId and t2.testVarchar in ${testVarcharList}")
-                        .addParam("testVarcharList", Arrays.asList("0", "1")));
-        Assert.assertEquals(dbList.size(), 6);
-        // 清理数据
-        deleteSame(list);
-    }
-
     /**
      * entity 类中扩展字段，分组查询的 countNum 测试
      */
@@ -213,20 +183,6 @@ public class BaseServiceTests extends AbstractTestNGSpringContextTests {
         dbEntityNotSameService.delete(new DbEntityNotSame(),
                 new Query().addWhere("db_entity_not_same_id in ${dbEntityNotSameIdList}")
                         .addParam("dbEntityNotSameIdList", list.stream().map(DbEntityNotSame::getDbEntityNotSameId).collect(Collectors.toList())));
-    }
-
-    private DbEntitySame saveSameThenReturn() {
-        DbEntitySame entity = new DbEntitySame();
-        entity.setTestBoolean(true).setTestInt(22222).setTestVarchar("22xxxx").setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
-        dbEntitySameService.save(entity);
-        return entity;
-    }
-
-    private DbEntityNotSame saveNotSameThenReturn() {
-        DbEntityNotSame entity = new DbEntityNotSame();
-        entity.setTestBoolean(true).setTestInt(22222).setTestVarchar("22xxxx");
-        dbEntityNotSameService.save(entity);
-        return entity;
     }
 
     /**
