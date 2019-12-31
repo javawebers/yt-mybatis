@@ -110,7 +110,7 @@ public class DataBasicService {
             // 0 1 2
             int testInt = i % 3;
             // 0 1 2 3
-            String testVarchar = i % 4 + "";
+            String testVarchar = "varchar_" + i % 4;
             // FEMALE MALE
             DbEntitySameTestEnumEnum testEnum = (i % 2 == 0) ? DbEntitySameTestEnumEnum.FEMALE : DbEntitySameTestEnumEnum.MALE;
             entity.setTestBoolean(testBoolean)
