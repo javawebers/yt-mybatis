@@ -1,8 +1,7 @@
-package com.github.yt.mybatis.business.entity;
+package com.github.yt.mybatis.example.entity;
 
 
 import com.github.yt.mybatis.entity.BaseEntityValue;
-import org.springframework.stereotype.Component;
 
 /**
  * entity 操作人信息默认实现

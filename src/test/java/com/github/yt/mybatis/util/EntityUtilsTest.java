@@ -1,7 +1,7 @@
 package com.github.yt.mybatis.util;
 
-import com.github.yt.mybatis.business.entity.DbEntityNotSame;
-import com.github.yt.mybatis.business.entity.DbEntitySame;
+import com.github.yt.mybatis.example.entity.DbEntityNotSame;
+import com.github.yt.mybatis.example.entity.DbEntitySame;
 import com.github.yt.mybatis.entity.BaseEntity;
 import com.github.yt.mybatis.entity.YtColumnType;
 import org.junit.Test;

@@ -1,8 +1,8 @@
-package com.github.yt.mybatis.business.service;
+package com.github.yt.mybatis.example.service;
 
-import com.github.yt.mybatis.business.entity.DbEntityNotSame;
-import com.github.yt.mybatis.business.entity.DbEntitySame;
-import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
+import com.github.yt.mybatis.example.entity.DbEntityNotSame;
+import com.github.yt.mybatis.example.entity.DbEntitySame;
+import com.github.yt.mybatis.example.po.DbEntitySameTestEnumEnum;
 import com.github.yt.mybatis.query.Query;
 import org.springframework.stereotype.Service;
 import org.testng.Assert;

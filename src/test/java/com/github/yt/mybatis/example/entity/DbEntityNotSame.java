@@ -1,11 +1,9 @@
-package com.github.yt.mybatis.business.entity;
+package com.github.yt.mybatis.example.entity;
 
 import javax.persistence.Table;
-import javax.persistence.Column;
 import javax.persistence.Transient;
 
-import com.github.yt.mybatis.business.entity.BusinessBaseEntity;
-import com.github.yt.mybatis.business.po.DbEntityNotSamePO;
+import com.github.yt.mybatis.example.po.DbEntityNotSamePO;
 
 /**
 * PO 类的扩展类

@@ -1,9 +1,9 @@
-package com.github.yt.mybatis.business.po;
+package com.github.yt.mybatis.example.po;
 
 import javax.persistence.Table;
 import javax.persistence.Column;
 
-import com.github.yt.mybatis.business.entity.BusinessBaseEntity;
+import com.github.yt.mybatis.example.entity.BusinessBaseEntity;
 
 @Table(name = "db_entity_not_same")
 public class DbEntityNotSamePO<T extends DbEntityNotSamePO<T>> extends BusinessBaseEntity<T> {

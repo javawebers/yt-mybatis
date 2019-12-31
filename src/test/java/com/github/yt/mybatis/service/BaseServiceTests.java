@@ -2,16 +2,15 @@ package com.github.yt.mybatis.service;
 
 import com.github.yt.mybatis.YtMybatisConfig;
 import com.github.yt.mybatis.YtMybatisDemoApplication;
-import com.github.yt.mybatis.business.entity.DbEntityNotSame;
-import com.github.yt.mybatis.business.entity.DbEntitySame;
-import com.github.yt.mybatis.business.entity.IntId;
-import com.github.yt.mybatis.business.po.DbEntitySameTestEnumEnum;
-import com.github.yt.mybatis.business.service.DbEntityNotSameService;
-import com.github.yt.mybatis.business.service.DbEntitySameService;
-import com.github.yt.mybatis.business.service.IntIdService;
+import com.github.yt.mybatis.example.entity.DbEntityNotSame;
+import com.github.yt.mybatis.example.entity.DbEntitySame;
+import com.github.yt.mybatis.example.entity.IntId;
+import com.github.yt.mybatis.example.po.DbEntitySameTestEnumEnum;
+import com.github.yt.mybatis.example.service.DbEntityNotSameService;
+import com.github.yt.mybatis.example.service.DbEntitySameService;
+import com.github.yt.mybatis.example.service.IntIdService;
 import com.github.yt.mybatis.query.Page;
 import com.github.yt.mybatis.query.Query;
-import com.github.yt.mybatis.query.QueryJoinType;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
@@ -20,7 +19,6 @@ import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

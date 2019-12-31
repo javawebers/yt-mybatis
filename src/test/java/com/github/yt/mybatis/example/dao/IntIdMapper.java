@@ -1,15 +1,12 @@
-package com.github.yt.mybatis.business.dao;
+package com.github.yt.mybatis.example.dao;
 
-import com.github.yt.mybatis.business.entity.IntId;
+import com.github.yt.mybatis.example.entity.IntId;
 import com.github.yt.mybatis.mapper.BaseMapper;
-import com.github.yt.mybatis.mapper.BaseMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * IntId Mapper

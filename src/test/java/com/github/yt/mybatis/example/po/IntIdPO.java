@@ -1,7 +1,7 @@
-package com.github.yt.mybatis.business.po;
+package com.github.yt.mybatis.example.po;
 
 import javax.persistence.Table;
-import javax.persistence.Column;
+
 import com.github.yt.mybatis.entity.BaseEntity;
 
 @Table(name = "IntId")

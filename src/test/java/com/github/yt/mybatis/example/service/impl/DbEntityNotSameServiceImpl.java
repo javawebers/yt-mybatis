@@ -1,9 +1,9 @@
-package com.github.yt.mybatis.business.service.impl;
+package com.github.yt.mybatis.example.service.impl;
 
 import com.github.yt.mybatis.service.BaseService;
-import com.github.yt.mybatis.business.dao.DbEntityNotSameMapper;
-import com.github.yt.mybatis.business.entity.DbEntityNotSame;
-import com.github.yt.mybatis.business.service.DbEntityNotSameService;
+import com.github.yt.mybatis.example.dao.DbEntityNotSameMapper;
+import com.github.yt.mybatis.example.entity.DbEntityNotSame;
+import com.github.yt.mybatis.example.service.DbEntityNotSameService;
 
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,7 @@
 # 5分钟上手yt-mybatis！！！
-欢迎加入QQ群~ 489333310~，我们一起进步，不限于mybatis。
 
 # 介绍
-yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml复杂查询，支持无xml复杂查询，支持无xml复杂查询。  
+yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml复杂查询。  
 如果是新项目，建议使用整体解决方案；如果是历史项目，您可以很快集成CURD。
 
 # 为什么使用yt-mybatis
@@ -11,28 +10,46 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
 # 特性
 * #### 免费开源，maven直接引用
 * #### spring-boot支持，一键接入增删改查
-* #### 支持级联join多表查询
-* #### 支持domain默认值自动注入，可以自定义注入值
+* #### 支持级联 join 多表查询
+* #### 支持 entity 默认值自动注入，可以自定义注入值
     创建人，创建时间，修改人，修改时间，逻辑删除状态。
 * #### 支持分页查询
     可与yt-web结合，自动设置分页信息到查询条件类中。
 * #### 代码生成
-    根据数据库中表定义生成实体类及dao、service、controller的空实现。
+    根据数据库中表定义生成 po、entity、dao、service、controller的空实现。
 
 # 使用教程
-可参考```https://github.com/javawebers/yt-mybatis-example```
-
 * ##  maven引入yt-mybatis
-    在```https://mvnrepository.com/artifact/com.github.javawebers/yt-mybatis```找到最新版引入
+    在 `https://mvnrepository.com/artifact/com.github.javawebers/yt-mybatis` 找到最新版引入
     ```xml
-    <dependency>
-        <groupId>com.github.javawebers</groupId>
-        <artifactId>yt-mybatis</artifactId>
-        <version>1.2.1</version>
-    </dependency>
+    <dependencys>
+        <dependency>
+            <groupId>com.github.javawebers</groupId>
+            <artifactId>yt-mybatis</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+        <!-- 引入 spring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>2.1.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <!-- 引入 mysql 驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.13</version>
+        </dependency>
+    </dependencys>
     ```
+
 * ## 启用yt-mybatis
-    在启动类上家注解```@EnableYtMybatis```
+    在启动类上家注解`@EnableYtMybatis`
     ```java
     @SpringBootApplication
     @EnableYtMybatis
@@ -47,10 +64,10 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
     spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
     spring.datasource.url=jdbc:mysql://localhost:3306/yt-mybatis?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     spring.datasource.username=root
-    spring.datasource.password=123456
+    spring.datasource.password=root
     ```
 ***
-通过上面配置即可```零配置```使用yt-mybatis的所有功能，下面演示基本使用
+通过上面配置即可`零配置`使用 yt-mybatis 的所有功能，下面演示基本使用
 ***
 * ## 导入测试数据
     ```sql
@@ -81,7 +98,7 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
 
     ```
     
-* ## 实现domain、dao、service（可通过代码生成器生成）
+* ## 实现 po、entity、dao、service（可通过代码生成器生成）
     * ### domain，继承BaseEntity\<T\>
     ```java
     package demo.com.github.yt.message.domain;

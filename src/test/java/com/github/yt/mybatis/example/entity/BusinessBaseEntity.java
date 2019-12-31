@@ -1,4 +1,4 @@
-package com.github.yt.mybatis.business.entity;
+package com.github.yt.mybatis.example.entity;
 
 import com.github.yt.mybatis.entity.YtBaseEntityColumn;
 import com.github.yt.mybatis.entity.YtColumnType;

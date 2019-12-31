@@ -1,12 +1,8 @@
-package com.github.yt.mybatis.business.service;
+package com.github.yt.mybatis.example.service;
 
 import com.github.yt.mybatis.service.IBaseService;
-import com.github.yt.mybatis.business.dao.IntIdMapper;
-import com.github.yt.mybatis.business.entity.IntId;
+import com.github.yt.mybatis.example.entity.IntId;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collection;
 import java.util.List;
 
 /**

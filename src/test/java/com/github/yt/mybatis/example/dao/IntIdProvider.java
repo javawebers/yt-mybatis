@@ -1,11 +1,9 @@
-package com.github.yt.mybatis.business.dao;
+package com.github.yt.mybatis.example.dao;
 
 import com.github.yt.commons.util.YtStringUtils;
-import com.github.yt.mybatis.business.entity.IntId;
 import com.github.yt.mybatis.util.EntityUtils;
 
 import java.lang.reflect.Field;
-import java.text.MessageFormat;
 import java.util.*;
 
 public class IntIdProvider {

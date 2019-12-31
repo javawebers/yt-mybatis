@@ -1,15 +1,14 @@
-package com.github.yt.mybatis.business.service.impl;
+package com.github.yt.mybatis.example.service.impl;
 
 import com.github.yt.mybatis.service.BaseService;
-import com.github.yt.mybatis.business.dao.IntIdMapper;
-import com.github.yt.mybatis.business.entity.IntId;
-import com.github.yt.mybatis.business.service.IntIdService;
+import com.github.yt.mybatis.example.dao.IntIdMapper;
+import com.github.yt.mybatis.example.entity.IntId;
+import com.github.yt.mybatis.example.service.IntIdService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service("intIdService")

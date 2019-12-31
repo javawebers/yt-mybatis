@@ -1,6 +1,6 @@
 package com.github.yt.mybatis.generator;
 
-import com.github.yt.mybatis.business.entity.BusinessBaseEntity;
+import com.github.yt.mybatis.example.entity.BusinessBaseEntity;
 import com.github.yt.mybatis.entity.BaseEntity;
 
 public class JavaCodeGeneratorTest {
