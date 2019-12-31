@@ -114,9 +114,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
             query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = " + DialectHandler.getDialect().getFieldParam(field, field.getName()));
             query.addParam(field.getName(), EntityUtils.getValue(entity, field));
         }
+        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
+                + " = "
+                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+        query.addParam(idField.getName(), EntityUtils.getValue(entity, idField));
 
-        query.addWhere(DialectHandler.getDialect().getColumnNameWithTableAlas(idField) + " = #{_id_}");
-        query.addParam("_id_", EntityUtils.getValue(entity, idField));
         return getMapper().update(ParamUtils.getParamMap(entityCondition, query));
     }
 
@@ -146,8 +148,10 @@ public abstract class BaseService<T> implements IBaseService<T> {
             throw new RuntimeException(e);
         }
         Query query = new Query();
-        query.addWhere(DialectHandler.getDialect().getColumnNameWithTableAlas(idField) + " = #{id}");
-        query.addParam("id", id);
+        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
+                + " = "
+                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+        query.addParam(idField.getName(), id);
         int num = this.logicDelete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_77);
         return num;
@@ -188,8 +192,10 @@ public abstract class BaseService<T> implements IBaseService<T> {
             throw new RuntimeException(e);
         }
         Query query = new Query();
-        query.addWhere(DialectHandler.getDialect().getColumnName(idField) + " = #{id}");
-        query.addParam("id", id);
+        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
+                + " = "
+                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+        query.addParam(idField.getName(), id);
         int num = this.delete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_76);
         return num;
@@ -215,8 +221,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        EntityUtils.setValue(entityCondition, idField, id);
-        return find(entityCondition);
+        Query query = new Query();
+        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
+                + " = "
+                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+        query.addParam(idField.getName(), id);
+        return find(entityCondition, query);
     }
 
     @Override

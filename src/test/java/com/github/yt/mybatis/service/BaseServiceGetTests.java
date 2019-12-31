@@ -61,6 +61,18 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
     }
 
     /**
+     * get id 不为空，记录存在
+     */
+    @Test
+    public void sameIdTypeNotSame() {
+        DbEntitySame entity = dataBasicService.saveOneSame();
+        entity.setDbEntitySameId("222");
+        dbEntitySameService.save(entity);
+        DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, 222);
+        Assert.assertNotNull(dbEntity);
+    }
+
+    /**
      * get id 为空
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
