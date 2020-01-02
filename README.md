@@ -5,7 +5,7 @@ yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml
 如果是新项目，建议使用整体解决方案；如果是历史项目，您可以很快集成CURD。
 
 # 为什么使用yt-mybatis
-通用CURD，使后端开发效率提升三倍，支持无xml复杂查询，代码更加简洁、异常控制等更加完善。
+通用CURD，使后端开发效率提升 3 倍，支持无xml复杂查询，代码更加简洁、异常控制等更加完善。
 
 # 特性
 * #### 免费开源，maven直接引用
@@ -406,24 +406,165 @@ public class MysqlExampleServiceImpl extends BaseService<MysqlExample> implement
 ```
     
 * ## 测试功能
-* ### insert
 ```java
+package com.github.yt.mybatis.service;
+
+import com.github.yt.mybatis.YtMybatisDemoApplication;
+import com.github.yt.mybatis.example.service.MysqlExampleService;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import javax.annotation.Resource;
+
+@SpringBootTest(classes = {YtMybatisDemoApplication.class})
+public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
+
+    @Resource
+    private MysqlExampleService mysqlExampleService;
+    
+    // 测试内容
+}
 
 ```
+* ### insert
+* ##### 保存一条记录
+```java
+@Test
+public void save() {
+    MysqlExample mysqlExample = new MysqlExample();
+    mysqlExampleService.save(mysqlExample);
+}
+```
+
+* ##### 批量保存
+```java
+@Test
+public void saveBatch() {
+    MysqlExample mysqlExample1 = new MysqlExample();
+    MysqlExample mysqlExample2 = new MysqlExample();
+    mysqlExampleService.saveBatch(Arrays.asList(mysqlExample1, mysqlExample2));
+}
+```
+###### 当主键为字符串类型，自动生成uuid的主键并设置到保存的对象中。
 
 * ### update
+* ##### 根据主键更新所选字段，或者所有字段，为空也更新
 ```java
+@Test
+public void update() {
+    MysqlExample mysqlExample = new MysqlExample();
+    // 设置值主键和要更新的值
+    mysqlExample.setExampleId("1");
+    mysqlExample.setTestInt(222);
+    mysqlExample.setTestVarchar("varchar_222");
 
+    // 更新所有的字段，为空也会更新
+    mysqlExampleService.update(mysqlExample);
+
+    // 更新指定的字段，为空也会更新，这里只更新 test_int
+    mysqlExampleService.update(mysqlExample, "test_int");
+}
 ```
+* ##### 根据主键更新所选字段，或者所有字段，为空不更新
+```java
+@Test
+public void updateForSelective() {
+    MysqlExample mysqlExample = new MysqlExample();
+    // 设置值主键和要更新的值
+    mysqlExample.setExampleId("1");
+    mysqlExample.setTestInt(222);
+    mysqlExample.setTestVarchar("varchar_222");
+
+    // 更新所有不为空的字段，这里更新 test_int 和 test_varchar
+    mysqlExampleService.updateForSelective(mysqlExample);
+    // 更新指定不为空的字段，这里只更新 test_int
+    mysqlExampleService.updateForSelective(mysqlExample, "test_int", "test_boolean");
+}
+```
+* ##### 根据条件更新
+```java
+@Test
+public void updateByCondition() {
+    // 更新条件
+    MysqlExample condition = new MysqlExample();
+    condition.setTestInt(222);
+    condition.setTestVarchar("varchar_222");
+
+    Query query = new Query();
+    // 设置要更新的字段
+    query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+    // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
+    mysqlExampleService.updateByCondition(condition, new Query());
+}
+```
+###### 根据条件更新可以指定复杂查询条件，条件设置方式和查询一样，详见查询的写法。
 
 * ### delete
+* ##### 根据主键删除一条记录
 ```java
+@Test
+public void delete() {
+    mysqlExampleService.delete(MysqlExample.class, "1");
+}
+```
 
+* ##### 根据主键删除一条记录，如果记录不存在抛出异常
+```java
+@Test
+public void deleteOne() {
+    mysqlExampleService.deleteOne(MysqlExample.class, "1");
+}
+```
+
+* ##### 根据条件删除
+```java
+@Test
+public void deleteByCondition() {
+    // 更新条件
+    MysqlExample condition = new MysqlExample();
+    condition.setTestInt(222);
+    condition.setTestVarchar("varchar_222");
+
+    Query query = new Query();
+    // 设置要更新的字段
+    query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+    // 将 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录删除
+    mysqlExampleService.delete(condition, query);
+}
 ```
 
 * ### logicDelete
+###### PO对象中需要有 `@YtBaseEntityColumn(YtColumnType.DELETE_FLAG)` 注解的字段，该字段可以在 `BaseEntity` 中，字段为 Boolean 类型
+* ##### 根据主键逻辑删除一条记录
 ```java
+@Test
+public void logicDelete() {
+    mysqlExampleService.logicDelete(MysqlExample.class, "1");
+}
+```
 
+* ##### 根据主键逻辑删除一条记录，如果记录不存在抛出异常
+```java
+@Test
+public void logicDeleteOne() {
+    mysqlExampleService.logicDeleteOne(MysqlExample.class, "1");
+}
+```
+
+* ##### 根据条件逻辑删除
+```java
+@Test
+public void logicDeleteByCondition() {
+    // 更新条件
+    MysqlExample condition = new MysqlExample();
+    condition.setTestInt(222);
+    condition.setTestVarchar("varchar_222");
+
+    Query query = new Query();
+    // 设置条件
+    query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+    // 将 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录逻辑删除
+    mysqlExampleService.logicDelete(condition, query);
+}
 ```
 
 * ### find
