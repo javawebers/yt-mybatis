@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class YtMybatisConfig {
-    public static String resultClass;
 
     /**
      * 分页参数
@@ -38,11 +37,6 @@ public class YtMybatisConfig {
     @Value("${yt.dialect:MYSQL}")
     public void setDialectEnum(DialectEnum dialectEnum) {
         YtMybatisConfig.dialectEnum = dialectEnum;
-    }
-
-    @Value("${yt.result.class:com.github.yt.web.result.SimpleResultConfig}")
-    public void setResultClass(String resultClass) {
-        YtMybatisConfig.resultClass = resultClass;
     }
 
     @Value("${yt.page.pageNoName:pageNo}")

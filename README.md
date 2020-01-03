@@ -769,20 +769,36 @@ public void updateBaseColumn() {
 }
 ```
 
-* ## 配置
-TODO
 
+* ## 配置 application.properties
 
+* ### 数据库方言 
+###### 目前支持 MYSQL 和 ORACLE，默认为 MYSQL
+```properties
+yt.dialect=MYSQL
+```
 
+* ### insert、update、logicDelete 操作自动设置操作人信息
+###### 默认时间返回 null，可扩展实现，根据业务进行实现，实现 `BaseEntityValue` 接口，从 ThreadLocal 中获取或者 从 request 中获取
+```properties
+yt.entity.baseEntityValue=com.github.yt.mybatis.entity.DefaultBaseEntityValue
+```
 
-
-
-
-
-
-
-
-
-
-
+* ### 设置分页字段信息
+###### 分页 `Page<T>` 实际上是个 map ，序列化给前端可通过修改如下配置修改默认字段信息
+```properties
+yt.page.pageNoName=pageNo
+yt.page.pageSizeName=pageSize
+yt.page.pageDataName=data
+yt.page.pageTotalCountName=totalCount
+```
+###### 默认示例
+```json
+{
+    "pageNo": 1,
+    "pageSize": 10,
+    "totalCount": 107,
+    "data": []
+}
+```
 
