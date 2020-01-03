@@ -405,7 +405,7 @@ public class MysqlExampleServiceImpl extends BaseService<MysqlExample> implement
 }
 ```
     
-* ## 测试功能
+* ## 功能示例
 ```java
 package com.github.yt.mybatis.service;
 
@@ -423,9 +423,8 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
     
     // 测试内容
 }
-
 ```
-* ### insert
+* ### insert （保存）
 * ##### 保存一条记录
 ```java
 @Test
@@ -446,7 +445,7 @@ public void saveBatch() {
 ```
 ###### 当主键为字符串类型，自动生成uuid的主键并设置到保存的对象中。
 
-* ### update
+* ### update （修改）
 * ##### 根据主键更新所选字段，或者所有字段，为空也更新
 ```java
 @Test
@@ -498,7 +497,7 @@ public void updateByCondition() {
 ```
 ###### 根据条件更新可以指定复杂查询条件，条件设置方式和查询一样，详见查询的写法。
 
-* ### delete
+* ### delete （删除）
 * ##### 根据主键删除一条记录
 ```java
 @Test
@@ -532,7 +531,7 @@ public void deleteByCondition() {
 }
 ```
 
-* ### logicDelete
+* ### logicDelete （逻辑删除）
 ###### PO对象中需要有 `@YtBaseEntityColumn(YtColumnType.DELETE_FLAG)` 注解的字段，该字段可以在 `BaseEntity` 中，字段为 Boolean 类型
 * ##### 根据主键逻辑删除一条记录
 ```java
@@ -567,7 +566,7 @@ public void logicDeleteByCondition() {
 }
 ```
 
-* ### find
+* ### find （查询记录）
 * ##### 根据主键查询一条记录，无记录返回 null
 ```java
 @Test
@@ -629,16 +628,11 @@ public void findPage() {
 }
 ```
 * ### 复杂用法
-
+TODO
 
 * ## 配置
+TODO
 
-
-***
-###### 通过配置修改默认行为。
-***
-
-待补充
 
 
 
