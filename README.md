@@ -425,7 +425,7 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
 }
 ```
 * ### insert （保存）
-* ##### 保存一条记录
+* ##### 保存一条记录，会自动设置 create_time, founder_id, founder_name 字段
 ```java
 @Test
 public void save() {
@@ -492,7 +492,7 @@ public void updateByCondition() {
     // 设置要更新的字段
     query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
     // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
-    mysqlExampleService.updateByCondition(condition, new Query());
+    mysqlExampleService.updateByCondition(condition, query);
 }
 ```
 ###### 根据条件更新可以指定复杂查询条件，条件设置方式和查询一样，详见查询的写法。
@@ -595,6 +595,7 @@ public void find() {
     // 设置条件
     query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
     // 查询 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录
+    // condition 是条件，不为空的字段之间进行 "and" 
     mysqlExampleService.find(condition, query);
 }
 ```
@@ -627,8 +628,146 @@ public void findPage() {
     mysqlExampleService.findPage(new MysqlExample(), query);
 }
 ```
-* ### 复杂用法
-TODO
+* ### 扩展用法
+* ##### in 查询
+```java
+@Test
+public void findListIn() {
+    Query query = new Query();
+    query.addWhere("test_int in ${testIntList}");
+    query.addParam("testIntList", Arrays.asList(1, 2, 3));
+    // 查询 test_int 为 1，2，3 的记录
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+* ##### join 查询，支持 JOIN、LEFT_JOIN、RIGHT_JOIN
+```java
+@Test
+public void findListJoin() {
+    Query query = new Query();
+    query.addJoin(QueryJoinType.JOIN, "mysql_example t2 on t1.example_id = t2.example_id");
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+* ##### limit
+```java
+@Test
+public void findListLimit() {
+    Query query = new Query();
+    // from:开始条数，包含，从 0 开始
+    query.limit(0, 10);
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+
+* ##### groupBy、排除所有默认字段、扩展查询字段
+###### 扩展实体类
+```java
+@Table(name = "mysql_example")
+public class MysqlExample extends MysqlExamplePO<MysqlExample> {
+    // 扩展字段，一对一对象等。字段上加 @Transient 注解
+    @Transient
+    private int countNum;
+
+    public int getCountNum() {
+        return countNum;
+    }
+    public MysqlExample setCountNum(int countNum) {
+        this.countNum = countNum;
+        return this;
+    }
+}
+```
+###### 执行查询
+```java
+@Test
+public void findListExtendSelectColumn() {
+    Query query = new Query();
+    // 排除所有主表中的字段
+    query.excludeAllSelectColumn();
+    // 扩展分组字段、test_int
+    query.addExtendSelectColumn("test_int as testInt, count(num) as countNum");
+    // 分组查询
+    query.addGroupBy("test_int");
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+
+* ##### orderBy 排序查询
+```java
+@Test
+public void findListOrderBy() {
+    Query query = new Query();
+    query.addOrderBy("test_int asc");
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+
+* ##### 排除查询字段。本次查询没有用到的字段 如：longtext，或者敏感字段
+```java
+public void findListExcludeSelectColumn() {
+    Query query = new Query();
+    query.addExcludeSelectColumn("test_int");
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+* ##### updateBaseColumn 是否更新基础字段。默认更新 modify_time、modifier_id、modifier_name
+###### 实现获取默认值的方式
+```java
+package com.github.yt.mybatis.example.entity;
+
+import com.github.yt.mybatis.entity.BaseEntityValue;
+
+/**
+ * entity 操作人信息默认实现
+ * @author liujiasheng
+ */
+public class BusinessBaseEntityValue implements BaseEntityValue {
+    // TODO 业务实现，可从登录信息中获取真实的用户信息。下面示例写死
+    @Override
+    public String getFounderId() {
+        return "founderId222";
+    }
+
+    @Override
+    public String getFounderName() {
+        return "founderName222";
+    }
+
+    @Override
+    public String getModifierId() {
+        return "ModifierId222";
+    }
+
+    @Override
+    public String getModifierName() {
+        return null;
+    }
+}
+
+```
+###### 添加全局配置 application.properties
+```properties
+yt.entity.baseEntityValue=com.github.yt.mybatis.example.entity.BusinessBaseEntityValue
+```
+###### 更新
+```java
+@Test
+public void updateBaseColumn() {
+    // 更新条件
+    MysqlExample condition = new MysqlExample();
+    condition.setTestInt(222);
+    condition.setTestVarchar("varchar_222");
+
+    Query query = new Query();
+    // 不更新修改时间、修改人、修改人名称字段
+    query.updateBaseColumn(false);
+    // 设置要更新的字段
+    query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+    // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
+    mysqlExampleService.updateByCondition(condition, query);
+}
+```
 
 * ## 配置
 TODO

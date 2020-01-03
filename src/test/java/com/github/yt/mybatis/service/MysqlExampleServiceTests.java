@@ -4,6 +4,7 @@ import com.github.yt.mybatis.YtMybatisDemoApplication;
 import com.github.yt.mybatis.example.entity.MysqlExample;
 import com.github.yt.mybatis.example.service.MysqlExampleService;
 import com.github.yt.mybatis.query.Query;
+import com.github.yt.mybatis.query.QueryJoinType;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
@@ -74,7 +75,7 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         // 设置要更新的字段
         query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
         // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
-        mysqlExampleService.updateByCondition(condition, new Query());
+        mysqlExampleService.updateByCondition(condition, query);
     }
 
     // 根据主键删除一条记录
@@ -155,6 +156,7 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         // 设置条件
         query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
         // 查询 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录
+        // condition 是条件，不为空的字段之间进行 "and"
         mysqlExampleService.find(condition, query);
     }
 
@@ -180,6 +182,76 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         query.makePageSize(10);
 
         mysqlExampleService.findPage(new MysqlExample(), query);
+    }
+
+    @Test
+    public void findListIn() {
+        Query query = new Query();
+        query.addWhere("test_int in ${testIntList}");
+        query.addParam("testIntList", Arrays.asList(1, 2, 3));
+        // 查询 test_int 为 1，2，3 的记录
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    @Test
+    public void findListOrderBy() {
+        Query query = new Query();
+        query.addOrderBy("test_int asc");
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+
+    @Test
+    public void findListJoin() {
+        Query query = new Query();
+        query.addJoin(QueryJoinType.JOIN, "mysql_example t2 on t1.example_id = t2.example_id");
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    @Test
+    public void findListLimit() {
+        Query query = new Query();
+        // from:开始条数，包含，从 0 开始
+        query.limit(0, 10);
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    // groupBy、排除所有默认字段、扩展查询字段
+    @Test
+    public void findListGroupBy() {
+        Query query = new Query();
+        // 排除所有主表中的字段
+        query.excludeAllSelectColumn();
+        // 扩展分组字段、test_int
+        query.addExtendSelectColumn("test_int as testInt, count(num) as countNum");
+        // 分组查询
+        query.addGroupBy("test_int");
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    // 排除查询字段，本次查询没有用到的字段 如：longtext，或者敏感字段
+    @Test
+    public void findListExcludeSelectColumn() {
+        Query query = new Query();
+        query.addExcludeSelectColumn("test_int");
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    // updateBaseColumn 是否更新基础字段。默认更新 修改时间、修改人、修改人名称字段
+    @Test
+    public void updateBaseColumn() {
+        // 更新条件
+        MysqlExample condition = new MysqlExample();
+        condition.setTestInt(222);
+        condition.setTestVarchar("varchar_222");
+
+        Query query = new Query();
+        // 不更新修改时间、修改人、修改人名称字段
+        query.updateBaseColumn(false);
+        // 设置要更新的字段
+        query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+        // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
+        mysqlExampleService.updateByCondition(condition, query);
     }
 
 

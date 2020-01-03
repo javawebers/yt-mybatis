@@ -93,8 +93,8 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     /**
      * limit
      *
-     * @param limit 开始条数
-     * @param size 查询条数
+     * @param limit 开始条数，包含，从 0 开始
+     * @param size  查询条数
      * @return this
      */
     T limit(int limit, int size);

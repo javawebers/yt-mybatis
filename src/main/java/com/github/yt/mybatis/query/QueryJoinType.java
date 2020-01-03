@@ -7,25 +7,18 @@ public enum QueryJoinType {
     /**
      * 关联查询
      */
-    JOIN(" JOIN "),
+    JOIN,
 
     /**
      * 左关联
      */
-    LEFT_JOIN(" LEFT JOIN "),
+    LEFT_JOIN,
 
     /**
      * 右关联
      */
-    RIGHT_JOIN(" RIGHT JOIN "),
+    RIGHT_JOIN,
     ;
-    String value;
 
-    QueryJoinType(String value) {
-        this.value = value;
-    }
 
-    public String getValue() {
-        return value;
-    }
 }
