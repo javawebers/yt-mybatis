@@ -1,0 +1,186 @@
+package com.github.yt.mybatis.service;
+
+import com.github.yt.mybatis.YtMybatisDemoApplication;
+import com.github.yt.mybatis.example.entity.MysqlExample;
+import com.github.yt.mybatis.example.service.MysqlExampleService;
+import com.github.yt.mybatis.query.Query;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.Test;
+
+import javax.annotation.Resource;
+import java.util.Arrays;
+
+@SpringBootTest(classes = {YtMybatisDemoApplication.class})
+public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
+
+    @Resource
+    private MysqlExampleService mysqlExampleService;
+
+    @Test
+    public void save() {
+        MysqlExample mysqlExample = new MysqlExample();
+        mysqlExampleService.save(mysqlExample);
+    }
+
+    @Test
+    public void saveBatch() {
+        MysqlExample mysqlExample1 = new MysqlExample();
+        MysqlExample mysqlExample2 = new MysqlExample();
+        mysqlExampleService.saveBatch(Arrays.asList(mysqlExample1, mysqlExample2));
+    }
+
+    // 根据主键更新所选字段，或者所有字段。为空也更新
+    @Test
+    public void update() {
+        MysqlExample mysqlExample = new MysqlExample();
+        // 设置值主键和要更新的值
+        mysqlExample.setExampleId("1");
+        mysqlExample.setTestInt(222);
+        mysqlExample.setTestVarchar("varchar_222");
+
+        // 更新所有的字段，为空也会更新
+        mysqlExampleService.update(mysqlExample);
+
+        // 更新指定的字段，为空也会更新，这里只更新 test_int
+        mysqlExampleService.update(mysqlExample, "test_int");
+    }
+
+
+    // 根据主键更新所选字段，或者所有字段。为空不更新
+    @Test
+    public void updateForSelective() {
+        MysqlExample mysqlExample = new MysqlExample();
+        // 设置值主键和要更新的值
+        mysqlExample.setExampleId("1");
+        mysqlExample.setTestInt(222);
+        mysqlExample.setTestVarchar("varchar_222");
+
+        // 更新所有不为空的字段，这里更新 test_int 和 test_varchar
+        mysqlExampleService.updateForSelective(mysqlExample);
+        // 更新指定不为空的字段，这里只更新 test_int
+        mysqlExampleService.updateForSelective(mysqlExample, "test_int", "test_boolean");
+    }
+
+    // 根据条件更新
+    @Test
+    public void updateByCondition() {
+        // 更新条件
+        MysqlExample condition = new MysqlExample();
+        condition.setTestInt(222);
+        condition.setTestVarchar("varchar_222");
+
+        Query query = new Query();
+        // 设置要更新的字段
+        query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+        // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
+        mysqlExampleService.updateByCondition(condition, new Query());
+    }
+
+    // 根据主键删除一条记录
+    @Test
+    public void delete() {
+        mysqlExampleService.delete(MysqlExample.class, "1");
+    }
+
+    // 根据主键删除一条记录，如果记录不存在抛出异常
+    @Test
+    public void deleteOne() {
+        mysqlExampleService.deleteOne(MysqlExample.class, "1");
+    }
+
+    // 根据条件删除
+    @Test
+    public void deleteByCondition() {
+        // 更新条件
+        MysqlExample condition = new MysqlExample();
+        condition.setTestInt(222);
+        condition.setTestVarchar("varchar_222");
+
+        Query query = new Query();
+        // 设置要更新的字段
+        query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+        // 将 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录删除
+        mysqlExampleService.delete(condition, query);
+    }
+
+    // 逻辑删除一条记录
+    @Test
+    public void logicDelete() {
+        mysqlExampleService.logicDelete(MysqlExample.class, "1");
+    }
+
+    // 逻辑删除一条记录，如果记录不存在抛出异常（记录已经被逻辑删除也会抛出异常）
+    @Test
+    public void logicDeleteOne() {
+        mysqlExampleService.logicDeleteOne(MysqlExample.class, "1");
+    }
+
+    // 根据条件逻辑删除
+    @Test
+    public void logicDeleteByCondition() {
+        // 更新条件
+        MysqlExample condition = new MysqlExample();
+        condition.setTestInt(222);
+        condition.setTestVarchar("varchar_222");
+
+        Query query = new Query();
+        // 设置条件
+        query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+        // 将 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录逻辑删除
+        mysqlExampleService.logicDelete(condition, query);
+    }
+
+
+    // 根据主键查询一条记录
+    @Test
+    public void get() {
+        mysqlExampleService.get(MysqlExample.class, "1");
+    }
+
+    // 根据主键查询一条记录，如果记录不存在抛出异常
+    @Test
+    public void getOne() {
+        mysqlExampleService.getOne(MysqlExample.class, "1");
+    }
+
+    // 查询一条记录
+    @Test
+    public void find() {
+        MysqlExample condition = new MysqlExample();
+        condition.setTestInt(222);
+        condition.setTestVarchar("varchar_222");
+
+        Query query = new Query();
+        // 设置条件
+        query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+        // 查询 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录
+        mysqlExampleService.find(condition, query);
+    }
+
+    // 查询一条记录，如果记录不存在抛出异常，其他和 find 一致
+    @Test
+    public void findOne() {
+        mysqlExampleService.findOne(new MysqlExample());
+    }
+
+    // 查询列表，使用方式和 find 一致，返回多条记录
+    @Test
+    public void findList() {
+        mysqlExampleService.findList(new MysqlExample());
+    }
+
+
+    // 分页查询，使用方式和 find 一致，返回分页数据
+    @Test
+    public void findPage() {
+        Query query = new Query();
+        // 如果使用 yt-web 分页信息可通过 controller 注入，无需手动设置
+        query.makePageNo(1);
+        query.makePageSize(10);
+
+        mysqlExampleService.findPage(new MysqlExample(), query);
+    }
+
+
+}

@@ -1,15 +1,15 @@
-# 5分钟上手yt-mybatis！！！
+# 5分钟上手 yt-mybatis ！！！
 
 # 介绍
 yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml复杂查询。  
 如果是新项目，建议使用整体解决方案；如果是历史项目，您可以很快集成CURD。
 
-# 为什么使用yt-mybatis
+# 为什么使用 yt-mybatis
 通用CURD，使后端开发效率提升 3 倍，支持无xml复杂查询，代码更加简洁、异常控制等更加完善。
 
 # 特性
-* #### 免费开源，maven直接引用
-* #### spring-boot支持，一键接入增删改查
+* #### 免费开源， maven 直接引用
+* #### spring-boot 支持，一键接入增删改查
 * #### 支持级联 join 多表查询
 * #### 支持 entity 默认值自动注入，可以自定义注入值
     创建人，创建时间，修改人，修改时间，逻辑删除状态。
@@ -568,12 +568,74 @@ public void logicDeleteByCondition() {
 ```
 
 * ### find
+* ##### 根据主键查询一条记录，无记录返回 null
 ```java
-
+@Test
+public void get() {
+    mysqlExampleService.get(MysqlExample.class, "1");
+}
 ```
 
+* ##### 根据主键查询一条记录，如果记录不存在抛出异常
+```java
+@Test
+public void getOne() {
+    mysqlExampleService.getOne(MysqlExample.class, "1");
+}
+```
+
+* ##### 查询一条记录，无记录返回 null
+```java
+@Test
+public void find() {
+    MysqlExample condition = new MysqlExample();
+    condition.setTestInt(222);
+    condition.setTestVarchar("varchar_222");
+
+    Query query = new Query();
+    // 设置条件
+    query.addWhere("test_boolean = #{testBoolean}").addParam("testBoolean", true);
+    // 查询 test_int 为 222 , test_varchar 为 varchar_222 , test_boolean 为 true 的记录
+    mysqlExampleService.find(condition, query);
+}
+```
+
+* ##### 查询一条记录，如果记录不存在抛出异常，其他和 find 一致
+```java
+@Test
+public void findOne() {
+    mysqlExampleService.findOne(new MysqlExample());
+}
+```
+
+* ##### 查询列表，使用方式和 find 一致，返回多条记录，无记录返回空集合
+```java
+@Test
+public void findList() {
+    mysqlExampleService.findList(new MysqlExample());
+}
+```
+
+* ##### 分页查询，使用方式和 find 一致，返回分页数据
+```java
+@Test
+public void findPage() {
+    Query query = new Query();
+    // 如果使用 yt-web 分页信息可通过 controller 注入，无需手动设置
+    query.makePageNo(1);
+    query.makePageSize(10);
+
+    mysqlExampleService.findPage(new MysqlExample(), query);
+}
+```
+* ### 复杂用法
+
+
+* ## 配置
+
+
 ***
-通过配置修改默认行为。
+###### 通过配置修改默认行为。
 ***
 
 待补充
