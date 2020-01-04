@@ -223,7 +223,7 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         // 排除所有主表中的字段
         query.excludeAllSelectColumn();
         // 扩展分组字段、test_int
-        query.addExtendSelectColumn("test_int as testInt, count(num) as countNum");
+        query.addExtendSelectColumn("test_int as testInt, count(*) as countNum");
         // 分组查询
         query.addGroupBy("test_int");
         mysqlExampleService.findList(new MysqlExample(), query);
