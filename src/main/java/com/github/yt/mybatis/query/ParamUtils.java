@@ -17,7 +17,7 @@ public class ParamUtils {
             query.makePageNo(1);
         }
         if (query.takePageSize() == null) {
-            query.makePageSize(20);
+            query.makePageSize(10);
         }
     }
 
