@@ -24,7 +24,7 @@ public class BaseEntityHandler {
                 try {
                     baseEntityValue = YtMybatisConfig.baseEntityValueClass.newInstance();
                 } catch (InstantiationException | IllegalAccessException e) {
-                    throw new RuntimeException("实例化baseEntityValue类异常", e);
+                    throw new RuntimeException("实例化 BaseEntityValue 类异常", e);
                 }
             }
         }
