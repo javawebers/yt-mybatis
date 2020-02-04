@@ -14,9 +14,6 @@ public class SpringContextUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
-    public SpringContextUtils() {
-    }
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         SpringContextUtils.applicationContext = applicationContext;
@@ -34,7 +31,6 @@ public class SpringContextUtils implements ApplicationContextAware {
         return applicationContext.getBean(beanName);
     }
 
-
     public static <T> T getBean(Class<T> beanClass) {
         return applicationContext.getBean(beanClass);
     }
@@ -43,7 +39,4 @@ public class SpringContextUtils implements ApplicationContextAware {
         return applicationContext.containsBean(beanName);
     }
 
-    public static String getProperty(String key) {
-        return PropertyConfigurer.getProperty(key);
-    }
 }
