@@ -106,7 +106,7 @@ public abstract class BaseDialect implements Dialect {
     }
 
     @Override
-    public String getFieldParam(Field field, String paramName) {
+    public String getFieldParam(String paramName) {
         return "#{" + paramName + "}";
     }
 }
