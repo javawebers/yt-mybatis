@@ -1,5 +1,7 @@
 package com.github.yt.mybatis.query;
 
+import com.github.yt.mybatis.dialect.DialectHandler;
+
 import java.util.*;
 
 /**
@@ -50,9 +52,8 @@ public class Query implements MybatisQuery<Query> {
         return this;
     }
 
-    private Query addInParam(String paramName, Collection<?> paramValue) {
+    private void addInParam(String paramName, Collection<?> paramValue) {
         inParamList.add(new QueryInCondition(paramName, paramValue));
-        return this;
     }
 
     @Override
@@ -111,6 +112,56 @@ public class Query implements MybatisQuery<Query> {
                          String tableNameAndOnConditions) {
         joinList.add(new QueryJoin(joinType, tableNameAndOnConditions));
         return this;
+    }
+
+    @Override
+    public Query gt(String columnName, Object value) {
+        if (value != null) {
+            String randomColumnName = "_gt_" + generateRandomColumn(columnName);
+            this.addWhere(columnName + " > " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+            this.addParam(randomColumnName, value);
+        }
+        return this;
+    }
+
+    @Override
+    public Query ge(String columnName, Object value) {
+        if (value != null) {
+            String randomColumnName = "_ge_" + generateRandomColumn(columnName);
+            this.addWhere(columnName + " >= " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+            this.addParam(randomColumnName, value);
+        }
+        return this;
+    }
+
+    @Override
+    public Query lt(String columnName, Object value) {
+        if (value != null) {
+            String randomColumnName = "_lt_" + generateRandomColumn(columnName);
+            this.addWhere(columnName + " < " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+            this.addParam(randomColumnName, value);
+        }
+        return this;
+    }
+
+    @Override
+    public Query le(String columnName, Object value) {
+        if (value != null) {
+            String randomColumnName = "_le_" + generateRandomColumn(columnName);
+            this.addWhere(columnName + " <= " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+            this.addParam(randomColumnName, value);
+        }
+        return this;
+    }
+
+    /**
+     * 获取一个字段随机字符串，再末尾拼接uuid
+     *
+     * @param columnName 字段名，可能存在"."，将 "."转为 "_"
+     * @return 字段随机字符串
+     */
+    private static String generateRandomColumn(String columnName) {
+        return columnName.replace(".", "_") + "_" + UUID.randomUUID().toString().replace("-", "");
     }
 
     @Override

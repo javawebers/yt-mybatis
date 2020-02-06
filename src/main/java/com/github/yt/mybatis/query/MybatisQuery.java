@@ -108,81 +108,133 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
      */
     T addJoin(QueryJoinType joinType, String tableNameAndOnConditions);
 
+    /**
+     * 大于
+     * 当值为空时不进行拼接
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T gt(String columnName, Object value);
+
+    /**
+     * 大于等于
+     * 当值为空时不进行拼接
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T ge(String columnName, Object value);
+
+    /**
+     * 小于
+     * 当值为空时不进行拼接
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T lt(String columnName, Object value);
+
+    /**
+     * 小于等于
+     * 当值为空时不进行拼接
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T le(String columnName, Object value);
 
     /**
      * 获取参数
+     *
      * @return Param
      */
     Map<String, Object> takeParam();
 
     /**
      * 是否更新基础字段
+     *
      * @return UpdateBaseColumn
      */
     boolean takeUpdateBaseColumn();
 
     /**
      * in 查询参数集合
+     *
      * @return InParamList
      */
     List<QueryInCondition> takeInParamList();
 
     /**
      * 更新字段集合
+     *
      * @return UpdateColumnList
      */
     List<String> takeUpdateColumnList();
 
     /**
      * 扩展字段集合
+     *
      * @return ExtendSelectColumnList
      */
     List<String> takeExtendSelectColumnList();
 
     /**
      * 排除字段集合
+     *
      * @return ExcludeSelectColumnList
      */
     List<String> takeExcludeSelectColumnList();
 
     /**
      * 是否排除所有字段
+     *
      * @return ExcludeAllSelectColumn
      */
     boolean takeExcludeAllSelectColumn();
 
     /**
      * 获取查询条件集合
+     *
      * @return WhereList
      */
     List<String> takeWhereList();
 
     /**
      * 获取 order by 集合
+     *
      * @return OrderByList
      */
     List<String> takeOrderByList();
 
     /**
      * 获取 group by
+     *
      * @return GroupBy
      */
     String takeGroupBy();
 
     /**
      * 获取 join 集合
+     *
      * @return JoinList
      */
     List<QueryJoin> takeJoinList();
 
     /**
      * 获取 limit 开始
+     *
      * @return LimitFrom
      */
     Integer takeLimitFrom();
 
     /**
      * 获取 limit 条数
+     *
      * @return LimitSize
      */
     Integer takeLimitSize();

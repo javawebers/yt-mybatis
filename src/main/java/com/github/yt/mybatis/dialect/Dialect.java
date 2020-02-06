@@ -78,9 +78,8 @@ public interface Dialect {
     /**
      * 获取FieldParam
      *
-     * @param field     field
      * @param paramName paramName
      * @return 获取FieldParam
      */
-    String getFieldParam(Field field, String paramName);
+    String getFieldParam(String paramName);
 }

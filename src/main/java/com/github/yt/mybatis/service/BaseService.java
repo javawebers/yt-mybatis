@@ -111,12 +111,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
                 }
             }
 
-            query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = " + DialectHandler.getDialect().getFieldParam(field, field.getName()));
+            query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = " + DialectHandler.getDialect().getFieldParam(field.getName()));
             query.addParam(field.getName(), EntityUtils.getValue(entity, field));
         }
         query.addWhere(DialectHandler.getDialect().getColumnName(idField)
                 + " = "
-                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+                + DialectHandler.getDialect().getFieldParam(idField.getName()));
         query.addParam(idField.getName(), EntityUtils.getValue(entity, idField));
 
         return getMapper().update(ParamUtils.getParamMap(entityCondition, query));
@@ -150,7 +150,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Query query = new Query();
         query.addWhere(DialectHandler.getDialect().getColumnName(idField)
                 + " = "
-                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+                + DialectHandler.getDialect().getFieldParam(idField.getName()));
         query.addParam(idField.getName(), id);
         int num = this.logicDelete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_77);
@@ -194,7 +194,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Query query = new Query();
         query.addWhere(DialectHandler.getDialect().getColumnName(idField)
                 + " = "
-                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+                + DialectHandler.getDialect().getFieldParam(idField.getName()));
         query.addParam(idField.getName(), id);
         int num = this.delete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_76);
@@ -224,7 +224,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Query query = new Query();
         query.addWhere(DialectHandler.getDialect().getColumnName(idField)
                 + " = "
-                + DialectHandler.getDialect().getFieldParam(idField, idField.getName()));
+                + DialectHandler.getDialect().getFieldParam(idField.getName()));
         query.addParam(idField.getName(), id);
         return find(entityCondition, query);
     }
@@ -459,19 +459,19 @@ public abstract class BaseService<T> implements IBaseService<T> {
                 query.addParam("_modifierId_", BaseEntityHandler.getBaseEntityValue().getModifierId());
                 query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierIdField)
                         + " = "
-                        + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifierId_"));
+                        + DialectHandler.getDialect().getFieldParam("_modifierId_"));
             }
             if (modifierNameField != null) {
                 query.addParam("_modifierName_", BaseEntityHandler.getBaseEntityValue().getModifierName());
                 query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierNameField)
                         + " = "
-                        + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifierName_"));
+                        + DialectHandler.getDialect().getFieldParam("_modifierName_"));
             }
             if (modifyTimeField != null) {
                 query.addParam("_modifyTime_", new Date());
                 query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifyTimeField)
                         + " = "
-                        + DialectHandler.getDialect().getFieldParam(modifierIdField, "_modifyTime_"));
+                        + DialectHandler.getDialect().getFieldParam("_modifyTime_"));
             }
         }
     }
