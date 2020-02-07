@@ -1,5 +1,7 @@
 package com.github.yt.mybatis.dialect;
 
+import com.github.yt.mybatis.query.QueryLikeType;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 
@@ -27,6 +29,7 @@ public interface Dialect {
 
     /**
      * 获取表别名
+     *
      * @param entityClass 实体类
      * @return "user as t"
      */
@@ -82,4 +85,15 @@ public interface Dialect {
      * @return 获取FieldParam
      */
     String getFieldParam(String paramName);
+
+    /**
+     * 获取 like param
+     * mysql: CONCAT('%', #{keyword}, '%')
+     *
+     * @param paramName paramName
+     * @param likeType  likeType
+     * @return like str
+     */
+    String getLikeParam(String paramName, QueryLikeType likeType);
+
 }

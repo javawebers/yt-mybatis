@@ -1,5 +1,6 @@
 package com.github.yt.mybatis.dialect;
 
+import com.github.yt.mybatis.query.QueryLikeType;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -108,5 +109,22 @@ public abstract class BaseDialect implements Dialect {
     @Override
     public String getFieldParam(String paramName) {
         return "#{" + paramName + "}";
+    }
+
+
+    @Override
+    public String getLikeParam(String paramName, QueryLikeType likeType) {
+        // "CONCAT('%',#{keyword},'%')"
+        String fieldParam = getFieldParam(paramName);
+        StringBuilder result = new StringBuilder("CONCAT(");
+        if (likeType == QueryLikeType.MIDDLE || likeType == QueryLikeType.RIGHT) {
+            result.append("'%', ");
+        }
+        result.append(fieldParam);
+        if (likeType == QueryLikeType.MIDDLE || likeType == QueryLikeType.LEFT) {
+            result.append(", '%'");
+        }
+        result.append(")");
+        return result.toString();
     }
 }

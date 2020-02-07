@@ -1,5 +1,6 @@
 package com.github.yt.mybatis.query;
 
+import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.dialect.DialectHandler;
 
 import java.util.*;
@@ -162,6 +163,21 @@ public class Query implements MybatisQuery<Query> {
      */
     private static String generateRandomColumn(String columnName) {
         return columnName.replace(".", "_") + "_" + UUID.randomUUID().toString().replace("-", "");
+    }
+
+    @Override
+    public Query like(String columnName, String value) {
+        return this.like(columnName, value, QueryLikeType.MIDDLE);
+    }
+
+    @Override
+    public Query like(String columnName, String value, QueryLikeType likeType) {
+        if (YtStringUtils.isNotEmpty(value)) {
+            String randomColumnName = "_like_" + generateRandomColumn(columnName);
+            this.addWhere(columnName + " like " + DialectHandler.getDialect().getLikeParam(randomColumnName, likeType));
+            this.addParam(randomColumnName, value);
+        }
+        return this;
     }
 
     @Override

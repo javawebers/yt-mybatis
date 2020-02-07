@@ -3,6 +3,7 @@ package com.github.yt.mybatis.dialect.impl;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.dialect.BaseDialect;
 import com.github.yt.mybatis.dialect.DialectHandler;
+import com.github.yt.mybatis.query.QueryLikeType;
 import com.github.yt.mybatis.util.EntityUtils;
 
 import java.lang.reflect.Field;
@@ -68,5 +69,10 @@ public class OracleDialect extends BaseDialect {
     @Override
     public String getFieldParam(String paramName) {
         return "#{" + paramName + ", jdbcType=VARCHAR}";
+    }
+
+    @Override
+    public String getLikeParam(String paramName, QueryLikeType likeType) {
+        throw new UnsupportedOperationException("oracle 未实现模糊查询");
     }
 }

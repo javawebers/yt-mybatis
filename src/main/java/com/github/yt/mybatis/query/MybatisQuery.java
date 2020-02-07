@@ -149,6 +149,26 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T le(String columnName, Object value);
 
     /**
+     * 模糊查询
+     * 默认为 %value%
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T like(String columnName, String value);
+
+    /**
+     * 模糊查询
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @param likeType   模糊查询类型
+     * @return this
+     */
+    T like(String columnName, String value, QueryLikeType likeType);
+
+    /**
      * 获取参数
      *
      * @return Param

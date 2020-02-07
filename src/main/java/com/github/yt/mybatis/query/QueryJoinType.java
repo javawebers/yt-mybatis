@@ -1,6 +1,8 @@
 package com.github.yt.mybatis.query;
 
 /**
+ * 查询的连接 join 类型
+ *
  * @author sheng
  */
 public enum QueryJoinType {
