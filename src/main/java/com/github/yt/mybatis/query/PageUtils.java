@@ -21,7 +21,7 @@ public class PageUtils {
      * @param <O>        原始分页数据类型
      * @return 新的分页信息
      */
-    public static <R, O> Page createPage(Page<O> oldPage, List<R> resultList) {
+    public static <R, O> Page<R> createPage(Page<O> oldPage, List<R> resultList) {
         return createPage(oldPage.getPageNo(), oldPage.getPageSize(), oldPage.getTotalCount(), resultList);
     }
 
@@ -35,7 +35,7 @@ public class PageUtils {
      * @param <R>        分页数据类型
      * @return 分页信息
      */
-    public static <R> Page createPage(int pageNo, int pageSize, int totalCount, List<R> data) {
+    public static <R> Page<R> createPage(int pageNo, int pageSize, int totalCount, List<R> data) {
         return new Page<R>()
                 .initKey(YtMybatisConfig.pageNoName, YtMybatisConfig.pageSizeName, YtMybatisConfig.pageTotalCountName, YtMybatisConfig.pageDataName)
                 .initValue(pageNo, pageSize, totalCount, data);

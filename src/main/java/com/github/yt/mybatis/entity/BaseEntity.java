@@ -62,11 +62,13 @@ public class BaseEntity<T extends BaseEntity<?>> implements Serializable {
         return modifyTime;
     }
 
+    @SuppressWarnings("unchecked")
     public T setCreateTime(Date createTime) {
         this.createTime = createTime;
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
     public T setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
         return (T) this;
@@ -76,6 +78,7 @@ public class BaseEntity<T extends BaseEntity<?>> implements Serializable {
         return founderId;
     }
 
+    @SuppressWarnings("unchecked")
     public T setFounderId(String founderId) {
         this.founderId = founderId;
         return (T) this;
@@ -85,6 +88,7 @@ public class BaseEntity<T extends BaseEntity<?>> implements Serializable {
         return founderName;
     }
 
+    @SuppressWarnings("unchecked")
     public T setFounderName(String founderName) {
         this.founderName = founderName;
         return (T) this;
@@ -94,6 +98,7 @@ public class BaseEntity<T extends BaseEntity<?>> implements Serializable {
         return modifierId;
     }
 
+    @SuppressWarnings("unchecked")
     public T setModifierId(String modifierId) {
         this.modifierId = modifierId;
         return (T) this;
@@ -103,6 +108,7 @@ public class BaseEntity<T extends BaseEntity<?>> implements Serializable {
         return modifierName;
     }
 
+    @SuppressWarnings("unchecked")
     public T setModifierName(String modifierName) {
         this.modifierName = modifierName;
         return (T) this;
@@ -112,6 +118,7 @@ public class BaseEntity<T extends BaseEntity<?>> implements Serializable {
         return deleteFlag;
     }
 
+    @SuppressWarnings("unchecked")
     public T setDeleteFlag(Boolean deleteFlag) {
         this.deleteFlag = deleteFlag;
         return (T) this;

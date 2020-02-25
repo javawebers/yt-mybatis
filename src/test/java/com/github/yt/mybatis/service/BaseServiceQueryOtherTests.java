@@ -125,6 +125,11 @@ public class BaseServiceQueryOtherTests extends AbstractTestNGSpringContextTests
         List<DbEntitySame> list = dataBasicService.save12Same();
         Page<DbEntitySame> dbPage = dbEntitySameService.findPage(new DbEntitySame()
                 , new Query().makePageNo(2).makePageSize(2));
+        int pageNo = dbPage.getPageNo();
+        int pageSize = dbPage.getPageSize();
+        int totalCount = dbPage.getTotalCount();
+        List<DbEntitySame> pageData = dbPage.getData();
+
         Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageNoName));
         Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageSizeName));
         Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageTotalCountName));

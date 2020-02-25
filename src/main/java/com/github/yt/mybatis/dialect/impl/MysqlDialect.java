@@ -1,8 +1,6 @@
 package com.github.yt.mybatis.dialect.impl;
 
 import com.github.yt.mybatis.dialect.BaseDialect;
-import com.github.yt.mybatis.dialect.Dialect;
-import com.github.yt.mybatis.query.QueryLikeType;
 import com.github.yt.mybatis.util.EntityUtils;
 
 import java.lang.reflect.Field;
@@ -13,10 +11,6 @@ import java.lang.reflect.Field;
  * @author sheng
  */
 public class MysqlDialect extends BaseDialect {
-
-    public static Dialect getInstance() {
-        return new MysqlDialect();
-    }
 
     /**
      * mysql 的转义符

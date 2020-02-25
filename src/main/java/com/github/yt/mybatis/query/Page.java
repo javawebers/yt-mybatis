@@ -21,7 +21,7 @@ public class Page<T> extends LinkedHashMap<String, Object> {
     public Page() {
     }
 
-    public Page initKey(String pageNoName, String pageSizeName,
+    public Page<T> initKey(String pageNoName, String pageSizeName,
                         String pageTotalCountName, String pageDataName) {
         this.pageNoName = pageNoName;
         this.pageSizeName = pageSizeName;
@@ -30,29 +30,29 @@ public class Page<T> extends LinkedHashMap<String, Object> {
         return this;
     }
 
-    public Page initValue(int pageNo, int pageSize, int totalCount, List<T> data) {
+    public Page<T> initValue(int pageNo, int pageSize, int totalCount, List<T> data) {
         return setPageNo(pageNo).
                 setPageSize(pageSize).
                 setTotalCount(totalCount).
                 setData(data);
     }
 
-    private Page setPageNo(int pageNo) {
+    private Page<T> setPageNo(int pageNo) {
         this.put(pageNoName, pageNo);
         return this;
     }
 
-    private Page setPageSize(int pageSize) {
+    private Page<T> setPageSize(int pageSize) {
         this.put(pageSizeName, pageSize);
         return this;
     }
 
-    private Page setTotalCount(int totalCount) {
+    private Page<T> setTotalCount(int totalCount) {
         this.put(pageTotalCountName, totalCount);
         return this;
     }
 
-    private Page setData(List<T> data) {
+    private Page<T> setData(List<T> data) {
         this.put(pageDataName, data);
         return this;
     }
@@ -69,6 +69,7 @@ public class Page<T> extends LinkedHashMap<String, Object> {
         return (Integer) this.get(pageTotalCountName);
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> getData() {
         return (List<T>) this.get(pageDataName);
     }
