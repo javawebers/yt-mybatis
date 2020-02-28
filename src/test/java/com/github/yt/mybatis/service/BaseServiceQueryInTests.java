@@ -46,6 +46,11 @@ public class BaseServiceQueryInTests extends AbstractTestNGSpringContextTests {
         count = dbEntitySameService.count(new DbEntitySame(),
                 new Query().in("testInt", 1, 2));
         Assert.assertEquals(8, count);
+
+        int[] testInts = new int[]{1, 2};
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", testInts));
+        Assert.assertEquals(8, count);
     }
 
     @Test
@@ -58,6 +63,10 @@ public class BaseServiceQueryInTests extends AbstractTestNGSpringContextTests {
         count = dbEntitySameService.count(new DbEntitySame(),
                 new Query().in("testInt", 1));
         Assert.assertEquals(4, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", new int[]{1}));
+        Assert.assertEquals(4, count);
     }
     @Test
     public void in3() {
@@ -67,7 +76,7 @@ public class BaseServiceQueryInTests extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(0, count);
 
         count = dbEntitySameService.count(new DbEntitySame(),
-                new Query().in("testInt"));
+                new Query().in("testInt", new int[]{}));
         Assert.assertEquals(0, count);
     }
 
@@ -104,7 +113,7 @@ public class BaseServiceQueryInTests extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(0, count);
 
         count = dbEntitySameService.count(new DbEntitySame(),
-                new Query().notIn("testInt"));
+                new Query().notIn("testInt", new int[]{}));
         Assert.assertEquals(0, count);
     }
 

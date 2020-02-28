@@ -191,35 +191,21 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
      * 常用操作，in
      *
      * @param columnName 字段
-     * @param values     值
+     * @param firstValue 第一个值。可以是集合、数组、其他 Object 类型
+     * @param moreValues 其他值。当第一个值为集合或者数组时，这个值忽略掉
      * @return this
      */
-    T in(String columnName, Object... values);
-    /**
-     * 常用操作，in
-     *
-     * @param columnName 字段
-     * @param values     值
-     * @return this
-     */
-    T in(String columnName, Collection<Object> values);
+    T in(String columnName, Object firstValue, Object... moreValues);
 
     /**
      * 常用操作，not in
      *
      * @param columnName 字段
-     * @param values     值
+     * @param firstValue 第一个值。可以是集合、数组、其他 Object 类型
+     * @param moreValues 其他值。当第一个值为集合或者数组时，这个值忽略掉
      * @return this
      */
-    T notIn(String columnName, Object... values);
-    /**
-     * 常用操作，not in
-     *
-     * @param columnName 字段
-     * @param values     值
-     * @return this
-     */
-    T notIn(String columnName, Collection<Object> values);
+    T notIn(String columnName, Object firstValue, Object... moreValues);
 
     /**
      * 获取参数

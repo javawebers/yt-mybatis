@@ -3,6 +3,8 @@ package com.github.yt.mybatis.query;
 import com.github.yt.commons.util.YtStringUtils;
 import com.github.yt.mybatis.dialect.DialectHandler;
 
+import javax.lang.model.element.Element;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -197,29 +199,37 @@ public class Query implements MybatisQuery<Query> {
     }
 
     @Override
-    public Query in(String columnName, Object... values) {
-        return in(columnName, Arrays.asList(values));
-    }
-
-    @Override
-    public Query in(String columnName, Collection<Object> values) {
+    public Query in(String columnName, Object firstValue, Object... moreValues) {
         String randomColumnName = "_in_" + generateRandomColumn(columnName);
         this.addWhere(columnName + " IN ${" + randomColumnName + "}");
-        this.addParam(randomColumnName, values);
+        this.addParam(randomColumnName, convertToCollection(firstValue, moreValues));
         return this;
     }
 
     @Override
-    public Query notIn(String columnName, Object... values) {
-        return notIn(columnName, Arrays.asList(values));
-    }
-
-    @Override
-    public Query notIn(String columnName, Collection<Object> values) {
+    public Query notIn(String columnName, Object firstValue, Object... moreValues) {
         String randomColumnName = "_notIn_" + generateRandomColumn(columnName);
         this.addWhere(columnName + " NOT IN ${" + randomColumnName + "}");
-        this.addParam(randomColumnName, values);
+        this.addParam(randomColumnName, convertToCollection(firstValue, moreValues));
         return this;
+    }
+
+    private Object convertToCollection(Object firstValue, Object... moreValues) {
+        if (firstValue instanceof Collection) {
+            return firstValue;
+        } else if (firstValue.getClass().isArray()) {
+            int length = Array.getLength(firstValue);
+            Object[] os = new Object[length];
+            for (int i = 0; i < os.length; i++) {
+                os[i] = Array.get(firstValue, i);
+            }
+            return Arrays.asList(os);
+        } else {
+            List<Object> list = new ArrayList<>();
+            list.add(firstValue);
+            list.addAll(Arrays.asList(moreValues));
+            return list;
+        }
     }
 
     @Override
