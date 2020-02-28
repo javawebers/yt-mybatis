@@ -181,6 +181,48 @@ public class Query implements MybatisQuery<Query> {
     }
 
     @Override
+    public Query equal(String columnName, Object value) {
+        String randomColumnName = "_equal_" + generateRandomColumn(columnName);
+        this.addWhere(columnName + " = " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+        this.addParam(randomColumnName, value);
+        return this;
+    }
+
+    @Override
+    public Query notEqual(String columnName, Object value) {
+        String randomColumnName = "_notEqual_" + generateRandomColumn(columnName);
+        this.addWhere(columnName + " != " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+        this.addParam(randomColumnName, value);
+        return this;
+    }
+
+    @Override
+    public Query in(String columnName, Object... values) {
+        return in(columnName, Arrays.asList(values));
+    }
+
+    @Override
+    public Query in(String columnName, Collection<Object> values) {
+        String randomColumnName = "_in_" + generateRandomColumn(columnName);
+        this.addWhere(columnName + " IN ${" + randomColumnName + "}");
+        this.addParam(randomColumnName, values);
+        return this;
+    }
+
+    @Override
+    public Query notIn(String columnName, Object... values) {
+        return notIn(columnName, Arrays.asList(values));
+    }
+
+    @Override
+    public Query notIn(String columnName, Collection<Object> values) {
+        String randomColumnName = "_notIn_" + generateRandomColumn(columnName);
+        this.addWhere(columnName + " NOT IN ${" + randomColumnName + "}");
+        this.addParam(randomColumnName, values);
+        return this;
+    }
+
+    @Override
     public Map<String, Object> takeParam() {
         return param;
     }

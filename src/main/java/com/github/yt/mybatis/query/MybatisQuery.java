@@ -2,6 +2,7 @@ package com.github.yt.mybatis.query;
 
 import com.github.yt.commons.query.PageQuery;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +110,7 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T addJoin(QueryJoinType joinType, String tableNameAndOnConditions);
 
     /**
-     * 大于
+     * 常用操作，大于
      * 当值为空时不进行拼接
      *
      * @param columnName 字段
@@ -119,7 +120,7 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T gt(String columnName, Object value);
 
     /**
-     * 大于等于
+     * 常用操作，大于等于
      * 当值为空时不进行拼接
      *
      * @param columnName 字段
@@ -129,7 +130,7 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T ge(String columnName, Object value);
 
     /**
-     * 小于
+     * 常用操作，小于
      * 当值为空时不进行拼接
      *
      * @param columnName 字段
@@ -139,7 +140,7 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T lt(String columnName, Object value);
 
     /**
-     * 小于等于
+     * 常用操作，小于等于
      * 当值为空时不进行拼接
      *
      * @param columnName 字段
@@ -149,7 +150,7 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T le(String columnName, Object value);
 
     /**
-     * 模糊查询
+     * 常用操作，模糊查询
      * 默认为 %value%
      *
      * @param columnName 字段
@@ -159,7 +160,7 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T like(String columnName, String value);
 
     /**
-     * 模糊查询
+     * 常用操作，模糊查询
      *
      * @param columnName 字段
      * @param value      值
@@ -167,6 +168,58 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
      * @return this
      */
     T like(String columnName, String value, QueryLikeType likeType);
+
+    /**
+     * 常用操作，等于
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T equal(String columnName, Object value);
+
+    /**
+     * 常用操作，不等于
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T notEqual(String columnName, Object value);
+
+    /**
+     * 常用操作，in
+     *
+     * @param columnName 字段
+     * @param values     值
+     * @return this
+     */
+    T in(String columnName, Object... values);
+    /**
+     * 常用操作，in
+     *
+     * @param columnName 字段
+     * @param values     值
+     * @return this
+     */
+    T in(String columnName, Collection<Object> values);
+
+    /**
+     * 常用操作，not in
+     *
+     * @param columnName 字段
+     * @param values     值
+     * @return this
+     */
+    T notIn(String columnName, Object... values);
+    /**
+     * 常用操作，not in
+     *
+     * @param columnName 字段
+     * @param values     值
+     * @return this
+     */
+    T notIn(String columnName, Collection<Object> values);
 
     /**
      * 获取参数

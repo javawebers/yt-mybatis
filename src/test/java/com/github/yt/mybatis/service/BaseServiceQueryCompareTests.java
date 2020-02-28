@@ -34,6 +34,83 @@ public class BaseServiceQueryCompareTests extends AbstractTestNGSpringContextTes
         dbEntityNotSameService.delete(new DbEntityNotSame());
     }
 
+    @Test
+    public void sameEqualDate() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        Date createTime = list.get(0).getCreateTime();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().equal("t.createTime", createTime));
+        Assert.assertEquals(12, dbList.size());
+
+        dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().equal("t.createTime", new Date(System.currentTimeMillis() + 50000)));
+        Assert.assertEquals(0, dbList.size());
+    }
+
+    @Test
+    public void sameEqualInt() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().equal("t.testInt", 1));
+        Assert.assertEquals(4, dbList.size());
+
+        dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().equal("t.testInt", 5));
+        Assert.assertEquals(0, dbList.size());
+    }
+
+
+    @Test
+    public void sameEqualStr() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().equal("t.testVarchar", "varchar_1"));
+        Assert.assertEquals(3, dbList.size());
+
+        dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().equal("t.testVarchar", "varchar_5"));
+        Assert.assertEquals(0, dbList.size());
+    }
+
+
+    @Test
+    public void sameNotEqualDate() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        Date createTime = list.get(0).getCreateTime();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().notEqual("t.createTime", createTime));
+        Assert.assertEquals(0, dbList.size());
+
+        dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().notEqual("t.createTime", new Date(System.currentTimeMillis() + 50000)));
+        Assert.assertEquals(12, dbList.size());
+    }
+
+    @Test
+    public void sameNotEqualInt() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().notEqual("t.testInt", 1));
+        Assert.assertEquals(8, dbList.size());
+
+        dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().notEqual("t.testInt", 5));
+        Assert.assertEquals(12, dbList.size());
+    }
+
+
+    @Test
+    public void sameNotEqualStr() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().notEqual("t.testVarchar", "varchar_1"));
+        Assert.assertEquals(9, dbList.size());
+
+        dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().notEqual("t.testVarchar", "varchar_5"));
+        Assert.assertEquals(12, dbList.size());
+    }
+
 
     @Test
     public void sameGtDate() {

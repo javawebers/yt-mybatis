@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootTest(classes = {YtMybatisDemoApplication.class})
 public class BaseServiceQueryInTests extends AbstractTestNGSpringContextTests {
@@ -36,12 +37,87 @@ public class BaseServiceQueryInTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void in1() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", Arrays.asList(1, 2)));
+        Assert.assertEquals(8, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", 1, 2));
+        Assert.assertEquals(8, count);
+    }
+
+    @Test
+    public void in2() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", Collections.singletonList(1)));
+        Assert.assertEquals(4, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", 1));
+        Assert.assertEquals(4, count);
+    }
+    @Test
+    public void in3() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt", new ArrayList<>()));
+        Assert.assertEquals(0, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().in("testInt"));
+        Assert.assertEquals(0, count);
+    }
+
+
+
+    @Test
+    public void notIn1() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().notIn("testInt", Arrays.asList(1, 2)));
+        Assert.assertEquals(4, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().notIn("testInt", 1, 2));
+        Assert.assertEquals(4, count);
+    }
+
+    @Test
+    public void notIn2() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().notIn("testInt", Collections.singletonList(1)));
+        Assert.assertEquals(8, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().notIn("testInt", 1));
+        Assert.assertEquals(8, count);
+    }
+    @Test
+    public void notIn3() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().notIn("testInt", new ArrayList<>()));
+        Assert.assertEquals(0, count);
+
+        count = dbEntitySameService.count(new DbEntitySame(),
+                new Query().notIn("testInt"));
+        Assert.assertEquals(0, count);
+    }
+
+
+
+    @Test
     public void sameIn() {
         dataBasicService.save12Same();
         int count = dbEntitySameService.count(new DbEntitySame(),
                 new Query().addWhere("testInt in ${testInt}")
                         .addParam("testInt", Arrays.asList(1, 2)));
         Assert.assertEquals(8, count);
+
     }
 
     @Test
