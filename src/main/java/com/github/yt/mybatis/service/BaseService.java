@@ -294,16 +294,22 @@ public abstract class BaseService<T> implements IBaseService<T> {
         // 设置页数页码
         ParamUtils.setPageInfo(query);
         Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query);
-        Page<T> page;
-        int count = getMapper().count(paramMap);
-        if (count == 0) {
-            page = PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, new ArrayList<>());
+        query.limit((query.takePageNo() - 1) * query.takePageSize(), query.takePageSize());
+        // 尽量减少 count 操作
+        List<T> entityList = getMapper().findList(paramMap);
+        int count;
+        if (entityList.size() == 0) {
+            if (query.takePageNo() == 0) {
+                count = 0;
+            } else {
+                count = getMapper().count(paramMap);
+            }
+        } else if (entityList.size() == query.takePageSize()){
+            count = getMapper().count(paramMap);
         } else {
-            query.limit((query.takePageNo() - 1) * query.takePageSize(), query.takePageSize());
-            List<T> entityList = getMapper().findList(paramMap);
-            page = PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, entityList);
+            count = entityList.size() + (query.takePageNo() - 1) * query.takePageSize();
         }
-        return page;
+        return PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, entityList);
     }
 
     /**

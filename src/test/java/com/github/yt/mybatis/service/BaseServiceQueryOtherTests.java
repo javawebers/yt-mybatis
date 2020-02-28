@@ -119,28 +119,4 @@ public class BaseServiceQueryOtherTests extends AbstractTestNGSpringContextTests
             Assert.assertNotNull(entity.getCreateTime());
         });
     }
-
-    @Test
-    public void findPagePropertiesName() {
-        List<DbEntitySame> list = dataBasicService.save12Same();
-        Page<DbEntitySame> dbPage = dbEntitySameService.findPage(new DbEntitySame()
-                , new Query().makePageNo(2).makePageSize(2));
-        int pageNo = dbPage.getPageNo();
-        int pageSize = dbPage.getPageSize();
-        int totalCount = dbPage.getTotalCount();
-        List<DbEntitySame> pageData = dbPage.getData();
-
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageNoName));
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageSizeName));
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageTotalCountName));
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageDataName));
-        Assert.assertEquals(dbPage.getPageNo(), 2);
-
-        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageNoName), 2);
-        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageSizeName), 2);
-        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageTotalCountName), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 2);
-    }
-
-
 }
