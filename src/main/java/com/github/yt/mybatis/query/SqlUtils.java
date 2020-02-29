@@ -177,7 +177,7 @@ public class SqlUtils {
                 // #{_inCondition_.t__userId[0]}, #{_inCondition_.t__userId[1]}
                 List<String> inParamList = new ArrayList<>();
                 for (int i = 0; i < queryInCondition.takeValues().size(); i++) {
-                    inParamList.add("#{" + ParamUtils.IN_CONDITION + "." + column + "[" + i + "]}");
+                    inParamList.add(DialectHandler.getDialect().getFieldParam(ParamUtils.IN_CONDITION + "." + column + "[" + i + "]"));
                 }
                 inSql = "(" + YtStringUtils.join(inParamList.toArray(), ", ") + ")";
             }
