@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootTest(classes = {YtMybatisDemoApplication.class})
 public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
@@ -193,6 +194,40 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         mysqlExampleService.findList(new MysqlExample(), query);
     }
 
+    // 常用 where 条件
+    public void findListCompare() {
+        Query query = new Query();
+        // 大于
+        query.gt("test_int", 1);
+        // 大于等于
+        query.ge("test_int", 2);
+        // 小于
+        query.lt("test_int", 1);
+        // 小于等于
+        query.le("test_int", 1);
+        // 等于
+        query.equal("test_int", 1);
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    public void findListIn2() {
+        Query query = new Query();
+        // 可变参数
+        query.in("test_int", 1, 2, 3);
+        // 数组
+        query.in("test_int", new int[]{1, 2, 3});
+        // 集合
+        query.in("test_int", Arrays.asList(1, 2, 3));
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
+    // or 查询
+    public void findListOr() {
+        Query query = new Query();
+        query.addWhere("test_int = 1 or test_int = 2");
+        mysqlExampleService.findList(new MysqlExample(), query);
+    }
+
     @Test
     public void findListOrderBy() {
         Query query = new Query();
@@ -236,6 +271,7 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         query.addExcludeSelectColumn("test_int");
         mysqlExampleService.findList(new MysqlExample(), query);
     }
+
 
     // updateBaseColumn 是否更新基础字段。默认更新 修改时间、修改人、修改人名称字段
     @Test

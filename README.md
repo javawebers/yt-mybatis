@@ -1,6 +1,4 @@
-# 5分钟上手 yt-mybatis ！！！
-
-# 介绍
+# 简介
 yt-mybatis是基于spring boot、mybaits封装的通用CURD框架。支持无xml复杂查询。  
 如果是新项目，建议使用整体解决方案；如果是历史项目，您可以很快集成CURD。
 
@@ -640,6 +638,44 @@ public void findListIn() {
     mysqlExampleService.findList(new MysqlExample(), query);
 }
 ```
+```java
+public void findListIn2() {
+    Query query = new Query();
+    // 可变参数
+    query.in("test_int", 1, 2, 3);
+    // 数组
+    query.in("test_int", new int[]{1, 2, 3});
+    // 集合
+    query.in("test_int", Arrays.asList(1, 2, 3));
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+* ##### 常用 where 条件
+```java
+public void findListCompare() {
+    Query query = new Query();
+    // 大于
+    query.gt("test_int", 1);
+    // 大于等于
+    query.ge("test_int", 2);
+    // 小于
+    query.lt("test_int", 1);
+    // 小于等于
+    query.le("test_int", 1);
+    // 等于
+    query.equal("test_int", 1);
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+* ##### or 查询
+```java
+public void findListOr() {
+    Query query = new Query();
+    query.addWhere("test_int = 1 or test_int = 2");
+    mysqlExampleService.findList(new MysqlExample(), query);
+}
+```
+
 * ##### join 查询，支持 JOIN、LEFT_JOIN、RIGHT_JOIN
 ```java
 @Test
