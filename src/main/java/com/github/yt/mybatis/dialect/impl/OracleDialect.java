@@ -71,6 +71,16 @@ public class OracleDialect extends BaseDialect {
 
     @Override
     public String getLikeParam(String paramName, QueryLikeType likeType) {
-        throw new UnsupportedOperationException("oracle 未实现模糊查询");
+        // "'%'||#{keyword}||'%'"
+        String fieldParam = getFieldParam(paramName);
+        StringBuilder result = new StringBuilder();
+        if (likeType == QueryLikeType.MIDDLE || likeType == QueryLikeType.RIGHT) {
+            result.append("'%'||");
+        }
+        result.append(fieldParam);
+        if (likeType == QueryLikeType.MIDDLE || likeType == QueryLikeType.LEFT) {
+            result.append("||'%'");
+        }
+        return result.toString();
     }
 }
