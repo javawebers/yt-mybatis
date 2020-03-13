@@ -20,35 +20,35 @@ public class BaseMapperProvider {
     }
 
     public String delete(Map<String, Object> paramMap) {
-        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        Class<?> entityConditionClass = (Class<?>) paramMap.get(ParamUtils.ENTITY_CONDITION_CLASS);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
 
         SQL sql = new SQL();
-        sql.DELETE_FROM(DialectHandler.getDialect().getTableName(entityCondition.getClass()));
-        SqlUtils.where(sql, entityCondition, query, false);
+        sql.DELETE_FROM(DialectHandler.getDialect().getTableName(entityConditionClass));
+        SqlUtils.where(sql, query);
         return SqlUtils.replaceInParam(sql, query);
     }
 
     public <T> String update(Map<String, Object> paramMap) {
-        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        Class<?> entityConditionClass = (Class<?>) paramMap.get(ParamUtils.ENTITY_CONDITION_CLASS);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
 
         SQL sql = new SQL();
-        sql.UPDATE(DialectHandler.getDialect().getTableNameWithAlas(entityCondition.getClass()));
+        sql.UPDATE(DialectHandler.getDialect().getTableName(entityConditionClass));
         SqlUtils.set(sql, query);
-        SqlUtils.where(sql, entityCondition, query, true);
+        SqlUtils.where(sql, query);
         return SqlUtils.replaceInParam(sql, query);
     }
 
     public String findList(Map<String, Object> paramMap) {
-        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        Class<?> entityConditionClass = (Class<?>) paramMap.get(ParamUtils.ENTITY_CONDITION_CLASS);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
 
         SQL sql = new SQL();
-        SqlUtils.select(sql, entityCondition.getClass(), query);
-        SqlUtils.from(sql, entityCondition.getClass());
+        SqlUtils.select(sql, entityConditionClass, query);
+        SqlUtils.from(sql, entityConditionClass);
         SqlUtils.join(sql, query);
-        SqlUtils.where(sql, entityCondition, query, true);
+        SqlUtils.where(sql, query);
         SqlUtils.groupBy(sql, query);
         SqlUtils.orderBy(sql, query);
         String sqlTemp = SqlUtils.replaceInParam(sql, query);
@@ -56,14 +56,14 @@ public class BaseMapperProvider {
     }
 
     public String count(Map<String, Object> paramMap) {
-        Object entityCondition = paramMap.get(ParamUtils.ENTITY_CONDITION);
+        Class<?> entityConditionClass = (Class<?>) paramMap.get(ParamUtils.ENTITY_CONDITION_CLASS);
         Query query = (Query) paramMap.get(ParamUtils.QUERY_OBJECT);
 
         SQL sql = new SQL();
         sql.SELECT("count(*)");
-        SqlUtils.from(sql, entityCondition.getClass());
+        SqlUtils.from(sql, entityConditionClass);
         SqlUtils.join(sql, query);
-        SqlUtils.where(sql, entityCondition, query, true);
+        SqlUtils.where(sql, query);
         SqlUtils.groupBy(sql, query);
         return SqlUtils.replaceInParam(sql, query);
     }

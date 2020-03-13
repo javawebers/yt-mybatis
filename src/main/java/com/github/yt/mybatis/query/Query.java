@@ -214,6 +214,14 @@ public class Query implements MybatisQuery<Query> {
         return this;
     }
 
+    @Override
+    public Query update(String columnName, Object value) {
+        String randomColumnName = "_update_" + generateRandomColumn(columnName);
+        this.addUpdate(columnName + " = " + DialectHandler.getDialect().getFieldParam(randomColumnName));
+        this.addParam(randomColumnName, value);
+        return this;
+    }
+
     private Object convertToCollection(Object firstValue, Object... moreValues) {
         if (firstValue instanceof Collection) {
             return firstValue;

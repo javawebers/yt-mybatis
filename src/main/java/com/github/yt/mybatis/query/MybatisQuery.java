@@ -208,6 +208,15 @@ public interface MybatisQuery<T extends MybatisQuery<?>> extends PageQuery<T> {
     T notIn(String columnName, Object firstValue, Object... moreValues);
 
     /**
+     * 常用操作，更新
+     *
+     * @param columnName 字段
+     * @param value      值
+     * @return this
+     */
+    T update(String columnName, Object value);
+
+    /**
      * 获取参数
      *
      * @return Param

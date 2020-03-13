@@ -1,6 +1,5 @@
 package com.github.yt.mybatis.dialect;
 
-import com.github.yt.mybatis.query.QueryLikeType;
 import com.github.yt.mybatis.util.EntityUtils;
 import org.apache.ibatis.jdbc.SQL;
 

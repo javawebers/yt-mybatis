@@ -110,22 +110,16 @@ public abstract class BaseService<T> implements IBaseService<T> {
                     continue;
                 }
             }
-
-            query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(field) + " = " + DialectHandler.getDialect().getFieldParam(field.getName()));
-            query.addParam(field.getName(), EntityUtils.getValue(entity, field));
+            query.update(DialectHandler.getDialect().getColumnName(field), EntityUtils.getValue(entity, field));
         }
-        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
-                + " = "
-                + DialectHandler.getDialect().getFieldParam(idField.getName()));
-        query.addParam(idField.getName(), EntityUtils.getValue(entity, idField));
-
-        return getMapper().update(ParamUtils.getParamMap(entityCondition, query));
+        query.equal(DialectHandler.getDialect().getColumnName(idField), EntityUtils.getValue(entity, idField));
+        return getMapper().update(ParamUtils.getParamMap(entityCondition, query, false));
     }
 
     @Override
     public int updateByCondition(T entityCondition, MybatisQuery<?> query) {
         setUpdateBaseColumn(entityCondition.getClass(), query);
-        return getMapper().update(ParamUtils.getParamMap(entityCondition, query));
+        return getMapper().update(ParamUtils.getParamMap(entityCondition, query, false));
     }
 
     @Override
@@ -148,10 +142,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
             throw new RuntimeException(e);
         }
         Query query = new Query();
-        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
-                + " = "
-                + DialectHandler.getDialect().getFieldParam(idField.getName()));
-        query.addParam(idField.getName(), id);
+        query.equal(DialectHandler.getDialect().getColumnName(idField), id);
         int num = this.logicDelete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_77);
         return num;
@@ -163,7 +154,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         setUpdateDeleteFlag(entityCondition, query);
         setUpdateBaseColumn(entityCondition.getClass(), query);
 
-        return getMapper().update(ParamUtils.getParamMap(entityCondition, query));
+        return getMapper().update(ParamUtils.getParamMap(entityCondition, query, false));
     }
 
 
@@ -192,10 +183,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
             throw new RuntimeException(e);
         }
         Query query = new Query();
-        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
-                + " = "
-                + DialectHandler.getDialect().getFieldParam(idField.getName()));
-        query.addParam(idField.getName(), id);
+        query.equal(DialectHandler.getDialect().getColumnName(idField), id);
         int num = this.delete(entityCondition, query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_76);
         return num;
@@ -208,7 +196,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int delete(T entityCondition, MybatisQuery<?> query) {
-        return getMapper().delete(ParamUtils.getParamMap(entityCondition, query));
+        return getMapper().delete(ParamUtils.getParamMap(entityCondition, query, false));
     }
 
     @Override
@@ -222,10 +210,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
             throw new RuntimeException(e);
         }
         Query query = new Query();
-        query.addWhere(DialectHandler.getDialect().getColumnName(idField)
-                + " = "
-                + DialectHandler.getDialect().getFieldParam(idField.getName()));
-        query.addParam(idField.getName(), id);
+        query.equal(DialectHandler.getDialect().getColumnName(idField), id);
         return find(entityCondition, query);
     }
 
@@ -266,7 +251,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
         if (query.takeLimitFrom() == null) {
             query.limit(0, 2);
         }
-        return getMapper().find(ParamUtils.getParamMap(entityCondition, query));
+        return getMapper().find(ParamUtils.getParamMap(entityCondition, query, true));
     }
 
     @Override
@@ -276,7 +261,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public List<T> findList(T entityCondition, MybatisQuery<?> query) {
-        return getMapper().findList(ParamUtils.getParamMap(entityCondition, query));
+        return getMapper().findList(ParamUtils.getParamMap(entityCondition, query, true));
     }
 
     @Override
@@ -286,14 +271,14 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
     @Override
     public int count(T entityCondition, MybatisQuery<?> query) {
-        return getMapper().count(ParamUtils.getParamMap(entityCondition, query));
+        return getMapper().count(ParamUtils.getParamMap(entityCondition, query, true));
     }
 
     @Override
     public Page<T> findPage(T entityCondition, MybatisQuery<?> query) {
         // 设置页数页码
         ParamUtils.setPageInfo(query);
-        Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query);
+        Map<String, Object> paramMap = ParamUtils.getParamMap(entityCondition, query, true);
         query.limit((query.takePageNo() - 1) * query.takePageSize(), query.takePageSize());
         // 尽量减少 count 操作
         List<T> entityList = getMapper().findList(paramMap);
@@ -462,22 +447,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
             Field modifierNameField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFIER_NAME);
             Field modifyTimeField = EntityUtils.getYtColumnField(entityClass, YtColumnType.MODIFY_TIME);
             if (modifierIdField != null) {
-                query.addParam("_modifierId_", BaseEntityHandler.getBaseEntityValue().getModifierId());
-                query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierIdField)
-                        + " = "
-                        + DialectHandler.getDialect().getFieldParam("_modifierId_"));
+                query.update(DialectHandler.getDialect().getColumnName(modifierIdField), BaseEntityHandler.getBaseEntityValue().getModifierId());
             }
             if (modifierNameField != null) {
-                query.addParam("_modifierName_", BaseEntityHandler.getBaseEntityValue().getModifierName());
-                query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifierNameField)
-                        + " = "
-                        + DialectHandler.getDialect().getFieldParam("_modifierName_"));
+                query.update(DialectHandler.getDialect().getColumnName(modifierNameField), BaseEntityHandler.getBaseEntityValue().getModifierName());
             }
             if (modifyTimeField != null) {
-                query.addParam("_modifyTime_", new Date());
-                query.addUpdate(DialectHandler.getDialect().getColumnNameWithTableAlas(modifyTimeField)
-                        + " = "
-                        + DialectHandler.getDialect().getFieldParam("_modifyTime_"));
+                query.update(DialectHandler.getDialect().getColumnName(modifyTimeField), new Date());
             }
         }
     }
@@ -486,11 +462,9 @@ public abstract class BaseService<T> implements IBaseService<T> {
         Field deleteFlagField = EntityUtils.getYtColumnField(entityCondition.getClass(), YtColumnType.DELETE_FLAG);
         org.springframework.util.Assert.notNull(deleteFlagField, "逻辑删除字段不存在");
 
-        String deleteFlagColumn = DialectHandler.getDialect().getColumnNameWithTableAlas(deleteFlagField);
-        query.addUpdate(deleteFlagColumn + " = #{deleteFlagUpdate}");
-        query.addWhere(deleteFlagColumn + " = #{deleteFlagWhere}");
-        query.addParam("deleteFlagUpdate", true);
-        query.addParam("deleteFlagWhere", false);
+        String deleteFlagColumn = DialectHandler.getDialect().getColumnName(deleteFlagField);
+        query.update(deleteFlagColumn, true);
+        query.equal(deleteFlagColumn, false);
     }
 
 

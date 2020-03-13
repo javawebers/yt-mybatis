@@ -2,6 +2,7 @@ package com.github.yt.mybatis.dialect;
 
 import com.github.yt.mybatis.dialect.impl.MysqlDialect;
 import com.github.yt.mybatis.dialect.impl.OracleDialect;
+import com.github.yt.mybatis.dialect.impl.SQLServerDialect;
 
 /**
  * 方言的枚举类
@@ -14,6 +15,7 @@ public enum DialectEnum {
      */
     MYSQL(MysqlDialect.class),
     ORACLE(OracleDialect.class),
+    SQLSERVER(SQLServerDialect.class),
     ;
 
     Class<? extends Dialect> dialect;

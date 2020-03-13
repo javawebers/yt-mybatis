@@ -66,24 +66,7 @@ public class SqlUtils {
     }
 
 
-    public static void where(SQL sql, Object entityCondition, MybatisQuery<?> query, boolean withAlias) {
-        if (entityCondition != null) {
-            List<Field> fieldList = EntityUtils.getTableFieldList(entityCondition.getClass());
-            for (Field field : fieldList) {
-                Object value = EntityUtils.getValue(entityCondition, field);
-                if (value != null) {
-                    StringBuilder where = new StringBuilder();
-                    if (withAlias) {
-                        where.append(DialectHandler.getDialect().getColumnNameWithTableAlas(field));
-                    } else {
-                        where.append(DialectHandler.getDialect().getColumnName(field));
-                    }
-                    where.append(" = #{").append(ParamUtils.ENTITY_CONDITION)
-                            .append(".").append(field.getName()).append("}");
-                    sql.WHERE(where.toString());
-                }
-            }
-        }
+    public static void where(SQL sql, MybatisQuery<?> query) {
         if (query != null) {
             // query.whereList
             // 拼接where查询条件
