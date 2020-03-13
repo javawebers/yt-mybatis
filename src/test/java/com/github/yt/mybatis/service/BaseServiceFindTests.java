@@ -83,7 +83,7 @@ public class BaseServiceFindTests extends AbstractTestNGSpringContextTests {
 
     @Test
     public void sameTypeNotSame() {
-        // 隐式类型转换 mysql 支持，oracle 不支持
+        // 隐式类型转换 mysql 支持，oracle、postgres、sqlserver 不支持
         DbEntitySame entity = dataBasicService.saveOneSame();
         DbEntitySame dbEntity = dbEntitySameService.find(new DbEntitySame().setTestVarchar(entity.getTestVarchar()),
                 new Query().addWhere("testVarchar = #{testVarchar}")

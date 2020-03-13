@@ -65,6 +65,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
      */
     @Test
     public void sameIdTypeNotSame() {
+        // 隐式类型转换 mysql 支持，oracle、postgres、sqlserver 不支持
         DbEntitySame entity = dataBasicService.saveOneSame();
         entity.setDbEntitySameId("222");
         dbEntitySameService.save(entity);
