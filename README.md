@@ -809,9 +809,9 @@ public void updateBaseColumn() {
 * ## 配置 application.properties
 
 * ### 数据库方言 
-###### 目前支持 MYSQL 和 ORACLE，默认为 MYSQL
+###### 目前支持 Mysql\Postgres\Oracle，默认为 Mysql。方言的实现都在 com.github.yt.mybatis.dialect.impl 下
 ```properties
-yt.dialect=MYSQL
+yt.mybatis.dialect=com.github.yt.mybatis.dialect.impl.MysqlDialect
 ```
 
 * ### insert、update、logicDelete 操作自动设置操作人信息
