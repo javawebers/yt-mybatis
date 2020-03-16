@@ -1,4 +1,7 @@
 drop table DbEntitySame;
+drop table db_entity_not_same;
+drop table IntId;
+
 CREATE TABLE DbEntitySame (
     dbEntitySameId varchar2(36) NOT NULL,
     testVarchar varchar2(36) DEFAULT NULL,
@@ -16,7 +19,6 @@ CREATE TABLE DbEntitySame (
     PRIMARY KEY (dbEntitySameId)
 );
 
-drop table db_entity_not_same;
 CREATE TABLE db_entity_not_same (
     db_entity_not_same_id varchar2(36) NOT NULL,
     test_varchar varchar2(36) DEFAULT NULL,
@@ -30,7 +32,6 @@ CREATE TABLE db_entity_not_same (
     PRIMARY KEY (db_entity_not_same_id)
 );
 
-drop table IntId;
 CREATE TABLE IntId (
     intId number(11) NOT NULL,
     testVarchar varchar2(36) DEFAULT NULL,

@@ -19,10 +19,8 @@ public class OracleDialect extends BaseDialect {
     @Override
     public String getInsertSql(Collection<?> entityCollection) {
 
-
         Class<?> entityClass = EntityUtils.getEntityClass(entityCollection);
         List<Field> tableFieldList = EntityUtils.getTableFieldList(entityClass);
-
 
         String tableName = getTableName(entityClass);
         StringBuilder stringBuffer = new StringBuilder("INSERT ");

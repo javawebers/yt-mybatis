@@ -13,19 +13,4 @@ import java.lang.reflect.Field;
  */
 public class PostgresDialect extends BaseDialect {
 
-    @Override
-    public String getLikeParam(String paramName, QueryLikeType likeType) {
-        // "CONCAT('%',#{keyword},'%')"
-        String fieldParam = getFieldParam(paramName);
-        StringBuilder result = new StringBuilder("CONCAT(");
-        if (likeType == QueryLikeType.MIDDLE || likeType == QueryLikeType.RIGHT) {
-            result.append("'%', ");
-        }
-        result.append(fieldParam);
-        if (likeType == QueryLikeType.MIDDLE || likeType == QueryLikeType.LEFT) {
-            result.append(", '%'");
-        }
-        result.append(")");
-        return result.toString();
-    }
 }

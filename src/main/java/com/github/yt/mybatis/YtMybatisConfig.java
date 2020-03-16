@@ -1,6 +1,6 @@
 package com.github.yt.mybatis;
 
-import com.github.yt.mybatis.dialect.DialectEnum;
+import com.github.yt.mybatis.dialect.Dialect;
 import com.github.yt.mybatis.entity.BaseEntityValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class YtMybatisConfig {
     /**
      * 方言
      */
-    public static DialectEnum dialectEnum;
+    public static Class<? extends Dialect> dialectClass;
 
     /**
      * BaseEntityValue 实现类
@@ -34,9 +34,9 @@ public class YtMybatisConfig {
         YtMybatisConfig.baseEntityValueClass = baseEntityValueClass;
     }
 
-    @Value("${yt.dialect:MYSQL}")
-    public void setDialectEnum(DialectEnum dialectEnum) {
-        YtMybatisConfig.dialectEnum = dialectEnum;
+    @Value("${yt.mybatis.dialect:com.github.yt.mybatis.dialect.impl.MysqlDialect}")
+    public void setDialectClass(Class<? extends Dialect> dialectClass) {
+        YtMybatisConfig.dialectClass = dialectClass;
     }
 
     @Value("${yt.page.pageNoName:pageNo}")

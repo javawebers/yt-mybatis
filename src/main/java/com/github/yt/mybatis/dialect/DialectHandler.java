@@ -12,7 +12,6 @@ public class DialectHandler {
     private DialectHandler() {
     }
 
-    private static final DialectHandler LOCK = new DialectHandler();
     private static Dialect dialect;
 
     /**
@@ -22,11 +21,13 @@ public class DialectHandler {
      */
     public static Dialect getDialect() {
         if (dialect == null) {
-            synchronized (LOCK) {
-                try {
-                    dialect = YtMybatisConfig.dialectEnum.getDialect().newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw new RuntimeException("实例化方言类异常", e);
+            synchronized(DialectHandler.class) {
+                if (dialect == null) {
+                    try {
+                        dialect = YtMybatisConfig.dialectClass.newInstance();
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        throw new RuntimeException("实例化方言类异常", e);
+                    }
                 }
             }
         }
