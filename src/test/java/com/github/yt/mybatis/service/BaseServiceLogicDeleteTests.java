@@ -132,6 +132,25 @@ public class BaseServiceLogicDeleteTests extends AbstractTestNGSpringContextTest
             Assert.assertNull(dbEntity.getModifyTime());
             Assert.assertEquals((Boolean) false, dbEntity.getDeleteFlag());
         });
+
+    }
+    @Test
+    public void sameQueryNotExist2() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        int count = dbEntitySameService.logicDelete(
+                new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
+                        .addWhere("testBoolean = #{testBoolean}")
+                        .addParam("testBoolean", false));
+        Assert.assertEquals(0, count);
+        List<DbEntitySame> dbList = dataBasicService.findSameList(list);
+        dbList.forEach(dbEntity -> {
+            Assert.assertNull(dbEntity.getModifierId());
+            Assert.assertNull(dbEntity.getModifierName());
+            Assert.assertNull(dbEntity.getModifyTime());
+            Assert.assertEquals((Boolean) false, dbEntity.getDeleteFlag());
+        });
+
     }
 
 

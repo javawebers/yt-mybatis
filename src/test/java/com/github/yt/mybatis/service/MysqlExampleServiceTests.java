@@ -82,13 +82,13 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
     // 根据主键删除一条记录
     @Test
     public void delete() {
-        mysqlExampleService.delete(MysqlExample.class, "1");
+        mysqlExampleService.delete("1");
     }
 
     // 根据主键删除一条记录，如果记录不存在抛出异常
     @Test
     public void deleteOne() {
-        mysqlExampleService.deleteOne(MysqlExample.class, "1");
+        mysqlExampleService.deleteOne("1");
     }
 
     // 根据条件删除
@@ -109,13 +109,13 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
     // 逻辑删除一条记录
     @Test
     public void logicDelete() {
-        mysqlExampleService.logicDelete(MysqlExample.class, "1");
+        mysqlExampleService.logicDelete("1");
     }
 
     // 逻辑删除一条记录，如果记录不存在抛出异常（记录已经被逻辑删除也会抛出异常）
     @Test
     public void logicDeleteOne() {
-        mysqlExampleService.logicDeleteOne(MysqlExample.class, "1");
+        mysqlExampleService.logicDeleteOne("1");
     }
 
     // 根据条件逻辑删除
@@ -137,13 +137,13 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
     // 根据主键查询一条记录
     @Test
     public void get() {
-        mysqlExampleService.get(MysqlExample.class, "1");
+        mysqlExampleService.get("1");
     }
 
     // 根据主键查询一条记录，如果记录不存在抛出异常
     @Test
     public void getOne() {
-        mysqlExampleService.getOne(MysqlExample.class, "1");
+        mysqlExampleService.getOne("1");
     }
 
     // 查询一条记录

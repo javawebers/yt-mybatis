@@ -140,6 +140,13 @@ public class BaseServiceFindTests extends AbstractTestNGSpringContextTests {
                 new Query().addWhere("test_varchar = #{testVarchar}")
                         .addParam("testVarchar", entity.getTestVarchar()));
         Assert.assertNotNull(dbEntity);
+        dbEntity = dbEntityNotSameService.find(new DbEntityNotSame().setTestVarchar(entity.getTestVarchar()),
+                new Query().equal("test_varchar", entity.getTestVarchar()));
+        Assert.assertNotNull(dbEntity);
+
+        dbEntity = dbEntityNotSameService.find(
+                new Query().equal("test_varchar", entity.getTestVarchar()));
+        Assert.assertNotNull(dbEntity);
     }
 
     @Test

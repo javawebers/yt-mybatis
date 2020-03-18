@@ -72,6 +72,14 @@ public class BaseServiceFindOneTests extends AbstractTestNGSpringContextTests {
                         .addWhere("testEnum = #{testEnum}")
                         .addParam("testEnum", entity.getTestEnum()));
         Assert.assertNotNull(dbEntity);
+
+        dbEntity = dbEntitySameService.findOne(new DbEntitySame().setTestVarchar(entity.getTestVarchar()),
+                new Query().equal("testVarchar", entity.getTestVarchar())
+                        .equal("testEnum", entity.getTestEnum()));
+        Assert.assertNotNull(dbEntity);
+        dbEntity = dbEntitySameService.findOne(
+                new Query().equal("testVarchar", entity.getTestVarchar()));
+        Assert.assertNotNull(dbEntity);
     }
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)

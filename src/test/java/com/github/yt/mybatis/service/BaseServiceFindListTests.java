@@ -64,12 +64,22 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
                 new Query().addWhere("testEnum = #{testEnum}")
                         .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE));
         Assert.assertEquals(6, dbList.size());
+        dbList = dbEntitySameService.findList(new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE));
+        Assert.assertEquals(6, dbList.size());
+
     }
 
     @Test
     public void sameQueryNotExist() {
         dataBasicService.save12Same();
         List<DbEntitySame> dbList = dbEntitySameService.findList(new DbEntitySame(),
+                new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
+                        .addWhere("testBoolean = #{testBoolean}")
+                        .addParam("testBoolean", false));
+        Assert.assertEquals(0, dbList.size());
+        dbList = dbEntitySameService.findList(
                 new Query().addWhere("testEnum = #{testEnum}")
                         .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
                         .addWhere("testBoolean = #{testBoolean}")
@@ -108,12 +118,21 @@ public class BaseServiceFindListTests extends AbstractTestNGSpringContextTests {
                 new Query().addWhere("test_boolean = #{testBoolean}")
                         .addParam("testBoolean", true));
         Assert.assertEquals(6, dbList.size());
+        dbList = dbEntityNotSameService.findList(new Query().addWhere("test_boolean = #{testBoolean}")
+                        .addParam("testBoolean", true));
+        Assert.assertEquals(6, dbList.size());
     }
 
     @Test
     public void notSameQueryNotExist() {
         dataBasicService.save12NotSame();
         List<DbEntityNotSame> dbList = dbEntityNotSameService.findList(new DbEntityNotSame(),
+                new Query().addWhere("test_int = #{testInt}")
+                        .addParam("testInt", 0)
+                        .addWhere("test_boolean = #{testBoolean}")
+                        .addParam("testBoolean", true));
+        Assert.assertEquals(2, dbList.size());
+        dbList = dbEntityNotSameService.findList(
                 new Query().addWhere("test_int = #{testInt}")
                         .addParam("testInt", 0)
                         .addWhere("test_boolean = #{testBoolean}")

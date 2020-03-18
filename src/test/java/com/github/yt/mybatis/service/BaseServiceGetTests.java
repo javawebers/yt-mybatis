@@ -38,7 +38,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNullId() {
         // null id
-        dbEntitySameService.get(DbEntitySame.class, null);
+        dbEntitySameService.get(null);
     }
 
     /**
@@ -46,7 +46,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
      */
     @Test
     public void sameNotExist() {
-        DbEntitySame entity = dbEntitySameService.get(DbEntitySame.class, "xxxx_null");
+        DbEntitySame entity = dbEntitySameService.get("xxxx_null");
         Assert.assertNull(entity);
     }
 
@@ -56,7 +56,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
     @Test
     public void sameExist() {
         DbEntitySame entity = dataBasicService.saveOneSame();
-        DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, entity.getDbEntitySameId());
+        DbEntitySame dbEntity = dbEntitySameService.get(entity.getDbEntitySameId());
         Assert.assertNotNull(dbEntity);
     }
 
@@ -69,7 +69,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
         DbEntitySame entity = dataBasicService.saveOneSame();
         entity.setDbEntitySameId("222");
         dbEntitySameService.save(entity);
-        DbEntitySame dbEntity = dbEntitySameService.get(DbEntitySame.class, 222);
+        DbEntitySame dbEntity = dbEntitySameService.get(222);
         Assert.assertNotNull(dbEntity);
     }
 
@@ -79,7 +79,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNullId() {
         // null id
-        dbEntityNotSameService.get(DbEntityNotSame.class, null);
+        dbEntityNotSameService.get(null);
     }
 
     /**
@@ -87,7 +87,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
      */
     @Test
     public void notSameNotExist() {
-        DbEntityNotSame entity = dbEntityNotSameService.get(DbEntityNotSame.class, "xxxx_null");
+        DbEntityNotSame entity = dbEntityNotSameService.get("xxxx_null");
         Assert.assertNull(entity);
     }
 
@@ -97,7 +97,7 @@ public class BaseServiceGetTests extends AbstractTestNGSpringContextTests {
     @Test
     public void notSameExist() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
-        DbEntityNotSame dbEntity = dbEntityNotSameService.get(DbEntityNotSame.class, entity.getDbEntityNotSameId());
+        DbEntityNotSame dbEntity = dbEntityNotSameService.get(entity.getDbEntityNotSameId());
         Assert.assertNotNull(dbEntity);
     }
 

@@ -67,9 +67,24 @@ public class BaseServiceDeleteTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void sameQueryExist2() {
+        dataBasicService.save12Same();
+        int count = dbEntitySameService.delete(
+                new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
     public void sameQueryNotExist() {
         dataBasicService.save12Same();
         int count = dbEntitySameService.delete(new DbEntitySame(),
+                new Query().addWhere("testEnum = #{testEnum}")
+                        .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
+                        .addWhere("testBoolean = #{testBoolean}")
+                        .addParam("testBoolean", false));
+        Assert.assertEquals(0, count);
+        count = dbEntitySameService.delete(
                 new Query().addWhere("testEnum = #{testEnum}")
                         .addParam("testEnum", DbEntitySameTestEnumEnum.FEMALE)
                         .addWhere("testBoolean = #{testBoolean}")
@@ -111,9 +126,29 @@ public class BaseServiceDeleteTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void notSameQueryExist2() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.delete(
+                new Query().addWhere("test_boolean = #{testBoolean}")
+                        .addParam("testBoolean", true));
+        Assert.assertEquals(6, count);
+    }
+
+    @Test
     public void notSameQueryNotExist() {
         dataBasicService.save12NotSame();
         int count = dbEntityNotSameService.delete(new DbEntityNotSame(),
+                new Query().addWhere("test_int = #{testInt}")
+                        .addParam("testInt", 0)
+                        .addWhere("test_boolean = #{testBoolean}")
+                        .addParam("testBoolean", true));
+        Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void notSameQueryNotExist2() {
+        dataBasicService.save12NotSame();
+        int count = dbEntityNotSameService.delete(
                 new Query().addWhere("test_int = #{testInt}")
                         .addParam("testInt", 0)
                         .addWhere("test_boolean = #{testBoolean}")

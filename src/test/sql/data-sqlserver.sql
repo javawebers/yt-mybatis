@@ -1,3 +1,5 @@
+create database TestDB;
+
 drop table DbEntitySame;
 drop table db_entity_not_same;
 drop table IntId;

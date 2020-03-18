@@ -15,6 +15,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -27,18 +29,52 @@ public abstract class BaseService<T> implements IBaseService<T> {
     private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
     private static final String ENTITY_MUST_NOT_BE_NULL = "The given entity must not be null!";
 
+    private Class<T> domainClass;
+
     private BaseMapper<?> mapper;
 
     @Override
     public <M extends BaseMapper<T>> M getMapper() {
         // 如果子类中没有getMapper方法会调用baseService中的getMapper方法，在这个方法中直接获取mapper属性
         if (mapper == null) {
-            Field mapperField = EntityUtils.getField(this.getClass(), "mapper");
-            mapper = (M) EntityUtils.getValue(this, mapperField);
-            // 没有覆盖getMapper方法，也没有mapper字段，抛出异常
-            Assert.notNull(mapper, YtMybatisExceptionEnum.CODE_85);
+            synchronized (this) {
+                if (mapper == null) {
+                    Field mapperField = EntityUtils.getField(this.getClass(), "mapper");
+                    mapper = (M) EntityUtils.getValue(this, mapperField);
+                    // 没有覆盖getMapper方法，也没有mapper字段，抛出异常
+                    Assert.notNull(mapper, YtMybatisExceptionEnum.CODE_85);
+                }
+            }
         }
         return (M) mapper;
+    }
+
+    /**
+     * 根据泛型获取实体类类型
+     *
+     * @return 实体类类型
+     */
+    private Class<T> getEntityClass() {
+        if (domainClass == null) {
+            synchronized (this) {
+                if (domainClass == null) {
+                    Type[] actualTypeArguments = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
+                    if (actualTypeArguments.length == 0) {
+                        throw new RuntimeException("该 mapper 没有泛型参数");
+                    }
+                    domainClass = (Class<T>) actualTypeArguments[0];
+                }
+            }
+        }
+        return domainClass;
+    }
+
+    private T newEntityInstance() {
+        try {
+            return getEntityClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -81,13 +117,6 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     private int update(T entity, boolean isUpdateNullField, String... selectedFieldColumnNames) {
-        T entityCondition;
-        try {
-            entityCondition = (T) entity.getClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
         // 判断是否更新指定字段
         Set<String> selectedFieldColumnNameSet = getSelectedFieldColumnNameSet(selectedFieldColumnNames, entity);
         Query query = new Query();
@@ -113,7 +142,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
             query.update(DialectHandler.getDialect().getColumnName(field), EntityUtils.getValue(entity, field));
         }
         query.equal(DialectHandler.getDialect().getColumnName(idField), EntityUtils.getValue(entity, idField));
-        return getMapper().update(ParamUtils.getParamMap(entityCondition, query, false));
+        return getMapper().update(ParamUtils.getParamMap(newEntityInstance(), query, false));
     }
 
     @Override
@@ -123,8 +152,13 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int logicDeleteOne(Class<T> entityClass, Serializable id) {
-        int num = logicDelete(entityClass, id);
+    public int updateByCondition(MybatisQuery<?> query) {
+        return updateByCondition(newEntityInstance(), query);
+    }
+
+    @Override
+    public int logicDeleteOne(Serializable id) {
+        int num = logicDelete(id);
         if (num != 1) {
             throw new EmptyResultDataAccessException("逻辑删除的数据不为1条，删除了:" + num, 1);
         }
@@ -132,18 +166,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int logicDelete(Class<T> entityClass, Serializable id) {
+    public int logicDelete(Serializable id) {
         org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Field idField = EntityUtils.getIdField(entityClass);
-        T entityCondition;
-        try {
-            entityCondition = entityClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        Field idField = EntityUtils.getIdField(getEntityClass());
         Query query = new Query();
         query.equal(DialectHandler.getDialect().getColumnName(idField), id);
-        int num = this.logicDelete(entityCondition, query);
+        int num = this.logicDelete(newEntityInstance(), query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_77);
         return num;
     }
@@ -157,15 +185,21 @@ public abstract class BaseService<T> implements IBaseService<T> {
         return getMapper().update(ParamUtils.getParamMap(entityCondition, query, false));
     }
 
+    @Override
+    public int logicDelete(MybatisQuery<?> query) {
+        return logicDelete(newEntityInstance(), query);
+    }
+
 
     @Override
     public int logicDelete(T entityCondition) {
+        org.springframework.util.Assert.notNull(entityCondition, "逻辑删除条件不能为空");
         return logicDelete(entityCondition, new Query());
     }
 
     @Override
-    public int deleteOne(Class<T> entityClass, Serializable id) {
-        int num = delete(entityClass, id);
+    public int deleteOne(Serializable id) {
+        int num = delete(id);
         if (num != 1) {
             throw new EmptyResultDataAccessException("删除的数据不为1条，删除了:" + num, 1);
         }
@@ -173,18 +207,12 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int delete(Class<T> entityClass, Serializable id) {
+    public int delete(Serializable id) {
         org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Field idField = EntityUtils.getIdField(entityClass);
-        T entityCondition;
-        try {
-            entityCondition = entityClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        Field idField = EntityUtils.getIdField(getEntityClass());
         Query query = new Query();
         query.equal(DialectHandler.getDialect().getColumnName(idField), id);
-        int num = this.delete(entityCondition, query);
+        int num = this.delete(newEntityInstance(), query);
         Assert.le(num, 1, YtMybatisExceptionEnum.CODE_76);
         return num;
     }
@@ -200,23 +228,22 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public T get(Class<T> entityClass, Serializable id) {
-        org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Field idField = EntityUtils.getIdField(entityClass);
-        T entityCondition;
-        try {
-            entityCondition = entityClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        Query query = new Query();
-        query.equal(DialectHandler.getDialect().getColumnName(idField), id);
-        return find(entityCondition, query);
+    public int delete(MybatisQuery<?> query) {
+        return delete(newEntityInstance(), query);
     }
 
     @Override
-    public T getOne(Class<T> clazz, @NotNull Serializable id) {
-        T entity = get(clazz, id);
+    public T get(Serializable id) {
+        org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+        Field idField = EntityUtils.getIdField(getEntityClass());
+        Query query = new Query();
+        query.equal(DialectHandler.getDialect().getColumnName(idField), id);
+        return find(newEntityInstance(), query);
+    }
+
+    @Override
+    public T getOne(@NotNull Serializable id) {
+        T entity = get(id);
         if (entity == null) {
             throw new EmptyResultDataAccessException(1);
         }
@@ -247,11 +274,21 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
+    public T findOne(MybatisQuery<?> query) {
+        return findOne(newEntityInstance(), query);
+    }
+
+    @Override
     public T find(T entityCondition, MybatisQuery<?> query) {
         if (query.takeLimitFrom() == null) {
             query.limit(0, 2);
         }
         return getMapper().find(ParamUtils.getParamMap(entityCondition, query, true));
+    }
+
+    @Override
+    public T find(MybatisQuery<?> query) {
+        return find(newEntityInstance(), query);
     }
 
     @Override
@@ -265,6 +302,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
+    public List<T> findList(MybatisQuery<?> query) {
+        return findList(newEntityInstance(), query);
+    }
+
+    @Override
     public int count(T entityCondition) {
         return count(entityCondition, new Query());
     }
@@ -272,6 +314,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
     @Override
     public int count(T entityCondition, MybatisQuery<?> query) {
         return getMapper().count(ParamUtils.getParamMap(entityCondition, query, true));
+    }
+
+    @Override
+    public int count(MybatisQuery<?> query) {
+        return count(newEntityInstance(), query);
     }
 
     @Override
@@ -289,12 +336,17 @@ public abstract class BaseService<T> implements IBaseService<T> {
             } else {
                 count = getMapper().count(paramMap);
             }
-        } else if (entityList.size() == query.takePageSize()){
+        } else if (entityList.size() == query.takePageSize()) {
             count = getMapper().count(paramMap);
         } else {
             count = entityList.size() + (query.takePageNo() - 1) * query.takePageSize();
         }
         return PageUtils.createPage(query.takePageNo(), query.takePageSize(), count, entityList);
+    }
+
+    @Override
+    public Page<T> findPage(MybatisQuery<?> query) {
+        return findPage(newEntityInstance(), query);
     }
 
     /**

@@ -156,6 +156,33 @@ public class BaseServiceUpdateByConditionTests extends AbstractTestNGSpringConte
 
 
     @Test
+    public void sameWithQuery2() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        int count = dbEntitySameService.updateByCondition(
+                new Query().addUpdate("testInt = #{testInt}")
+                        .addParam("testInt", 22222222)
+                        .addWhere("testInt = 0")
+                        .equal("testEnum", DbEntitySameTestEnumEnum.FEMALE)
+        );
+        Assert.assertEquals(2, count);
+        int dbCount = dbEntitySameService.count(new DbEntitySame().setTestInt(22222222));
+        Assert.assertEquals(2, dbCount);
+        List<DbEntitySame> dbList = dataBasicService.findSameList(list);
+        dbList.forEach(dbEntity -> {
+            if (dbEntity.getTestInt() == 22222222) {
+                Assert.assertNotNull(dbEntity.getModifierId());
+                Assert.assertNull(dbEntity.getModifierName());
+                Assert.assertNotNull(dbEntity.getModifyTime());
+            } else {
+                Assert.assertNull(dbEntity.getModifierId());
+                Assert.assertNull(dbEntity.getModifierName());
+                Assert.assertNull(dbEntity.getModifyTime());
+            }
+        });
+    }
+
+
+    @Test
     public void notSameUpdateBaseColumn() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
         int count = dbEntityNotSameService.updateByCondition(new DbEntityNotSame().setTestBoolean(false),
