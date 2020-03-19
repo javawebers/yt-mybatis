@@ -447,7 +447,7 @@ public void saveBatch() {
 * ##### 根据主键更新所选字段，或者所有字段，为空也更新
 ```java
 @Test
-public void update() {
+public void updateById() {
     MysqlExample mysqlExample = new MysqlExample();
     // 设置值主键和要更新的值
     mysqlExample.setExampleId("1");
@@ -455,16 +455,16 @@ public void update() {
     mysqlExample.setTestVarchar("varchar_222");
 
     // 更新所有的字段，为空也会更新
-    mysqlExampleService.update(mysqlExample);
+    mysqlExampleService.updateById(mysqlExample);
 
     // 更新指定的字段，为空也会更新，这里只更新 test_int
-    mysqlExampleService.update(mysqlExample, "test_int");
+    mysqlExampleService.updateById(mysqlExample, "test_int");
 }
 ```
 * ##### 根据主键更新所选字段，或者所有字段，为空不更新
 ```java
 @Test
-public void updateForSelective() {
+public void updateForSelectiveById() {
     MysqlExample mysqlExample = new MysqlExample();
     // 设置值主键和要更新的值
     mysqlExample.setExampleId("1");
@@ -472,15 +472,15 @@ public void updateForSelective() {
     mysqlExample.setTestVarchar("varchar_222");
 
     // 更新所有不为空的字段，这里更新 test_int 和 test_varchar
-    mysqlExampleService.updateForSelective(mysqlExample);
+    mysqlExampleService.updateForSelectiveById(mysqlExample);
     // 更新指定不为空的字段，这里只更新 test_int
-    mysqlExampleService.updateForSelective(mysqlExample, "test_int", "test_boolean");
+    mysqlExampleService.updateForSelectiveById(mysqlExample, "test_int", "test_boolean");
 }
 ```
 * ##### 根据条件更新
 ```java
 @Test
-public void updateByCondition() {
+public void update() {
     // 更新条件
     MysqlExample condition = new MysqlExample();
     condition.setTestInt(222);
@@ -490,7 +490,7 @@ public void updateByCondition() {
     // 设置要更新的字段
     query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
     // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
-    mysqlExampleService.updateByCondition(condition, query);
+    mysqlExampleService.update(condition, query);
 }
 ```
 ###### 根据条件更新可以指定复杂查询条件，条件设置方式和查询一样，详见查询的写法。
@@ -499,23 +499,23 @@ public void updateByCondition() {
 * ##### 根据主键删除一条记录
 ```java
 @Test
-public void delete() {
-    mysqlExampleService.delete(MysqlExample.class, "1");
+public void deleteById() {
+    mysqlExampleService.deleteById("1");
 }
 ```
 
 * ##### 根据主键删除一条记录，如果记录不存在抛出异常
 ```java
 @Test
-public void deleteOne() {
-    mysqlExampleService.deleteOne(MysqlExample.class, "1");
+public void deleteOneById() {
+    mysqlExampleService.deleteOneById("1");
 }
 ```
 
 * ##### 根据条件删除
 ```java
 @Test
-public void deleteByCondition() {
+public void delete() {
     // 更新条件
     MysqlExample condition = new MysqlExample();
     condition.setTestInt(222);
@@ -534,23 +534,23 @@ public void deleteByCondition() {
 * ##### 根据主键逻辑删除一条记录
 ```java
 @Test
-public void logicDelete() {
-    mysqlExampleService.logicDelete(MysqlExample.class, "1");
+public void logicDeleteById() {
+    mysqlExampleService.logicDeleteById("1");
 }
 ```
 
 * ##### 根据主键逻辑删除一条记录，如果记录不存在抛出异常
 ```java
 @Test
-public void logicDeleteOne() {
-    mysqlExampleService.logicDeleteOne(MysqlExample.class, "1");
+public void logicDeleteOneById() {
+    mysqlExampleService.logicDeleteOneById("1");
 }
 ```
 
 * ##### 根据条件逻辑删除
 ```java
 @Test
-public void logicDeleteByCondition() {
+public void logicDelete() {
     // 更新条件
     MysqlExample condition = new MysqlExample();
     condition.setTestInt(222);
@@ -568,16 +568,16 @@ public void logicDeleteByCondition() {
 * ##### 根据主键查询一条记录，无记录返回 null
 ```java
 @Test
-public void get() {
-    mysqlExampleService.get(MysqlExample.class, "1");
+public void findById() {
+    mysqlExampleService.get("1");
 }
 ```
 
 * ##### 根据主键查询一条记录，如果记录不存在抛出异常
 ```java
 @Test
-public void getOne() {
-    mysqlExampleService.getOne(MysqlExample.class, "1");
+public void findOneById() {
+    mysqlExampleService.getOne("1");
 }
 ```
 

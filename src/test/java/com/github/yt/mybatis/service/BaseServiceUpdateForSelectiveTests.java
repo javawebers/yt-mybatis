@@ -36,19 +36,19 @@ public class BaseServiceUpdateForSelectiveTests extends AbstractTestNGSpringCont
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNull() {
-        dbEntitySameService.updateForSelective(null);
+        dbEntitySameService.updateForSelectiveById(null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNullId() {
-        dbEntitySameService.updateForSelective(new DbEntitySame());
+        dbEntitySameService.updateForSelectiveById(new DbEntitySame());
     }
 
     @Test
     public void sameExist() {
         List<DbEntitySame> list = dataBasicService.save12Same();
 
-        int num = dbEntitySameService.updateForSelective(new DbEntitySame()
+        int num = dbEntitySameService.updateForSelectiveById(new DbEntitySame()
                 .setDbEntitySameId(list.get(0).getDbEntitySameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
@@ -82,7 +82,7 @@ public class BaseServiceUpdateForSelectiveTests extends AbstractTestNGSpringCont
     public void sameNotExist() {
         List<DbEntitySame> list = dataBasicService.save12Same();
 
-        int num = dbEntitySameService.updateForSelective(new DbEntitySame()
+        int num = dbEntitySameService.updateForSelectiveById(new DbEntitySame()
                 .setDbEntitySameId("xxx_DbEntitySame")
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
@@ -105,7 +105,7 @@ public class BaseServiceUpdateForSelectiveTests extends AbstractTestNGSpringCont
     public void sameWithColumn() {
         List<DbEntitySame> list = dataBasicService.save12Same();
 
-        int num = dbEntitySameService.updateForSelective(new DbEntitySame()
+        int num = dbEntitySameService.updateForSelectiveById(new DbEntitySame()
                 .setDbEntitySameId(list.get(0).getDbEntitySameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
@@ -141,19 +141,19 @@ public class BaseServiceUpdateForSelectiveTests extends AbstractTestNGSpringCont
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNull() {
-        dbEntityNotSameService.updateForSelective(null);
+        dbEntityNotSameService.updateForSelectiveById(null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNullId() {
-        dbEntityNotSameService.updateForSelective(new DbEntityNotSame());
+        dbEntityNotSameService.updateForSelectiveById(new DbEntityNotSame());
     }
 
     @Test
     public void notSameExist() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
 
-        int num = dbEntityNotSameService.updateForSelective(new DbEntityNotSame()
+        int num = dbEntityNotSameService.updateForSelectiveById(new DbEntityNotSame()
                 .setDbEntityNotSameId(list.get(0).getDbEntityNotSameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222"));
@@ -182,7 +182,7 @@ public class BaseServiceUpdateForSelectiveTests extends AbstractTestNGSpringCont
     public void notSameNotExist() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
 
-        int num = dbEntityNotSameService.updateForSelective(new DbEntityNotSame()
+        int num = dbEntityNotSameService.updateForSelectiveById(new DbEntityNotSame()
                 .setDbEntityNotSameId("xxx_DbEntitySame")
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222"));
@@ -202,7 +202,7 @@ public class BaseServiceUpdateForSelectiveTests extends AbstractTestNGSpringCont
     public void notSameWithColumn() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
 
-        int num = dbEntityNotSameService.updateForSelective(new DbEntityNotSame()
+        int num = dbEntityNotSameService.updateForSelectiveById(new DbEntityNotSame()
                 .setDbEntityNotSameId(list.get(0).getDbEntityNotSameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")

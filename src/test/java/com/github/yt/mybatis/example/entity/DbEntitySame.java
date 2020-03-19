@@ -5,11 +5,13 @@ import javax.persistence.Transient;
 
 import com.github.yt.mybatis.example.po.DbEntitySamePO;
 
+import java.io.Serializable;
+
 /**
-* PO 类的扩展类
-*/
+ * PO 类的扩展类
+ */
 @Table(name = "DbEntitySame")
-public class DbEntitySame extends DbEntitySamePO<DbEntitySame> {
+public class DbEntitySame extends DbEntitySamePO<DbEntitySame> implements Serializable {
 
     // 扩展字段，一对一对象等。字段上加 @Transient 注解
 

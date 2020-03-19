@@ -34,6 +34,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     private BaseMapper<?> mapper;
 
     @Override
+    @SuppressWarnings("unchecked")
     public <M extends BaseMapper<T>> M getMapper() {
         // 如果子类中没有getMapper方法会调用baseService中的getMapper方法，在这个方法中直接获取mapper属性
         if (mapper == null) {
@@ -54,6 +55,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
      *
      * @return 实体类类型
      */
+    @SuppressWarnings("unchecked")
     private Class<T> getEntityClass() {
         if (domainClass == null) {
             synchronized (this) {
@@ -103,17 +105,27 @@ public abstract class BaseService<T> implements IBaseService<T> {
 
 
     @Override
-    public int update(T entity, String... fieldColumnNames) {
+    public int updateById(T entity, String... fieldColumnNames) {
         org.springframework.util.Assert.notNull(entity, ENTITY_MUST_NOT_BE_NULL);
         org.springframework.util.Assert.notNull(EntityUtils.getIdValue(entity), ID_MUST_NOT_BE_NULL);
         return update(entity, true, fieldColumnNames);
     }
 
     @Override
-    public int updateForSelective(T entity, String... fieldColumnNames) {
+    public int updateForSelectiveById(T entity, String... fieldColumnNames) {
         org.springframework.util.Assert.notNull(entity, ENTITY_MUST_NOT_BE_NULL);
         org.springframework.util.Assert.notNull(EntityUtils.getIdValue(entity), ID_MUST_NOT_BE_NULL);
         return update(entity, false, fieldColumnNames);
+    }
+
+    @Override
+    public int updateBatchById(T entity, String... fieldColumnNames) {
+        throw new UnsupportedOperationException("暂未实现");
+    }
+
+    @Override
+    public int updateForSelectiveBatchById(T entity, String... fieldColumnNames) {
+        throw new UnsupportedOperationException("暂未实现");
     }
 
     private int update(T entity, boolean isUpdateNullField, String... selectedFieldColumnNames) {
@@ -146,19 +158,19 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int updateByCondition(T entityCondition, MybatisQuery<?> query) {
+    public int update(T entityCondition, MybatisQuery<?> query) {
         setUpdateBaseColumn(entityCondition.getClass(), query);
         return getMapper().update(ParamUtils.getParamMap(entityCondition, query, false));
     }
 
     @Override
-    public int updateByCondition(MybatisQuery<?> query) {
-        return updateByCondition(newEntityInstance(), query);
+    public int update(MybatisQuery<?> query) {
+        return update(newEntityInstance(), query);
     }
 
     @Override
-    public int logicDeleteOne(Serializable id) {
-        int num = logicDelete(id);
+    public int logicDeleteOneById(Serializable id) {
+        int num = logicDeleteById(id);
         if (num != 1) {
             throw new EmptyResultDataAccessException("逻辑删除的数据不为1条，删除了:" + num, 1);
         }
@@ -166,7 +178,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int logicDelete(Serializable id) {
+    public int logicDeleteById(Serializable id) {
         org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         Field idField = EntityUtils.getIdField(getEntityClass());
         Query query = new Query();
@@ -198,8 +210,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int deleteOne(Serializable id) {
-        int num = delete(id);
+    public int deleteOneById(Serializable id) {
+        int num = deleteById(id);
         if (num != 1) {
             throw new EmptyResultDataAccessException("删除的数据不为1条，删除了:" + num, 1);
         }
@@ -207,7 +219,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int delete(Serializable id) {
+    public int deleteById(Serializable id) {
         org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         Field idField = EntityUtils.getIdField(getEntityClass());
         Query query = new Query();
@@ -233,7 +245,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public T get(Serializable id) {
+    public T findById(Serializable id) {
         org.springframework.util.Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         Field idField = EntityUtils.getIdField(getEntityClass());
         Query query = new Query();
@@ -242,8 +254,8 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public T getOne(@NotNull Serializable id) {
-        T entity = get(id);
+    public T findOneById(@NotNull Serializable id) {
+        T entity = findById(id);
         if (entity == null) {
             throw new EmptyResultDataAccessException(1);
         }

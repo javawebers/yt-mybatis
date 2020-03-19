@@ -46,19 +46,37 @@ public interface IBaseService<T> {
      * 根据主键更新实体
      *
      * @param entity           业务实体
-     * @param fieldColumnNames 更新的字段对应数据库字段
+     * @param fieldColumnNames 指定更新的字段，为空也进行更新。更新的字段对应数据库字段
      * @return 更新的条数
      */
-    int update(T entity, String... fieldColumnNames);
+    int updateById(T entity, String... fieldColumnNames);
 
     /**
      * 只更新非空字段
      *
      * @param entity           业务实体
-     * @param fieldColumnNames 更新的字段对应数据库字段
+     * @param fieldColumnNames 指定更新的字段，为空不进行更新。更新的字段对应数据库字段
      * @return 更新的条数
      */
-    int updateForSelective(T entity, String... fieldColumnNames);
+    int updateForSelectiveById(T entity, String... fieldColumnNames);
+
+    /**
+     * 根据 id 批量更新
+     *
+     * @param entity           业务实体
+     * @param fieldColumnNames 指定更新的字段，为空也进行更新。更新的字段对应数据库字段
+     * @return 更新的条数
+     */
+    int updateBatchById(T entity, String... fieldColumnNames);
+
+    /**
+     * 根据 id 批量更新，只更新非空字段
+     *
+     * @param entity           业务实体
+     * @param fieldColumnNames 指定更新的字段，为空不进行更新。更新的字段对应数据库字段
+     * @return 更新的条数
+     */
+    int updateForSelectiveBatchById(T entity, String... fieldColumnNames);
 
     /**
      * 根据条件更新
@@ -67,24 +85,31 @@ public interface IBaseService<T> {
      * @param query           扩展条件
      * @return 更新条数
      */
-    int updateByCondition(T entityCondition, MybatisQuery<?> query);
-    int updateByCondition(MybatisQuery<?> query);
+    int update(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 根据条件更新
+     *
+     * @param query 扩展条件
+     * @return 更新条数
+     */
+    int update(MybatisQuery<?> query);
 
     /**
      * 逻辑删除，不存在抛出异常
      *
-     * @param id          业务实体ID
+     * @param id 业务实体ID
      * @return 删除记录数
      */
-    int logicDeleteOne(Serializable id);
+    int logicDeleteOneById(Serializable id);
 
     /**
      * 逻辑删除
      *
-     * @param id          业务实体ID
+     * @param id 业务实体ID
      * @return 删除记录数
      */
-    int logicDelete(Serializable id);
+    int logicDeleteById(Serializable id);
 
     /**
      * 逻辑删除实体
@@ -94,6 +119,13 @@ public interface IBaseService<T> {
      * @return 删除的条数
      */
     int logicDelete(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 逻辑删除实体
+     *
+     * @param query 删除辅助类
+     * @return 删除的条数
+     */
     int logicDelete(MybatisQuery<?> query);
 
     /**
@@ -107,18 +139,18 @@ public interface IBaseService<T> {
     /**
      * 删除实体，不存在抛出异常
      *
-     * @param id          业务实体ID
+     * @param id 业务实体ID
      * @return 删除的条数
      */
-    int deleteOne(Serializable id);
+    int deleteOneById(Serializable id);
 
     /**
      * 删除实体
      *
-     * @param id          业务实体ID
+     * @param id 业务实体ID
      * @return 删除的条数
      */
-    int delete(Serializable id);
+    int deleteById(Serializable id);
 
     /**
      * 删除实体
@@ -128,6 +160,13 @@ public interface IBaseService<T> {
      * @return 删除的条数
      */
     int delete(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 删除实体
+     *
+     * @param query 删除辅助类
+     * @return 删除的条数
+     */
     int delete(MybatisQuery<?> query);
 
     /**
@@ -141,18 +180,18 @@ public interface IBaseService<T> {
     /**
      * 根据ID获取实体
      *
-     * @param id    业务实体ID
+     * @param id 业务实体ID
      * @return 业务实体
      */
-    T get(Serializable id);
+    T findById(Serializable id);
 
     /**
      * 根据ID获取实体，获取一条记录，不存在抛出异常
      *
-     * @param id    业务实体ID
+     * @param id 业务实体ID
      * @return 业务实体
      */
-    T getOne(Serializable id);
+    T findOneById(Serializable id);
 
     /**
      * 按条件查询一条记录
@@ -161,6 +200,23 @@ public interface IBaseService<T> {
      * @return 业务实体
      */
     T find(T entityCondition);
+
+    /**
+     * 按条件查询一条记录
+     *
+     * @param entityCondition 业务实体类或业务查询实体类
+     * @param query           查询辅助类
+     * @return 业务实体
+     */
+    T find(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 按条件查询一条记录
+     *
+     * @param query 查询辅助类
+     * @return 业务实体
+     */
+    T find(MybatisQuery<?> query);
 
     /**
      * 按条件查询一条记录，获取一条记录，不存在抛出异常
@@ -178,17 +234,14 @@ public interface IBaseService<T> {
      * @return 业务实体
      */
     T findOne(T entityCondition, MybatisQuery<?> query);
-    T findOne(MybatisQuery<?> query);
 
     /**
-     * 按条件查询一条记录
+     * 按条件查询一条记录，获取一条记录，不存在抛出异常
      *
-     * @param entityCondition 业务实体类或业务查询实体类
-     * @param query           查询辅助类
+     * @param query 查询辅助类
      * @return 业务实体
      */
-    T find(T entityCondition, MybatisQuery<?> query);
-    T find(MybatisQuery<?> query);
+    T findOne(MybatisQuery<?> query);
 
     /**
      * 按条件查询记录集合
@@ -206,6 +259,13 @@ public interface IBaseService<T> {
      * @return 业务实体集合
      */
     List<T> findList(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 按条件查询记录集合
+     *
+     * @param query 查询辅助类
+     * @return 业务实体集合
+     */
     List<T> findList(MybatisQuery<?> query);
 
     /**
@@ -224,6 +284,13 @@ public interface IBaseService<T> {
      * @return 数量
      */
     int count(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 查询数量
+     *
+     * @param query 查询辅助类
+     * @return 数量
+     */
     int count(MybatisQuery<?> query);
 
     /**
@@ -234,5 +301,12 @@ public interface IBaseService<T> {
      * @return 根据查询条件查询的查询结果集
      */
     Page<T> findPage(T entityCondition, MybatisQuery<?> query);
+
+    /**
+     * 获取数据
+     *
+     * @param query 查询辅助类
+     * @return 根据查询条件查询的查询结果集
+     */
     Page<T> findPage(MybatisQuery<?> query);
 }

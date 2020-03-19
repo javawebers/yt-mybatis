@@ -31,11 +31,11 @@ public class DataBasicService {
                 .setTestVarchar("varchar_" + entity.hashCode())
                 .setTestEnum(DbEntitySameTestEnumEnum.FEMALE);
         dbEntitySameService.save(entity);
-        return dbEntitySameService.get(entity.getDbEntitySameId());
+        return dbEntitySameService.findById(entity.getDbEntitySameId());
     }
 
     public void deleteSame(DbEntitySame entity) {
-        int count = dbEntitySameService.delete(entity.getDbEntitySameId());
+        int count = dbEntitySameService.deleteById(entity.getDbEntitySameId());
         Assert.assertEquals(1, count);
     }
 
@@ -67,11 +67,11 @@ public class DataBasicService {
                 .setTestInt(entity.hashCode())
                 .setTestVarchar("varchar_" + entity.hashCode());
         dbEntityNotSameService.save(entity);
-        return dbEntityNotSameService.get(entity.getDbEntityNotSameId());
+        return dbEntityNotSameService.findById(entity.getDbEntityNotSameId());
     }
 
     public void deleteNotSame(DbEntityNotSame entity) {
-        int count = dbEntityNotSameService.delete(entity.getDbEntityNotSameId());
+        int count = dbEntityNotSameService.deleteById(entity.getDbEntityNotSameId());
         Assert.assertEquals(1, count);
     }
 

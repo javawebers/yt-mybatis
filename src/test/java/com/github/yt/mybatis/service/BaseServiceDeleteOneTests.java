@@ -35,40 +35,40 @@ public class BaseServiceDeleteOneTests extends AbstractTestNGSpringContextTests 
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNullId() {
-        dbEntitySameService.deleteOne(null);
+        dbEntitySameService.deleteOneById(null);
     }
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void sameNotExist() {
-        dbEntitySameService.deleteOne("sameNotExist_xxx");
+        dbEntitySameService.deleteOneById("sameNotExist_xxx");
     }
 
     @Test
     public void sameExist() {
         DbEntitySame entity = dataBasicService.saveOneSame();
-        int num = dbEntitySameService.deleteOne(entity.getDbEntitySameId());
+        int num = dbEntitySameService.deleteOneById(entity.getDbEntitySameId());
         Assert.assertEquals(1, num);
-        DbEntitySame dbEntity = dbEntitySameService.get(entity.getDbEntitySameId());
+        DbEntitySame dbEntity = dbEntitySameService.findById(entity.getDbEntitySameId());
         Assert.assertNull(dbEntity);
     }
 
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNullId() {
-        dbEntityNotSameService.deleteOne(null);
+        dbEntityNotSameService.deleteOneById(null);
     }
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void notSameNotExist() {
-        dbEntityNotSameService.deleteOne("sameNotExist_xxx");
+        dbEntityNotSameService.deleteOneById("sameNotExist_xxx");
     }
 
     @Test
     public void notSameExist() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
-        int num = dbEntityNotSameService.deleteOne(entity.getDbEntityNotSameId());
+        int num = dbEntityNotSameService.deleteOneById(entity.getDbEntityNotSameId());
         Assert.assertEquals(1, num);
-        DbEntityNotSame dbEntity = dbEntityNotSameService.get(entity.getDbEntityNotSameId());
+        DbEntityNotSame dbEntity = dbEntityNotSameService.findById(entity.getDbEntityNotSameId());
         Assert.assertNull(dbEntity);
     }
 }

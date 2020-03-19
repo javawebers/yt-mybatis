@@ -35,12 +35,12 @@ public class BaseServiceLogicDeleteOneTests extends AbstractTestNGSpringContextT
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNullId() {
-        dbEntitySameService.logicDeleteOne(null);
+        dbEntitySameService.logicDeleteOneById(null);
     }
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void sameNotExist() {
-        dbEntitySameService.logicDeleteOne("sameNotExist_xxx");
+        dbEntitySameService.logicDeleteOneById("sameNotExist_xxx");
     }
 
     @Test
@@ -49,9 +49,9 @@ public class BaseServiceLogicDeleteOneTests extends AbstractTestNGSpringContextT
         Assert.assertNull(entity.getModifierId());
         Assert.assertNull(entity.getModifierName());
         Assert.assertNull(entity.getModifyTime());
-        int num = dbEntitySameService.logicDeleteOne(entity.getDbEntitySameId());
+        int num = dbEntitySameService.logicDeleteOneById(entity.getDbEntitySameId());
         Assert.assertEquals(1, num);
-        DbEntitySame dbEntity = dbEntitySameService.get(entity.getDbEntitySameId());
+        DbEntitySame dbEntity = dbEntitySameService.findById(entity.getDbEntitySameId());
         Assert.assertNotNull(dbEntity);
         Assert.assertNotNull(dbEntity.getModifierId());
         Assert.assertNull(dbEntity.getModifierName());
@@ -62,12 +62,12 @@ public class BaseServiceLogicDeleteOneTests extends AbstractTestNGSpringContextT
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNullId() {
-        dbEntityNotSameService.logicDeleteOne(null);
+        dbEntityNotSameService.logicDeleteOneById(null);
     }
 
     @Test(expectedExceptions = EmptyResultDataAccessException.class)
     public void notSameNotExist() {
-        dbEntityNotSameService.logicDeleteOne("sameNotExist_xxx");
+        dbEntityNotSameService.logicDeleteOneById("sameNotExist_xxx");
     }
 
     @Test
@@ -75,9 +75,9 @@ public class BaseServiceLogicDeleteOneTests extends AbstractTestNGSpringContextT
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
         Assert.assertNull(entity.getModifierId());
         Assert.assertNull(entity.getModifyTime());
-        int num = dbEntityNotSameService.logicDeleteOne(entity.getDbEntityNotSameId());
+        int num = dbEntityNotSameService.logicDeleteOneById(entity.getDbEntityNotSameId());
         Assert.assertEquals(1, num);
-        DbEntityNotSame dbEntity = dbEntityNotSameService.get(entity.getDbEntityNotSameId());
+        DbEntityNotSame dbEntity = dbEntityNotSameService.findById(entity.getDbEntityNotSameId());
         Assert.assertNotNull(dbEntity);
         Assert.assertNotNull(dbEntity.getModifierId());
         Assert.assertNotNull(dbEntity.getModifyTime());

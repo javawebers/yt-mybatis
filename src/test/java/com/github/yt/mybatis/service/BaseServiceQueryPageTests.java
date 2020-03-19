@@ -71,6 +71,17 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
     }
 
 
+    @Test
+    public void findPage11() {
+        List<DbEntitySame> list = dataBasicService.save12Same();
+        Page<DbEntitySame> dbPage = dbEntitySameService.findPage(new Query().makePageNo(1).makePageSize(11));
+
+        Assert.assertEquals(dbPage.getPageNo(), 1);
+        Assert.assertEquals(dbPage.getPageSize(), 11);
+        Assert.assertEquals(dbPage.getTotalCount(), 12);
+        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 11);
+    }
+
 
     @Test
     public void findPage2() {

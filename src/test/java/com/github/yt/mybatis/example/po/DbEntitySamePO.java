@@ -4,16 +4,18 @@ import javax.persistence.Table;
 
 import com.github.yt.mybatis.entity.BaseEntity;
 
+import java.io.Serializable;
+
 @Table(name = "DbEntitySame")
-public class DbEntitySamePO<T extends  DbEntitySamePO<T>> extends BaseEntity<T>{
-    
-    /** 
-     * id  
+public class DbEntitySamePO<T extends DbEntitySamePO<T>> extends BaseEntity<T> implements Serializable {
+
+    /**
+     * id
      */
     @javax.persistence.Id
     private String dbEntitySameId;
-    /** 
-     * String类型  
+    /**
+     * String类型
      */
     private String testVarchar;
     /** 

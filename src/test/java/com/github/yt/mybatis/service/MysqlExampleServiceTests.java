@@ -11,7 +11,6 @@ import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.Collections;
 
 @SpringBootTest(classes = {YtMybatisDemoApplication.class})
 public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
@@ -42,10 +41,10 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         mysqlExample.setTestVarchar("varchar_222");
 
         // 更新所有的字段，为空也会更新
-        mysqlExampleService.update(mysqlExample);
+        mysqlExampleService.updateById(mysqlExample);
 
         // 更新指定的字段，为空也会更新，这里只更新 test_int
-        mysqlExampleService.update(mysqlExample, "test_int");
+        mysqlExampleService.updateById(mysqlExample, "test_int");
     }
 
 
@@ -59,9 +58,9 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         mysqlExample.setTestVarchar("varchar_222");
 
         // 更新所有不为空的字段，这里更新 test_int 和 test_varchar
-        mysqlExampleService.updateForSelective(mysqlExample);
+        mysqlExampleService.updateForSelectiveById(mysqlExample);
         // 更新指定不为空的字段，这里只更新 test_int
-        mysqlExampleService.updateForSelective(mysqlExample, "test_int", "test_boolean");
+        mysqlExampleService.updateForSelectiveById(mysqlExample, "test_int", "test_boolean");
     }
 
     // 根据条件更新
@@ -76,19 +75,19 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         // 设置要更新的字段
         query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
         // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
-        mysqlExampleService.updateByCondition(condition, query);
+        mysqlExampleService.update(condition, query);
     }
 
     // 根据主键删除一条记录
     @Test
     public void delete() {
-        mysqlExampleService.delete("1");
+        mysqlExampleService.deleteById("1");
     }
 
     // 根据主键删除一条记录，如果记录不存在抛出异常
     @Test
     public void deleteOne() {
-        mysqlExampleService.deleteOne("1");
+        mysqlExampleService.deleteOneById("1");
     }
 
     // 根据条件删除
@@ -109,13 +108,13 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
     // 逻辑删除一条记录
     @Test
     public void logicDelete() {
-        mysqlExampleService.logicDelete("1");
+        mysqlExampleService.logicDeleteById("1");
     }
 
     // 逻辑删除一条记录，如果记录不存在抛出异常（记录已经被逻辑删除也会抛出异常）
     @Test
     public void logicDeleteOne() {
-        mysqlExampleService.logicDeleteOne("1");
+        mysqlExampleService.logicDeleteOneById("1");
     }
 
     // 根据条件逻辑删除
@@ -137,13 +136,13 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
     // 根据主键查询一条记录
     @Test
     public void get() {
-        mysqlExampleService.get("1");
+        mysqlExampleService.findById("1");
     }
 
     // 根据主键查询一条记录，如果记录不存在抛出异常
     @Test
     public void getOne() {
-        mysqlExampleService.getOne("1");
+        mysqlExampleService.findOneById("1");
     }
 
     // 查询一条记录
@@ -287,7 +286,7 @@ public class MysqlExampleServiceTests extends AbstractTestNGSpringContextTests {
         // 设置要更新的字段
         query.addUpdate("test_boolean = #{testBoolean}").addParam("testBoolean", true);
         // 将 test_int 为 222 , test_varchar 为 varchar_222 记录的 test_boolean 字段更新为 true
-        mysqlExampleService.updateByCondition(condition, query);
+        mysqlExampleService.update(condition, query);
     }
 
 

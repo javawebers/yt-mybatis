@@ -33,32 +33,32 @@ public class BaseServiceDeleteByIdTests extends AbstractTestNGSpringContextTests
 
     @Test
     public void sameNotExist() {
-        int num = dbEntitySameService.delete("sameNotExist_xxx");
+        int num = dbEntitySameService.deleteById("sameNotExist_xxx");
         Assert.assertEquals(0, num);
     }
 
     @Test
     public void sameExist() {
         DbEntitySame entity = dataBasicService.saveOneSame();
-        int num = dbEntitySameService.delete(entity.getDbEntitySameId());
+        int num = dbEntitySameService.deleteById(entity.getDbEntitySameId());
         Assert.assertEquals(1, num);
-        DbEntitySame dbEntity = dbEntitySameService.get(entity.getDbEntitySameId());
+        DbEntitySame dbEntity = dbEntitySameService.findById(entity.getDbEntitySameId());
         Assert.assertNull(dbEntity);
     }
 
 
     @Test
     public void notSameNotExist() {
-        int num = dbEntityNotSameService.delete("sameNotExist_xxx");
+        int num = dbEntityNotSameService.deleteById("sameNotExist_xxx");
         Assert.assertEquals(0, num);
     }
 
     @Test
     public void notSameExist() {
         DbEntityNotSame entity = dataBasicService.saveOneNotSame();
-        int num = dbEntityNotSameService.delete(entity.getDbEntityNotSameId());
+        int num = dbEntityNotSameService.deleteById(entity.getDbEntityNotSameId());
         Assert.assertEquals(1, num);
-        DbEntityNotSame dbEntity = dbEntityNotSameService.get(entity.getDbEntityNotSameId());
+        DbEntityNotSame dbEntity = dbEntityNotSameService.findById(entity.getDbEntityNotSameId());
         Assert.assertNull(dbEntity);
     }
 

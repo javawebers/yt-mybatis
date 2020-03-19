@@ -36,19 +36,19 @@ public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNull() {
-        dbEntitySameService.update(null);
+        dbEntitySameService.updateById(null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void sameNullId() {
-        dbEntitySameService.update(new DbEntitySame());
+        dbEntitySameService.updateById(new DbEntitySame());
     }
 
     @Test
     public void sameExist() {
         List<DbEntitySame> list = dataBasicService.save12Same();
 
-        int num = dbEntitySameService.update(new DbEntitySame()
+        int num = dbEntitySameService.updateById(new DbEntitySame()
                 .setDbEntitySameId(list.get(0).getDbEntitySameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
@@ -82,7 +82,7 @@ public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
     public void sameNotExist() {
         List<DbEntitySame> list = dataBasicService.save12Same();
 
-        int num = dbEntitySameService.update(new DbEntitySame()
+        int num = dbEntitySameService.updateById(new DbEntitySame()
                 .setDbEntitySameId("xxx_DbEntitySame")
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
@@ -105,7 +105,7 @@ public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
     public void sameWithColumn() {
         List<DbEntitySame> list = dataBasicService.save12Same();
 
-        int num = dbEntitySameService.update(new DbEntitySame()
+        int num = dbEntitySameService.updateById(new DbEntitySame()
                 .setDbEntitySameId(list.get(0).getDbEntitySameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
@@ -141,19 +141,19 @@ public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNull() {
-        dbEntityNotSameService.update(null);
+        dbEntityNotSameService.updateById(null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void notSameNullId() {
-        dbEntityNotSameService.update(new DbEntityNotSame());
+        dbEntityNotSameService.updateById(new DbEntityNotSame());
     }
 
     @Test
     public void notSameExist() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
 
-        int num = dbEntityNotSameService.update(new DbEntityNotSame()
+        int num = dbEntityNotSameService.updateById(new DbEntityNotSame()
                 .setDbEntityNotSameId(list.get(0).getDbEntityNotSameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222"));
@@ -182,7 +182,7 @@ public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
     public void notSameNotExist() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
 
-        int num = dbEntityNotSameService.update(new DbEntityNotSame()
+        int num = dbEntityNotSameService.updateById(new DbEntityNotSame()
                 .setDbEntityNotSameId("xxx_DbEntitySame")
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222"));
@@ -202,7 +202,7 @@ public class BaseServiceUpdateTests extends AbstractTestNGSpringContextTests {
     public void notSameWithColumn() {
         List<DbEntityNotSame> list = dataBasicService.save12NotSame();
 
-        int num = dbEntityNotSameService.update(new DbEntityNotSame()
+        int num = dbEntityNotSameService.updateById(new DbEntityNotSame()
                 .setDbEntityNotSameId(list.get(0).getDbEntityNotSameId())
                 .setDeleteFlag(false)
                 .setTestVarchar("xxx_222")
