@@ -124,7 +124,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     }
 
     @Override
-    public int updateForSelectiveBatchById(Collection<T> entities, String... fieldColumnNames) {
+    public int updateBatchForSelectiveById(Collection<T> entities, String... fieldColumnNames) {
         throw new UnsupportedOperationException("暂未实现");
     }
 

@@ -72,11 +72,11 @@ public interface IBaseService<T> {
     /**
      * 根据 id 批量更新，只更新非空字段
      *
-     * @param entities           业务实体
+     * @param entities         业务实体
      * @param fieldColumnNames 指定更新的字段，为空不进行更新。更新的字段对应数据库字段
      * @return 更新的条数
      */
-    int updateForSelectiveBatchById(Collection<T> entities, String... fieldColumnNames);
+    int updateBatchForSelectiveById(Collection<T> entities, String... fieldColumnNames);
 
     /**
      * 根据条件更新
