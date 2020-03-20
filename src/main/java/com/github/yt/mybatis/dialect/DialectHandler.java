@@ -12,7 +12,7 @@ public class DialectHandler {
     private DialectHandler() {
     }
 
-    private static Dialect dialect;
+    private volatile static Dialect dialect;
 
     /**
      * 获取方言
@@ -21,7 +21,7 @@ public class DialectHandler {
      */
     public static Dialect getDialect() {
         if (dialect == null) {
-            synchronized(DialectHandler.class) {
+            synchronized (DialectHandler.class) {
                 if (dialect == null) {
                     try {
                         dialect = YtMybatisConfig.dialectClass.newInstance();
