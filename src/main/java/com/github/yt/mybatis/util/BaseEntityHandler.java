@@ -14,17 +14,17 @@ public class BaseEntityHandler {
     private BaseEntityHandler() {
     }
 
-    private static final BaseEntityHandler LOCK = new BaseEntityHandler();
-
-    private static BaseEntityValue baseEntityValue;
+    private volatile static BaseEntityValue baseEntityValue;
 
     public static BaseEntityValue getBaseEntityValue() {
         if (baseEntityValue == null) {
-            synchronized (LOCK) {
-                try {
-                    baseEntityValue = YtMybatisConfig.baseEntityValueClass.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw new RuntimeException("实例化 BaseEntityValue 类异常", e);
+            synchronized (BaseEntityHandler.class) {
+                if (baseEntityValue == null) {
+                    try {
+                        baseEntityValue = YtMybatisConfig.baseEntityValueClass.newInstance();
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        throw new RuntimeException("实例化 BaseEntityValue 类异常", e);
+                    }
                 }
             }
         }
