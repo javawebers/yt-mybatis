@@ -40,8 +40,9 @@ public enum YtMybatisExceptionEnum {
     CODE_99("系统异常"),
     ;
 
-    public String message;
-    public String description;
+    private String message;
+    private String description;
+
     YtMybatisExceptionEnum(String message) {
         this.message = message;
     }
