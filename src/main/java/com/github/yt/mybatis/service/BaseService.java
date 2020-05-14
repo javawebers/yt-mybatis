@@ -172,7 +172,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public int logicDeleteOneById(Serializable id) {
         int num = logicDeleteById(id);
         if (num != 1) {
-            throw new EmptyResultDataAccessException("逻辑删除的数据不为1条，删除了:" + num, 1);
+            throw new EmptyResultDataAccessException("逻辑删除的数据不为1条，删除了: " + num + "条数据，id: " + id, 1);
         }
         return num;
     }
@@ -213,7 +213,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public int deleteOneById(Serializable id) {
         int num = deleteById(id);
         if (num != 1) {
-            throw new EmptyResultDataAccessException("删除的数据不为1条，删除了:" + num, 1);
+            throw new EmptyResultDataAccessException("逻辑删除的数据不为1条，删除了: " + num + "条数据，id: " + id, 1);
         }
         return num;
     }
@@ -257,7 +257,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public T findOneById(@NotNull Serializable id) {
         T entity = findById(id);
         if (entity == null) {
-            throw new EmptyResultDataAccessException(1);
+            throw new EmptyResultDataAccessException("没有查询到数据，id: " + id, 1);
         }
         return entity;
     }
@@ -271,7 +271,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public T findOne(T entityCondition) {
         T entity = find(entityCondition);
         if (entity == null) {
-            throw new EmptyResultDataAccessException(1);
+            throw new EmptyResultDataAccessException("没有查询到数据", 1);
         }
         return entity;
     }
@@ -280,7 +280,7 @@ public abstract class BaseService<T> implements IBaseService<T> {
     public T findOne(T entityCondition, MybatisQuery<?> query) {
         T entity = find(entityCondition, query);
         if (entity == null) {
-            throw new EmptyResultDataAccessException(1);
+            throw new EmptyResultDataAccessException("没有查询到数据", 1);
         }
         return entity;
     }
