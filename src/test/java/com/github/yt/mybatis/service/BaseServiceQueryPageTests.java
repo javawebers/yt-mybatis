@@ -25,6 +25,9 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
     private DataBasicService dataBasicService;
 
     @Resource
+    private YtMybatisConfig ytMybatisConfig;
+
+    @Resource
     DbEntitySameService dbEntitySameService;
     @Resource
     DbEntityNotSameService dbEntityNotSameService;
@@ -45,16 +48,16 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         int totalCount = dbPage.getTotalCount();
         List<DbEntitySame> pageData = dbPage.getData();
 
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageNoName));
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageSizeName));
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageTotalCountName));
-        Assert.assertTrue(dbPage.containsKey(YtMybatisConfig.pageDataName));
+        Assert.assertTrue(dbPage.containsKey(ytMybatisConfig.getPage().getPageNoName()));
+        Assert.assertTrue(dbPage.containsKey(ytMybatisConfig.getPage().getPageSizeName()));
+        Assert.assertTrue(dbPage.containsKey(ytMybatisConfig.getPage().getPageTotalCountName()));
+        Assert.assertTrue(dbPage.containsKey(ytMybatisConfig.getPage().getPageDataName()));
         Assert.assertEquals(dbPage.getPageNo(), 2);
 
-        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageNoName), 2);
-        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageSizeName), 2);
-        Assert.assertEquals(dbPage.get(YtMybatisConfig.pageTotalCountName), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 2);
+        Assert.assertEquals(dbPage.get(ytMybatisConfig.getPage().getPageNoName()), 2);
+        Assert.assertEquals(dbPage.get(ytMybatisConfig.getPage().getPageSizeName()), 2);
+        Assert.assertEquals(dbPage.get(ytMybatisConfig.getPage().getPageTotalCountName()), 12);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 2);
     }
 
 
@@ -67,7 +70,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 1);
         Assert.assertEquals(dbPage.getPageSize(), 11);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 11);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 11);
     }
 
 
@@ -79,7 +82,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 1);
         Assert.assertEquals(dbPage.getPageSize(), 11);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 11);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 11);
     }
 
 
@@ -92,7 +95,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 1);
         Assert.assertEquals(dbPage.getPageSize(), 12);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 12);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 12);
     }
 
     @Test
@@ -104,7 +107,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 1);
         Assert.assertEquals(dbPage.getPageSize(), 13);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 12);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 12);
     }
 
     @Test
@@ -115,7 +118,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 2);
         Assert.assertEquals(dbPage.getPageSize(), 10);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 2);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 2);
     }
 
 
@@ -127,7 +130,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 2);
         Assert.assertEquals(dbPage.getPageSize(), 5);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 5);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 5);
     }
 
 
@@ -139,7 +142,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 3);
         Assert.assertEquals(dbPage.getPageSize(), 10);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 0);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 0);
     }
 
     @Test
@@ -150,7 +153,7 @@ public class BaseServiceQueryPageTests extends AbstractTestNGSpringContextTests 
         Assert.assertEquals(dbPage.getPageNo(), 3);
         Assert.assertEquals(dbPage.getPageSize(), 6);
         Assert.assertEquals(dbPage.getTotalCount(), 12);
-        Assert.assertEquals(((List<?>) dbPage.get(YtMybatisConfig.pageDataName)).size(), 0);
+        Assert.assertEquals(((List<?>) dbPage.get(ytMybatisConfig.getPage().getPageDataName())).size(), 0);
     }
 
 

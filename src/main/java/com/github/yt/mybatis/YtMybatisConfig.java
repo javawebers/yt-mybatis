@@ -1,62 +1,120 @@
 package com.github.yt.mybatis;
 
 import com.github.yt.mybatis.dialect.Dialect;
+import com.github.yt.mybatis.dialect.impl.MysqlDialect;
 import com.github.yt.mybatis.entity.BaseEntityValue;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import com.github.yt.mybatis.entity.DefaultBaseEntityValue;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
 
 /**
  * @author sheng
  */
-@Configuration
-public class YtMybatisConfig {
+@Component
+@ConfigurationProperties("yt")
+public class YtMybatisConfig implements Serializable {
 
-    /**
-     * 分页参数
-     */
-    public static String pageNoName;
-    public static String pageSizeName;
-    public static String pageTotalCountName;
-    public static String pageDataName;
+    private Entity entity = new Entity();
+    private Mybatis mybatis = new Mybatis();
+    private Page page = new Page();
 
-    /**
-     * 方言
-     */
-    public static Class<? extends Dialect> dialectClass;
-
-    /**
-     * BaseEntityValue 实现类
-     */
-    public static Class<? extends BaseEntityValue> baseEntityValueClass;
-
-    @Value("${yt.entity.baseEntityValue:com.github.yt.mybatis.entity.DefaultBaseEntityValue}")
-    public void setDialectEnum(Class<? extends BaseEntityValue> baseEntityValueClass) {
-        YtMybatisConfig.baseEntityValueClass = baseEntityValueClass;
+    public Entity getEntity() {
+        return entity;
     }
 
-    @Value("${yt.mybatis.dialect:com.github.yt.mybatis.dialect.impl.MysqlDialect}")
-    public void setDialectClass(Class<? extends Dialect> dialectClass) {
-        YtMybatisConfig.dialectClass = dialectClass;
+    public YtMybatisConfig setEntity(Entity entity) {
+        this.entity = entity;
+        return this;
     }
 
-    @Value("${yt.page.pageNoName:pageNo}")
-    public void setPageNoName(String pageNoName) {
-        YtMybatisConfig.pageNoName = pageNoName;
+    public Mybatis getMybatis() {
+        return mybatis;
     }
 
-    @Value("${yt.page.pageSizeName:pageSize}")
-    public void setPageSizeName(String pageSizeName) {
-        YtMybatisConfig.pageSizeName = pageSizeName;
+    public YtMybatisConfig setMybatis(Mybatis mybatis) {
+        this.mybatis = mybatis;
+        return this;
     }
 
-    @Value("${yt.page.pageTotalCountName:totalCount}")
-    public void setPageTotalCountName(String pageTotalCountName) {
-        YtMybatisConfig.pageTotalCountName = pageTotalCountName;
+    public Page getPage() {
+        return page;
     }
 
-    @Value("${yt.page.pageDataName:data}")
-    public void setPageDataName(String pageDataName) {
-        YtMybatisConfig.pageDataName = pageDataName;
+    public YtMybatisConfig setPage(Page page) {
+        this.page = page;
+        return this;
+    }
+
+    public static class Entity {
+        private Class<? extends BaseEntityValue> baseEntityValue = DefaultBaseEntityValue.class;
+
+        public Class<? extends BaseEntityValue> getBaseEntityValue() {
+            return baseEntityValue;
+        }
+
+        public Entity setBaseEntityValue(Class<? extends BaseEntityValue> baseEntityValue) {
+            this.baseEntityValue = baseEntityValue;
+            return this;
+        }
+    }
+
+    public static class Mybatis {
+        private Class<? extends Dialect> dialect = MysqlDialect.class;
+
+        public Class<? extends Dialect> getDialect() {
+            return dialect;
+        }
+
+        public Mybatis setDialect(Class<? extends Dialect> dialect) {
+            this.dialect = dialect;
+            return this;
+        }
+    }
+
+    public static class Page {
+        private String pageNoName = "pageNo";
+        private String pageSizeName = "pageSize";
+        private String pageTotalCountName = "totalCount";
+        private String pageDataName = "data";
+
+        public String getPageNoName() {
+            return pageNoName;
+        }
+
+        public Page setPageNoName(String pageNoName) {
+            this.pageNoName = pageNoName;
+            return this;
+        }
+
+        public String getPageSizeName() {
+            return pageSizeName;
+        }
+
+        public Page setPageSizeName(String pageSizeName) {
+            this.pageSizeName = pageSizeName;
+            return this;
+        }
+
+        public String getPageTotalCountName() {
+            return pageTotalCountName;
+        }
+
+        public Page setPageTotalCountName(String pageTotalCountName) {
+            this.pageTotalCountName = pageTotalCountName;
+            return this;
+        }
+
+        public String getPageDataName() {
+            return pageDataName;
+        }
+
+        public Page setPageDataName(String pageDataName) {
+            this.pageDataName = pageDataName;
+            return this;
+        }
     }
 
 }

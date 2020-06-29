@@ -21,7 +21,8 @@ public class BaseEntityHandler {
             synchronized (BaseEntityHandler.class) {
                 if (baseEntityValue == null) {
                     try {
-                        baseEntityValue = YtMybatisConfig.baseEntityValueClass.newInstance();
+                        YtMybatisConfig ytMybatisConfig = SpringContextUtils.getBean(YtMybatisConfig.class);
+                        baseEntityValue = ytMybatisConfig.getEntity().getBaseEntityValue().newInstance();
                     } catch (InstantiationException | IllegalAccessException e) {
                         throw new RuntimeException("实例化 BaseEntityValue 类异常", e);
                     }

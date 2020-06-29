@@ -1,6 +1,7 @@
 package com.github.yt.mybatis.query;
 
 import com.github.yt.mybatis.YtMybatisConfig;
+import com.github.yt.mybatis.util.SpringContextUtils;
 
 import java.util.List;
 
@@ -36,8 +37,13 @@ public class PageUtils {
      * @return 分页信息
      */
     public static <R> Page<R> createPage(int pageNo, int pageSize, int totalCount, List<R> data) {
+        YtMybatisConfig ytMybatisConfig = SpringContextUtils.getBean(YtMybatisConfig.class);
+
         return new Page<R>()
-                .initKey(YtMybatisConfig.pageNoName, YtMybatisConfig.pageSizeName, YtMybatisConfig.pageTotalCountName, YtMybatisConfig.pageDataName)
+                .initKey(ytMybatisConfig.getPage().getPageNoName(),
+                        ytMybatisConfig.getPage().getPageSizeName(),
+                        ytMybatisConfig.getPage().getPageTotalCountName(),
+                        ytMybatisConfig.getPage().getPageDataName())
                 .initValue(pageNo, pageSize, totalCount, data);
     }
 
