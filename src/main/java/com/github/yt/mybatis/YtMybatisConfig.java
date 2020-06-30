@@ -17,6 +17,9 @@ import java.io.Serializable;
 @ConfigurationProperties("yt")
 public class YtMybatisConfig implements Serializable {
 
+    /**
+     *
+     */
     private Entity entity = new Entity();
     private Mybatis mybatis = new Mybatis();
     private Page page = new Page();
@@ -49,6 +52,9 @@ public class YtMybatisConfig implements Serializable {
     }
 
     public static class Entity {
+        /**
+         * base entity 自动设置值实现类
+         */
         private Class<? extends BaseEntityValue> baseEntityValue = DefaultBaseEntityValue.class;
 
         public Class<? extends BaseEntityValue> getBaseEntityValue() {
@@ -62,6 +68,10 @@ public class YtMybatisConfig implements Serializable {
     }
 
     public static class Mybatis {
+        /**
+         * 数据库方言
+         * 在 com.github.yt.mybatis.dialect.impl 包中，默认为 MysqlDialect
+         */
         private Class<? extends Dialect> dialect = MysqlDialect.class;
 
         public Class<? extends Dialect> getDialect() {
@@ -75,9 +85,21 @@ public class YtMybatisConfig implements Serializable {
     }
 
     public static class Page {
+        /**
+         * 页码
+         */
         private String pageNoName = "pageNo";
+        /**
+         * 每页记录数
+         */
         private String pageSizeName = "pageSize";
+        /**
+         * 总条数
+         */
         private String pageTotalCountName = "totalCount";
+        /**
+         * 数据字段
+         */
         private String pageDataName = "data";
 
         public String getPageNoName() {
