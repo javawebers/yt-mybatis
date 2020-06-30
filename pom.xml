@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.javawebers</groupId>
     <artifactId>yt-mybatis</artifactId>
-    <version>1.8.3</version>
+    <version>1.8.4</version>
     <url>https://github.com/javawebers/yt-mybatis</url>
     <name>yt-mybatis</name>
     <description>yt-mybatis</description>
