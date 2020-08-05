@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class DatabaseExceptionConverter implements BaseExceptionConverter {
 
     @Override
-    public Exception convertToBaseException(Exception e) {
+    public Throwable convertToBaseException(Throwable e) {
         if (e instanceof DuplicateKeyException) {
             // 数据库异常，记录已存在
             return new BaseAccidentException(YtMybatisExceptionEnum.CODE_21, e);
