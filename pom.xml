@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.javawebers</groupId>
     <artifactId>yt-mybatis</artifactId>
-    <version>1.8.4</version>
+    <version>1.9.0</version>
     <url>https://github.com/javawebers/yt-mybatis</url>
     <name>yt-mybatis</name>
     <description>yt-mybatis</description>
@@ -34,7 +34,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
         <mybatis-spring-boot.version>2.1.1</mybatis-spring-boot.version>
-        <yt-commons.version>1.3.4</yt-commons.version>
+        <yt-commons.version>1.4.0</yt-commons.version>
     </properties>
     <dependencies>
         <!-- mybatis 依赖需要引用 yt-mybatis 的项目中指定，避免 yt-mybatis 依赖的 mybatis 版本和项目中指定的版本又冲突 -->
